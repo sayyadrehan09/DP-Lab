@@ -29,6 +29,23 @@ public class Movie {
         return id + "|" + title + "|" + genre + "|" + language + "|" + rating + "|" + year + "|" + platform;
     }
 
+    public String toJson() {
+        return "{" +
+                "\"id\":" + id + "," +
+                "\"title\":\"" + escapeJson(title) + "\"," +
+                "\"genre\":\"" + escapeJson(genre) + "\"," +
+                "\"language\":\"" + escapeJson(language) + "\"," +
+                "\"rating\":" + rating + "," +
+                "\"year\":" + year + "," +
+                "\"platform\":\"" + escapeJson(platform) + "\"" +
+                "}";
+    }
+
+    private String escapeJson(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+    }
+
     public void showDetails() {
         System.out.println("ID       : " + id);
         System.out.println("Title    : " + title);
