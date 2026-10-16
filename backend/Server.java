@@ -60,7 +60,10 @@ public class Server {
         server.createContext("/api/movies", new MoviesHandler());
         server.createContext("/api/top-movies", new TopMoviesHandler());
         server.createContext("/api/recommend", new RecommendHandler());
+        server.createContext("/api/sort", new SortHandler());
         server.createContext("/api/watchlist", new WatchlistHandler());
+        server.createContext("/api/watchlist/export", new WatchlistExportHandler());
+        server.createContext("/api/watchlist/undo", new WatchlistUndoHandler());
         server.createContext("/api/login", new LoginHandler());
         server.createContext("/api/notifications", new NotificationsHandler());
         server.createContext("/api/notify", new BroadcastHandler());
@@ -415,8 +418,12 @@ public class Server {
                     return;
                 }
 
+                // Memento Pattern: Save state snapshot before mutating watchlist
+                List<Integer> currentIdsBeforeAdd = FileManager.getUserWatchlistIds(user);
+                WatchlistCaretaker.saveSnapshot(user, currentIdsBeforeAdd, "Before adding '" + movie.getTitle() + "'");
+
                 FileManager.saveWatchlist(user, movie);
-                sendJsonResponse(exchange, 200, "{\"success\":true,\"message\":\"" + movie.getTitle() + " added to your watchlist.\"}");
+                sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":true,\"message\":\"" + movie.getTitle() + " added to your watchlist.\"}");
 
             } else if ("DELETE".equalsIgnoreCase(method)) {
                 Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
@@ -431,15 +438,130 @@ public class Server {
                     return;
                 }
 
+                // Memento Pattern: Save state snapshot before removing
+                List<Integer> currentIdsBeforeRemove = FileManager.getUserWatchlistIds(user);
+                Movie movieToRemove = database.findMovieById(movieId);
+                String title = (movieToRemove != null) ? movieToRemove.getTitle() : ("ID #" + movieId);
+                WatchlistCaretaker.saveSnapshot(user, currentIdsBeforeRemove, "Before removing '" + title + "'");
+
                 boolean removed = FileManager.removeFromWatchlist(user, movieId);
                 if (removed) {
-                    sendJsonResponse(exchange, 200, "{\"success\":true,\"message\":\"Movie removed from your watchlist.\"}");
+                    sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":true,\"message\":\"Movie removed from your watchlist.\"}");
                 } else {
                     sendJsonResponse(exchange, 404, "{\"success\":false,\"message\":\"Movie not found in watchlist.\"}");
                 }
             } else {
                 sendJsonResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
             }
+        }
+    }
+
+    /**
+     * Handler for Strategy Pattern: Dynamic Catalog Sorting
+     */
+    static class SortHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handlePreflight(exchange)) return;
+
+            Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
+            String by = params.getOrDefault("by", "rating").trim();
+
+            CatalogSorterContext sorter = new CatalogSorterContext(CatalogSorterContext.getStrategyByName(by));
+            List<Movie> sorted = sorter.executeSort(database.getMovies());
+
+            StringBuilder json = new StringBuilder("{");
+            json.append("\"strategy\":\"").append(sorter.getStrategy().getStrategyName().replace("\"", "\\\"")).append("\",");
+            json.append("\"description\":\"").append(sorter.getStrategy().getDescription().replace("\"", "\\\"")).append("\",");
+            json.append("\"movies\":[");
+            for (int i = 0; i < sorted.size(); i++) {
+                json.append(sorted.get(i).toJson());
+                if (i < sorted.size() - 1) json.append(",");
+            }
+            json.append("]}");
+
+            sendJsonResponse(exchange, 200, json.toString());
+        }
+    }
+
+    /**
+     * Handler for Template Method Pattern: Watchlist Export Engine
+     */
+    static class WatchlistExportHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handlePreflight(exchange)) return;
+
+            Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
+            String user = params.getOrDefault("user", "").trim();
+            String format = params.getOrDefault("format", "markdown").trim();
+
+            if (user.isEmpty()) {
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user parameter required\"}");
+                return;
+            }
+
+            List<Movie> watchlist = FileManager.loadUserWatchlistMovies(user);
+            WatchlistReportTemplate generator = WatchlistReportTemplate.getGenerator(format);
+            String report = generator.generateReport(user, watchlist);
+
+            String escapedContent = report.replace("\\", "\\\\")
+                                          .replace("\"", "\\\"")
+                                          .replace("\r", "")
+                                          .replace("\n", "\\n");
+
+            String json = "{\"success\":true,\"user\":\"" + user.replace("\"", "\\\"") + "\",\"format\":\"" + generator.getFormatName() + "\",\"content\":\"" + escapedContent + "\"}";
+            sendJsonResponse(exchange, 200, json);
+        }
+    }
+
+    /**
+     * Handler for Memento Pattern: Watchlist Undo Rollback
+     */
+    static class WatchlistUndoHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handlePreflight(exchange)) return;
+
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendJsonResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
+                return;
+            }
+
+            String body = readBody(exchange);
+            String user = getJsonString(body, "user", "").trim();
+
+            if (user.isEmpty()) {
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user is required\"}");
+                return;
+            }
+
+            if (!WatchlistCaretaker.canUndo(user)) {
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"No previous watchlist states available to undo.\"}");
+                return;
+            }
+
+            WatchlistMemento previousState = WatchlistCaretaker.undo(user);
+            if (previousState == null) {
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Could not restore state.\"}");
+                return;
+            }
+
+            FileManager.restoreUserWatchlist(user, previousState.getSavedState());
+            List<Movie> restored = FileManager.loadUserWatchlistMovies(user);
+
+            StringBuilder json = new StringBuilder("{");
+            json.append("\"success\":true,");
+            json.append("\"message\":\"Watchlist state rolled back via Memento Pattern (" + previousState.getDescription().replace("\"", "\\\"") + " at " + previousState.getTimestamp() + ")\",");
+            json.append("\"canUndo\":").append(WatchlistCaretaker.canUndo(user)).append(",");
+            json.append("\"watchlist\":[");
+            for (int i = 0; i < restored.size(); i++) {
+                json.append(restored.get(i).toJson());
+                if (i < restored.size() - 1) json.append(",");
+            }
+            json.append("]}");
+
+            sendJsonResponse(exchange, 200, json.toString());
         }
     }
 
@@ -484,7 +606,6 @@ public class Server {
                 sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Invalid action. Use 'login' or 'register'.\"}");
             }
         }
-    }
     }
 
     static class NotificationsHandler implements HttpHandler {
@@ -583,6 +704,27 @@ public class Server {
                     "\"class\":\"RecommendationChain\"," +
                     "\"description\":\"Passes the movie catalog along a chain of filtering handlers (Genre -> Language -> Rating -> Platform) where each handler decides what to keep.\"," +
                     "\"handlers\":[\"GenreHandler\", \"LanguageHandler\", \"RatingHandler\", \"PlatformHandler\"]" +
+                    "}," +
+                    "\"strategy\":{" +
+                    "\"pattern\":\"Strategy Pattern\"," +
+                    "\"contextClass\":\"CatalogSorterContext\"," +
+                    "\"strategyInterface\":\"MovieSortStrategy\"," +
+                    "\"description\":\"Encapsulates dynamic sorting algorithms into interchangeable strategy classes (Rating, Year, Title, Popularity) selectable at runtime.\"," +
+                    "\"strategies\":[\"RatingSortStrategy\", \"YearSortStrategy\", \"TitleSortStrategy\", \"PopularitySortStrategy\"]" +
+                    "}," +
+                    "\"templateMethod\":{" +
+                    "\"pattern\":\"Template Method Pattern\"," +
+                    "\"abstractClass\":\"WatchlistReportTemplate\"," +
+                    "\"templateMethod\":\"generateReport(username, movies)\"," +
+                    "\"description\":\"Defines the skeleton of a watchlist report in a base template class, deferring header, row, and footer formatting to concrete subclasses.\"," +
+                    "\"concreteTemplates\":[\"MarkdownWatchlistReport\", \"PlainTextWatchlistReport\", \"JsonWatchlistReport\"]" +
+                    "}," +
+                    "\"memento\":{" +
+                    "\"pattern\":\"Memento Pattern\"," +
+                    "\"mementoClass\":\"WatchlistMemento\"," +
+                    "\"caretakerClass\":\"WatchlistCaretaker\"," +
+                    "\"description\":\"Captures and externalizes internal watchlist state snapshots, enabling clean undo and rollback of additions and deletions without exposing private fields.\"," +
+                    "\"totalSnapshotsTaken\":" + WatchlistCaretaker.getTotalSnapshotsTaken() +
                     "}" +
                     "}";
 
