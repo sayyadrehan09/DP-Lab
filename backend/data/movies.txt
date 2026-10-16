@@ -7,7 +7,6 @@
 7|Avengers: Endgame|Action|English|8.4|2019|Disney+
 8|Dangal|Drama|Hindi|8.3|2016|Netflix
 9|3 Idiots|Comedy|Hindi|8.4|2009|Prime Video
-10|KGF|Action|Hindi|8.2|2018|Prime Video
 11|Drishyam|Thriller|Hindi|8.2|2015|Netflix
 12|The Martian|Sci-Fi|English|8.0|2015|Disney+
 13|Joker|Drama|English|8.4|2019|Prime Video
@@ -26,3 +25,4 @@
 26|shutter isam|scifi|engllish|8.0|2010|netflix
 27|Dead Poets Society|Drama|English|8.1|1989|Netflix
 28|Harry Potter and the Philosopher's Stone|Drama|English|7.7|2001|Netflix
+29|Test Movie|Drama|English|8.5|2020|Netflix

@@ -1,3 +1,13 @@
-Aryan|10|Joker|Drama|English|8.4|2019|Prime Video
-Aryan|2|The Godfather|Drama|English|9.2|1972|Prime Video
 Bhai|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
+testuser|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
+Aryan|2|The Godfather|Drama|English|9.2|1972|Prime Video
+Aryan|3|The Dark Knight|Action|English|9.1|2008|Netflix
+Aryan|19|Taare Zameen Par|Drama|Hindi|8.3|2007|Netflix
+Aryan|22|Andhadhun|Thriller|Hindi|8.2|2018|Netflix
+Aryan|29|Test Movie|Drama|English|8.5|2020|Netflix
+Aryan|9|3 Idiots|Comedy|Hindi|8.4|2009|Prime Video
+Aryan|8|Dangal|Drama|Hindi|8.3|2016|Netflix
+Aryan|13|Joker|Drama|English|8.4|2019|Prime Video
+Aryan|15|Gladiator|Action|English|8.5|2000|Prime Video
+Aryan|5|Inception|Sci-Fi|English|9.0|2010|Netflix
+Aryan|6|Interstellar|Sci-Fi|English|9.0|2014|Prime Video

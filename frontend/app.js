@@ -139,6 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Periodic polling for notifications (Observer Pattern)
   setInterval(fetchNotifications, 12000);
+
+  // Restore active tab & undo status if previously selected
+  const savedTab = sessionStorage.getItem('cp_active_tab');
+  if (savedTab && savedTab !== 'catalog') {
+    switchTab(savedTab);
+  }
+  const savedCanUndo = sessionStorage.getItem('cp_can_undo') === 'true';
+  setUndoAvailable(savedCanUndo);
 });
 
 // ============================================================================
@@ -308,6 +316,7 @@ function setupEventListeners() {
 // ============================================================================
 function switchTab(tabId) {
   state.activeTab = tabId;
+  sessionStorage.setItem('cp_active_tab', tabId);
   elements.navTabs.forEach(t => {
     t.classList.toggle('active', t.getAttribute('data-tab') === tabId);
   });
@@ -818,6 +827,7 @@ async function handleMementoUndo() {
 
 function setUndoAvailable(available) {
   state.canUndo = available;
+  sessionStorage.setItem('cp_can_undo', available ? 'true' : 'false');
   if (elements.mementoUndoBtn) {
     elements.mementoUndoBtn.disabled = !available;
     elements.mementoUndoBtn.title = available
