@@ -640,7 +640,7 @@ class NotificationService implements Subject {
   <div class="modal-overlay" id="loginModal" style="display: none;">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">Select User Profile & Role</h3>
+        <h3 class="modal-title">Auth Gateway</h3>
         <button class="modal-close-btn" id="closeLoginModalBtn">&times;</button>
       </div>
       <form id="loginForm" class="modal-form">
@@ -648,33 +648,47 @@ class NotificationService implements Subject {
           Test the <strong>Observer Pattern</strong> (users subscribe to updates) and <strong>Proxy Pattern</strong> (ADMIN vs USER permission controls).
         </p>
 
-        <div class="form-group">
-          <label for="loginNameInput">Your Name</label>
-          <input type="text" id="loginNameInput" placeholder="e.g. Aryan, Karan, Sarah" required>
+        <div class="auth-segmented-control">
+          <button type="button" class="auth-toggle-btn active" id="authTabLogin" data-mode="login">Sign In</button>
+          <button type="button" class="auth-toggle-btn" id="authTabRegister" data-mode="register">Create Account</button>
         </div>
 
-        <div class="form-group">
-          <label>Select Role</label>
-          <div class="role-selector">
-            <label class="role-option">
-              <input type="radio" name="loginRole" value="USER" checked>
-              <div class="role-box">
-                <span class="role-title">👤 USER</span>
-                <span class="role-desc">Browse movies, get chain recommendations, add to personal watchlist</span>
+        <div class="auth-form-views">
+          <div class="auth-form-view login-view active">
+            <div class="form-group">
+              <label for="loginNameInput">Your Name</label>
+              <input type="text" id="loginNameInput" placeholder="e.g. Aryan, Karan, Sarah" required>
+            </div>
+          </div>
+          <div class="auth-form-view register-view">
+            <div class="form-group">
+              <label for="loginNameInput">Your Name</label>
+              <input type="text" id="loginNameInput" placeholder="e.g. Aryan, Karan, Sarah" required>
+            </div>
+            <div class="form-group">
+              <label>Select Role</label>
+              <div class="role-selector">
+                <label class="role-option">
+                  <input type="radio" name="loginRole" value="USER" checked>
+                  <div class="role-box">
+                    <span class="role-title">👤 USER</span>
+                    <span class="role-desc">Browse movies, get chain recommendations, add to personal watchlist</span>
+                  </div>
+                </label>
+                <label class="role-option">
+                  <input type="radio" name="loginRole" value="ADMIN">
+                  <div class="role-box">
+                    <span class="role-title">🛡️ ADMIN</span>
+                    <span class="role-desc">Add movies via Factory, remove movies, broadcast to Observers</span>
+                  </div>
+                </label>
               </div>
-            </label>
-            <label class="role-option">
-              <input type="radio" name="loginRole" value="ADMIN">
-              <div class="role-box">
-                <span class="role-title">🛡️ ADMIN</span>
-                <span class="role-desc">Add movies via Factory, remove movies, broadcast to Observers</span>
-              </div>
-            </label>
+            </div>
           </div>
         </div>
 
         <button type="submit" class="primary-btn" id="loginSubmitBtn">
-          Continue as Selected User
+          Continue
         </button>
       </form>
     </div>

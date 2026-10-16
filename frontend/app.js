@@ -100,6 +100,9 @@ const elements = {
   loginNameInput: document.getElementById('loginNameInput'),
   closeLoginModalBtn: document.getElementById('closeLoginModalBtn'),
   toastContainer: document.getElementById('toastContainer'),
+  authTabLogin: document.getElementById("authTabLogin"),
+  authTabRegister: document.getElementById("authTabRegister"),
+  authFormViews: document.querySelector(".auth-form-views"),
 };
 
 // ============================================================================
@@ -157,11 +160,26 @@ function setupEventListeners() {
   elements.loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = elements.loginNameInput.value.trim();
-    const roleRadio = document.querySelector('input[name="loginRole"]:checked');
-    const role = roleRadio ? roleRadio.value : 'USER';
+    let action = 'login';
+    let role = 'USER';
+
+    // Determine current mode from active tab
+    if (elements.authTabRegister.classList.contains('active')) {
+      action = 'register';
+      // Get selected role from radio buttons
+      const roleRadio = document.querySelector('input[name="loginRole"]:checked');
+      role = roleRadio ? roleRadio.value : 'USER';
+    } else {
+      // login mode: role is not needed from form, but we'll keep the current role or default to USER
+      // For login, we can ignore the role from the form (if any) and use the role from state?
+      // However, the loginUser function expects a role. We'll set role to 'USER' (it will be ignored by the server for login).
+      // But note: the login modal in login view does not show role radios, so the query above would return null.
+      // We'll set role to 'USER' for login.
+      role = 'USER';
+    }
 
     if (name) {
-      loginUser(name, role);
+      loginUser(name, role, action);
       closeLoginModal();
     }
   });
@@ -192,6 +210,14 @@ function setupEventListeners() {
   // Admin Forms
   elements.addMovieForm.addEventListener('submit', handleAddMovie);
   elements.broadcastForm.addEventListener('submit', handleBroadcast);
+
+  // Auth Gateway Tab Switching
+  elements.authTabLogin.addEventListener('click', () => {
+    switchAuthMode('login');
+  });
+  elements.authTabRegister.addEventListener('click', () => {
+    switchAuthMode('register');
+  });
 
   // Refresh Patterns
   elements.refreshPatternsBtn.addEventListener('click', () => {
@@ -226,7 +252,7 @@ function capitalize(str) {
 // ============================================================================
 // User & Auth Management
 // ============================================================================
-async function loginUser(name, role) {
+async function loginUser(name, role, action = "login") {
   state.currentUser = name;
   state.currentRole = role;
   localStorage.setItem('cp_user', name);
@@ -238,13 +264,15 @@ async function loginUser(name, role) {
     const res = await fetch(`${API_BASE}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, role })
+      body: JSON.stringify({ name, role, action })
     });
     const data = await res.json();
     if (data.success) {
       showToast(`Logged in as ${name} (${role}). Registered in Observer Pattern.`, 'success');
       fetchWatchlist();
       fetchPatternsInfo();
+    } else {
+      throw new Error(data.message || 'Login failed');
     }
   } catch (err) {
     console.warn('Backend offline or login error:', err);
@@ -796,6 +824,16 @@ async function fetchPatternsInfo() {
 // ============================================================================
 // Toast Notification Helper
 // ============================================================================
+function switchAuthMode(mode) {
+  // Update active tab
+  elements.authTabLogin.classList.toggle("active", mode === "login");
+  elements.authTabRegister.classList.toggle("active", mode === "register");
+  // Update form views
+  const loginView = document.querySelector(".login-view");
+  const registerView = document.querySelector(".register-view");
+  loginView.classList.toggle("active", mode === "login");
+  registerView.classList.toggle("active", mode === "register");
+}
 function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
