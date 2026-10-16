@@ -454,26 +454,37 @@ public class Server {
             }
 
             String body = readBody(exchange);
+            String action = getJsonString(body, "action", "login").trim().toLowerCase();
             String name = getJsonString(body, "name", "").trim();
-            String requestedRole = getJsonString(body, "role", "USER").trim().toUpperCase();
+            String role = getJsonString(body, "role", "USER").trim().toUpperCase();
 
             if (name.isEmpty()) {
                 sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Name is required\"}");
                 return;
             }
 
-            String actualRole = requestedRole;
-            if (FileManager.userExists(name)) {
-                actualRole = FileManager.getUserRole(name);
+            if ("login".equals(action)) {
+                if (!FileManager.userExists(name)) {
+                    sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"User not found. Please create an account first.\"}");
+                    return;
+                }
+                String actualRole = FileManager.getUserRole(name);
+                notificationService.addObserver(new UserObserver(name));
+                sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + name.replace("\"", "\\\"") + "\",\"role\":\"" + actualRole + "\"}");
+            } else if ("register".equals(action)) {
+                if (FileManager.userExists(name)) {
+                    sendJsonResponse(exchange, 409, "{\"success\":false,\"message\":\"Username already taken. Please choose another or sign in.\"}");
+                    return;
+                }
+                FileManager.saveUser(name, role);
+                notificationService.addObserver(new UserObserver(name));
+                notificationService.notifyObservers("New user " + name + " joined as " + role);
+                sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + name.replace("\"", "\\\"") + "\",\"role\":\"" + role + "\"}");
             } else {
-                FileManager.saveUser(name, actualRole);
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Invalid action. Use 'login' or 'register'.\"}");
             }
-
-            // Register in Observer Pattern
-            notificationService.addObserver(new UserObserver(name));
-
-            sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + name.replace("\"", "\\\"") + "\",\"role\":\"" + actualRole + "\"}");
         }
+    }
     }
 
     static class NotificationsHandler implements HttpHandler {
