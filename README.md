@@ -1,32 +1,33 @@
-# 🎬 Movie & OTT Recommendation System (DP-Lab)
+# 🎬 Movie & OTT Recommendation System (CinePattern)
 
 [![Java](https://img.shields.io/badge/Language-Java%208%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
 [![Architecture](https://img.shields.io/badge/Architecture-GoF%20Design%20Patterns-blue?style=for-the-badge)](https://en.wikipedia.org/wiki/Design_Patterns)
-[![Storage](https://img.shields.io/badge/Persistence-Flat%20File%20(I%2FO)-success?style=for-the-badge)](https://docs.oracle.com/javase/8/docs/api/java/io/package-summary.html)
-[![License](https://img.shields.io/badge/Academic-Lab%20Assessment-lightgrey?style=for-the-badge)](https://github.com/sayyadrehan09/DP-Lab)
+[![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20%7C%20CSS3%20%7C%20HTML5-purple?style=for-the-badge)](frontend/)
+[![Storage](https://img.shields.io/badge/Persistence-Flat%20File%20(I%2FO)-success?style=for-the-badge)](backend/data/)
+[![Academic](https://img.shields.io/badge/Academic-5th%20Sem%20Lab%20Assessment-lightgrey?style=for-the-badge)](https://github.com/sayyadrehan09/DP-Lab)
 
-A modular, object-oriented Java console application simulating an **OTT Streaming & Movie Recommendation Platform**. Built for the **Design Patterns Laboratory Assessment**, this system demonstrates how standard **Gang of Four (GoF)** design patterns decouple business logic, enforce role-based access control, manage data flow, and implement flexible filtering pipelines.
+A full-stack, enterprise-grade **Movie & OTT Recommendation System** featuring a Java backend and a modern cinematic web interface. Built for the **Design Patterns Laboratory Assessment**, this system demonstrates how standard **Gang of Four (GoF)** design patterns decouple business logic, enforce role-based access control, manage data flow, and implement flexible filtering pipelines.
 
 ---
 
 ## 📌 Table of Contents
 
 - [Overview](#-overview)
+- [Directory & Folder Structure](#-directory--folder-structure)
 - [Design Patterns Implemented](#-design-patterns-implemented)
   - [1. Singleton Pattern](#1-singleton-pattern)
   - [2. Factory Method Pattern](#2-factory-method-pattern)
-  - [3. Proxy Pattern (Protection Proxy)](#3-proxy-pattern-protection-proxy)
+  - [3. Protection Proxy Pattern](#3-protection-proxy-pattern)
   - [4. Observer Pattern](#4-observer-pattern)
   - [5. Chain of Responsibility Pattern](#5-chain-of-responsibility-pattern)
 - [Design Patterns Summary Table](#-design-patterns-summary-table)
-- [Architecture & Workflow](#-architecture--workflow)
 - [Features & Role-Based Capabilities](#-features--role-based-capabilities)
-- [Directory Structure](#-directory-structure)
+- [REST API Endpoints Reference](#-rest-api-endpoints-reference)
 - [Data Storage Schema](#-data-storage-schema)
-- [Prerequisites & Execution](#-prerequisites--execution)
-  - [Method 1: IntelliJ IDEA / Eclipse](#method-1-intellij-idea--eclipse)
-  - [Method 2: Command Line (javac / java)](#method-2-command-line-javac--java)
-- [Interactive Usage Demo](#-interactive-usage-demo)
+- [How to Run](#-how-to-run)
+  - [Option A: One-Click Quick Launch (Recommended)](#option-a-one-click-quick-launch-recommended)
+  - [Option B: Command Line (Java REST Server + Web UI)](#option-b-command-line-java-rest-server--web-ui)
+  - [Option C: Original Terminal CLI](#option-c-original-terminal-cli)
 - [Author](#-author)
 
 ---
@@ -36,6 +37,38 @@ A modular, object-oriented Java console application simulating an **OTT Streamin
 The **Movie & OTT Recommendation System** provides personalized movie discovery across major streaming services (Netflix, Prime Video, Disney+). Users can filter titles across multiple dimensions (genre, language, minimum rating, and streaming platform), curate personal watchlists, and view top-ranked films.
 
 Administrators have elevated privileges to expand the catalog, delete obsolete titles, and broadcast real-time notifications to connected subscribers.
+
+---
+
+## 📁 Directory & Folder Structure
+
+```plaintext
+DP-Lab/
+├── backend/                        # Java Core Engine & REST API
+│   ├── data/                       # Text-file persistence storage
+│   │   ├── movies.txt              # Pipe-delimited movie catalog dataset
+│   │   ├── users.txt               # Stored usernames and assigned roles
+│   │   └── watchlist.txt           # User-specific saved movie watchlists
+│   ├── FileManager.java            # File I/O persistence handler (load/save/sync)
+│   ├── Main.java                   # Console UI and terminal CLI controller
+│   ├── Movie.java                  # Domain entity representing a movie
+│   ├── MovieDatabase.java          # [Singleton Pattern] In-memory repository manager
+│   ├── MovieFactory.java           # [Factory Method Pattern] Instantiation & parsing utility
+│   ├── ObserverPattern.java        # [Observer Pattern] Subject & subscriber notification system
+│   ├── ProxyPattern.java           # [Protection Proxy Pattern] Role-based access control
+│   ├── RecommendationChain.java    # [Chain of Resp.] Filtering pipeline
+│   ├── Server.java                 # Built-in HTTP REST API & Static File Server
+│   └── run-backend.bat             # Backend launch script
+│
+├── frontend/                       # Modern Cinematic Web Interface
+│   ├── index.html                  # Responsive SPA with 6 views
+│   ├── style.css                   # Premium Dark OTT theme (Netflix / Prime Video style)
+│   └── app.js                      # API client, live trace & pattern visualizer
+│
+├── .gitignore                      # Git ignore rules for Java & Node
+├── README.md                       # Comprehensive documentation
+└── start.bat                       # One-click launcher (Compiles, boots server & opens browser)
+```
 
 ---
 
@@ -55,16 +88,15 @@ The application cleanly implements **5 classic GoF Design Patterns** across Crea
 ```
 
 ### 1. Singleton Pattern
-* **File:** [`MovieDatabase.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/MovieDatabase.java)
+* **File:** [`backend/MovieDatabase.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/MovieDatabase.java)
 * **Type:** Creational
 * **Role:** Guarantees that only one global instance of the movie database exists in memory throughout the application lifecycle.
 * **Implementation:**
   - Private constructor prevents direct instantiation (`new MovieDatabase()`).
   - Static accessor `getInstance()` provides a synchronized, single access point.
-  - Manages the in-memory cache of movies and coordinates with [`FileManager`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/FileManager.java).
+  - Manages the in-memory cache of movies and coordinates with `FileManager`.
 
 ```java
-// Thread-safe / Controlled single instance
 public class MovieDatabase {
     private static MovieDatabase instance;
     private List<Movie> movies;
@@ -73,7 +105,7 @@ public class MovieDatabase {
         movies = new ArrayList<>();
     }
 
-    public static MovieDatabase getInstance() {
+    public static synchronized MovieDatabase getInstance() {
         if (instance == null) {
             instance = new MovieDatabase();
         }
@@ -85,12 +117,12 @@ public class MovieDatabase {
 ---
 
 ### 2. Factory Method Pattern
-* **File:** [`MovieFactory.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/MovieFactory.java)
+* **File:** [`backend/MovieFactory.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/MovieFactory.java)
 * **Type:** Creational
 * **Role:** Encapsulates the instantiation logic for `Movie` objects and decouples raw file string parsing from the domain model.
 * **Implementation:**
-  - `createMovie(...)`: Instantiates a `Movie` from validated user input.
-  - `createMovieFromFile(String data)`: Parses delimited pipe-separated text (`id|title|genre|...`) from `data/movies.txt` into strongly-typed `Movie` domain objects.
+  - `createMovie(...)`: Instantiates a `Movie` from validated user/web input.
+  - `createMovieFromFile(String data)`: Parses delimited pipe-separated text (`id|title|genre|...`) from `backend/data/movies.txt` into strongly-typed `Movie` domain objects.
 
 ```java
 public class MovieFactory {
@@ -108,14 +140,14 @@ public class MovieFactory {
 
 ---
 
-### 3. Proxy Pattern (Protection Proxy)
-* **File:** [`ProxyPattern.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/ProxyPattern.java)
+### 3. Protection Proxy Pattern
+* **File:** [`backend/ProxyPattern.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/ProxyPattern.java)
 * **Type:** Structural
 * **Role:** Restricts access to sensitive catalog operations based on the active session role (`USER` vs `ADMIN`).
 * **Implementation:**
   - **Subject Interface:** `MovieService` defines `addMovie()`, `removeMovie()`, and `viewMovies()`.
-  - **Real Subject:** `RealMovieService` communicates with [`MovieDatabase`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/MovieDatabase.java) to execute operations.
-  - **Proxy:** `MovieServiceProxy` intercepts calls. It permits read actions to all users, but blocks write/delete attempts by non-administrators with `Access Denied! Only ADMIN can add/remove movies.`.
+  - **Real Subject:** `RealMovieService` communicates with `MovieDatabase` to execute operations.
+  - **Proxy:** `MovieServiceProxy` intercepts calls. It permits read actions to all users, but blocks write/delete attempts by non-administrators with `403 Forbidden` / `Access Denied! Only ADMIN can add/remove movies.`.
 
 ```
                   ┌──────────────────────┐
@@ -137,14 +169,14 @@ public class MovieFactory {
 ---
 
 ### 4. Observer Pattern
-* **File:** [`ObserverPattern.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/ObserverPattern.java)
+* **File:** [`backend/ObserverPattern.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/ObserverPattern.java)
 * **Type:** Behavioral
 * **Role:** Establishes a one-to-many publish-subscribe communication channel between system events and registered users.
 * **Implementation:**
   - **Subject Interface:** `Subject` (`addObserver()`, `removeObserver()`, `notifyObservers()`).
-  - **Concrete Subject:** `NotificationService` maintains active subscribers.
+  - **Concrete Subject:** `NotificationService` maintains active subscribers and notification history.
   - **Observer Interface:** `Observer` (`update(String message)`).
-  - **Concrete Observer:** `UserObserver` prints notifications to user terminals when new movies are added or administrative broadcasts are issued.
+  - **Concrete Observer:** `UserObserver` logs notifications to user terminals and pushes real-time updates to the web interface.
 
 ```
        ┌────────────────────────┐                   ┌────────────────────────┐
@@ -163,7 +195,7 @@ public class MovieFactory {
 ---
 
 ### 5. Chain of Responsibility Pattern
-* **File:** [`RecommendationChain.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/RecommendationChain.java)
+* **File:** [`backend/RecommendationChain.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/RecommendationChain.java)
 * **Type:** Behavioral
 * **Role:** Chains multiple sequential filters together to process movie recommendations dynamically without hard-coding complex multi-branch conditional logic.
 * **Implementation:**
@@ -173,7 +205,7 @@ public class MovieFactory {
     2. `LanguageHandler` (Matches language or passes through if `"Any"`)
     3. `RatingHandler` (Filters movies meeting or exceeding minimum rating threshold)
     4. `PlatformHandler` (Matches OTT streaming provider or passes through if `"Any"`)
-  - **Chain Coordinator:** `RecommendationChain` wires `Genre -> Language -> Rating -> Platform` and returns the final filtered list.
+  - **Chain Coordinator:** `RecommendationChain` wires `Genre -> Language -> Rating -> Platform` and returns the final filtered list, including a step-by-step candidate trace for the web visualizer.
 
 ```
   List<Movie> ──> [ GenreHandler ] ──> [ LanguageHandler ] ──> [ RatingHandler ] ──> [ PlatformHandler ] ──> Result
@@ -185,56 +217,53 @@ public class MovieFactory {
 
 | Pattern | Category | Source File | Core Classes / Interfaces | Purpose in System |
 | :--- | :--- | :--- | :--- | :--- |
-| **Singleton** | Creational | [`MovieDatabase.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/MovieDatabase.java) | `MovieDatabase` | Centralized, synchronized movie data management in memory. |
-| **Factory Method** | Creational | [`MovieFactory.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/MovieFactory.java) | `MovieFactory` | Encapsulates movie object creation and file record parsing. |
-| **Proxy** | Structural | [`ProxyPattern.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/ProxyPattern.java) | `MovieService`, `RealMovieService`, `MovieServiceProxy` | Protection proxy enforcing role-based access control (Admin vs User). |
-| **Observer** | Behavioral | [`ObserverPattern.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/ObserverPattern.java) | `Subject`, `Observer`, `NotificationService`, `UserObserver` | Notifies users when movies are added or broadcasts are triggered. |
-| **Chain of Responsibility** | Behavioral | [`RecommendationChain.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/RecommendationChain.java) | `RecommendationHandler`, `GenreHandler`, `LanguageHandler`, `RatingHandler`, `PlatformHandler` | Sequential multi-criteria recommendation filtering pipeline. |
+| **Singleton** | Creational | [`backend/MovieDatabase.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/MovieDatabase.java) | `MovieDatabase` | Centralized, synchronized movie data management in memory. |
+| **Factory Method** | Creational | [`backend/MovieFactory.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/MovieFactory.java) | `MovieFactory` | Encapsulates movie object creation and file record parsing. |
+| **Proxy** | Structural | [`backend/ProxyPattern.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/ProxyPattern.java) | `MovieService`, `RealMovieService`, `MovieServiceProxy` | Protection proxy enforcing role-based access control (Admin vs User). |
+| **Observer** | Behavioral | [`backend/ObserverPattern.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/ObserverPattern.java) | `Subject`, `Observer`, `NotificationService`, `UserObserver` | Notifies users when movies are added or broadcasts are triggered. |
+| **Chain of Responsibility** | Behavioral | [`backend/RecommendationChain.java`](file:///f:/00.%20College/5th%20Semester/9%20Design%20Pattern/Lab%20Assesment/DP-Lab/backend/RecommendationChain.java) | `RecommendationHandler`, `GenreHandler`, `LanguageHandler`, `RatingHandler`, `PlatformHandler` | Sequential multi-criteria recommendation filtering pipeline. |
 
 ---
 
 ## 🎯 Features & Role-Based Capabilities
 
 ### 👤 Regular User Features
-1. **View Top 5 Movies:** Displays the top-ranked movies with ratings $\ge 9.0$ sorted in descending order.
-2. **Personalized Recommendations:** Filters catalog by Genre, Language, Minimum Rating, and OTT Platform.
-3. **Add to Watchlist:** Adds movies by title to the persistent user watchlist.
-4. **View Watchlist:** Inspects personal bookmarked movies.
+1. **Interactive Movie Catalog:** Browse, search, and filter in-memory titles in real time.
+2. **View Top 5 Movies:** Displays the top-ranked masterpieces with ratings $\ge 9.0$.
+3. **Chain of Responsibility Recommender:** Custom criteria pipeline with live node-by-node pass count animation.
+4. **Personal Watchlist:** Bookmark movies to user's persistent watchlist with add/remove support.
+5. **Real-time Notifications:** Bell notification drawer fed by the Observer Pattern.
 
 ### 🛡️ Admin Privileges
 Includes all user features plus:
-1. **Add Movie:** Adds new titles to the database via `MovieServiceProxy`, updates `data/movies.txt`, and triggers broadcast alerts via `NotificationService`.
-2. **Remove Movie:** Deletes movies by ID from the catalog and updates disk storage.
+1. **Add Movie:** Adds new titles via `MovieFactory` and validated by `MovieServiceProxy`, broadcasting alert to observers.
+2. **Remove Movie:** Deletes movies by ID from the catalog via `MovieServiceProxy`.
 3. **Broadcast System Notification:** Triggers broadcast messages to all active user observers.
 
 ---
 
-## 📂 Directory Structure
+## 🌐 REST API Endpoints Reference
 
-```plaintext
-DP-Lab/
-├── data/
-│   ├── movies.txt              # Pipe-delimited movie catalog dataset
-│   ├── users.txt               # Registered usernames and assigned roles
-│   └── watchlist.txt           # User-specific saved movie watchlists
-├── FileManager.java            # File I/O persistence handler (load/save/sync)
-├── Main.java                   # Console UI, session login, and CLI menu controller
-├── Movie.java                  # Domain entity representing a movie
-├── MovieDatabase.java          # [Singleton] In-memory repository manager
-├── MovieFactory.java           # [Factory Method] Instantiation & parsing utility
-├── ObserverPattern.java        # [Observer] Subject & subscriber notification system
-├── ProxyPattern.java           # [Proxy] Protection proxy with role-based checks
-├── RecommendationChain.java    # [Chain of Resp.] Filtering pipeline
-├── Lab Assesment/              # Compiled bytecode artifacts (.class files)
-├── Lab Assesment.iml           # IntelliJ IDEA module definition
-└── README.md                   # Project documentation
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/movies` | Fetch all movies or filter by `?search=`, `?genre=`, `?platform=` |
+| `GET` | `/api/top-movies` | Fetch top-rated movies (Rating $\ge$ 9.0) sorted descending |
+| `POST` | `/api/recommend` | Runs the 4-stage Chain of Responsibility pipeline with live stage trace |
+| `GET` | `/api/watchlist?user={name}` | Retrieves saved watchlist for a user |
+| `POST` | `/api/watchlist` | Adds a movie to user's watchlist |
+| `DELETE` | `/api/watchlist?user={name}&movieId={id}` | Removes a movie from user's watchlist |
+| `POST` | `/api/movies` | Adds a movie via `MovieFactory` (protected by `MovieServiceProxy`) |
+| `DELETE` | `/api/movies?id={id}` | Removes a movie (protected by `MovieServiceProxy`) |
+| `POST` | `/api/login` | Log in as USER or ADMIN and register as an Observer |
+| `GET` | `/api/notifications` | Get Observer pattern notification feed |
+| `POST` | `/api/notify` | Broadcast message to all observers (Admin only) |
+| `GET` | `/api/design-patterns` | Live metrics & status of all 5 patterns in the JVM |
 
 ---
 
 ## 💾 Data Storage Schema
 
-The application persists data inside the `data/` directory using pipe-separated values (`|`):
+The application persists data inside `backend/data/` using pipe-separated values (`|`):
 
 ### 1. `movies.txt`
 ```
@@ -268,108 +297,34 @@ Aryan|10|Joker|Drama|English|8.4|2019|Prime Video
 
 ---
 
-## 🚀 Prerequisites & Execution
+## 🚀 How to Run
 
-### Prerequisites
-- **Java Development Kit (JDK 8 or higher)** installed.
-- Any IDE (IntelliJ IDEA, Eclipse, VS Code) or terminal with `javac` and `java` in `PATH`.
-
----
-
-### Method 1: IntelliJ IDEA / Eclipse (Recommended)
-1. Open the cloned folder (`DP-Lab`) in **IntelliJ IDEA**.
-2. Ensure project SDK is configured:
-   - Go to **File -> Project Structure -> Project -> SDK** (Select Java 8+).
-3. Open [`Main.java`](file:///c:/Users/Rehan/Downloads/dp-lab/DP-Lab/Main.java).
-4. Click the green **Run** ▶ button or press `Shift + F10`.
+### Option A: One-Click Quick Launch (Recommended)
+Double-click `start.bat` in the root folder.
+This will:
+1. Compile all Java backend sources.
+2. Launch the HTTP REST API server on `http://localhost:8080`.
+3. Automatically launch your default web browser to the interface.
 
 ---
 
-### Method 2: Command Line (javac / java)
-
+### Option B: Command Line (Java REST Server + Web UI)
 1. Open PowerShell or Command Prompt in the repository folder:
    ```powershell
-   cd path/to/DP-Lab
+   cd backend
+   javac -d . *.java
+   java Server
    ```
-
-2. Compile all Java source files:
-   ```bash
-   javac *.java
-   ```
-
-3. Run the application:
-   ```bash
-   java Main
-   ```
-
-> **Note:** Ensure you run the application from the directory containing the `data/` folder so relative file paths resolve correctly.
+2. Open `http://localhost:8080` in your browser.
 
 ---
 
-## 💻 Interactive Usage Demo
-
-```plaintext
-==============================================
-       MOVIE & OTT RECOMMENDATION SYSTEM
-==============================================
-
-Enter your name: Alex
-
-Select Role:
-1. User
-2. Admin
-Enter choice: 2
-
-============== MENU ==============
-1. View Top 5 Movies
-2. Get Recommendations
-3. Add Movie to Watchlist
-4. View Watchlist
-5. Add Movie
-6. Remove Movie
-7. Send Notification
-8. Exit
-Enter choice: 2
-
-========== MOVIE RECOMMENDATION ==========
-
-Select Genre:
-1. Action
-2. Comedy
-3. Sci-Fi
-4. Drama
-5. Thriller
-6. Any
-Enter choice: 1
-
-Select Language:
-1. English
-2. Hindi
-3. Any
-Enter choice: 1
-
-Enter minimum rating (0-10): 9.0
-
-Select OTT Platform:
-1. Netflix
-2. Prime Video
-3. Disney+
-4. Any
-Enter choice: 1
-
-==============================================
-           RECOMMENDED MOVIES
-==============================================
-
-ID       : 3
-Title    : The Dark Knight
-Genre    : Action
-Language : English
-Rating   : 9.1
-Year     : 2008
-Platform : Netflix
-----------------------------------------
-Total Recommendations: 1
+### Option C: Original Terminal CLI
+If you or an evaluator want to run the terminal-based interactive menu:
+```powershell
+cd backend
+javac -d . *.java
+java Main
 ```
 
 ---
@@ -377,5 +332,3 @@ Total Recommendations: 1
 ## 👤 Author
 
 Developed by **[Rehan Sayyad](https://github.com/sayyadrehan09)** for the **Design Patterns (DP) Laboratory Assessment**.
-
-For issues, contributions, or questions, feel free to open an issue or pull request on the repository.
