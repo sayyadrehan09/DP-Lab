@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePattern | Movie & OTT Recommendation System</title>
+  <meta name="description" content="A Next-Gen Movie & OTT Recommendation System powered by 5 Gang of Four Design Patterns: Singleton, Factory, Observer, Proxy, and Chain of Responsibility.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Glow & Particles -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Main Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand-logo" id="brandLogo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">Cine<span class="gradient-text">Pattern</span></span>
+          <span class="logo-subtitle">OTT Recommender & DP Lab</span>
+        </div>
+      </div>
+
+      <nav class="nav-links" id="mainNav">
+        <button class="nav-tab active" data-tab="catalog" id="navCatalogBtn">
+          <span class="tab-icon">🎬</span> Catalog
+        </button>
+        <button class="nav-tab" data-tab="top-rated" id="navTopRatedBtn">
+          <span class="tab-icon">⭐</span> Top 5 (9.0+)
+        </button>
+        <button class="nav-tab" data-tab="recommender" id="navRecommenderBtn">
+          <span class="tab-icon">⚡</span> Chain Recommender
+        </button>
+        <button class="nav-tab" data-tab="watchlist" id="navWatchlistBtn">
+          <span class="tab-icon">🔖</span> Watchlist <span class="badge" id="watchlistCountBadge">0</span>
+        </button>
+        <button class="nav-tab" data-tab="admin" id="navAdminBtn">
+          <span class="tab-icon">🛡️</span> Admin Portal
+        </button>
+        <button class="nav-tab" data-tab="patterns" id="navPatternsBtn">
+          <span class="tab-icon">🧩</span> DP Inspector
+        </button>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Notification Bell (Observer Pattern) -->
+        <div class="notification-wrapper" id="notificationWrapper">
+          <button class="icon-btn" id="notificationBtn" title="Observer Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notif-badge" id="notifBadge">0</span>
+          </button>
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="dropdown-header">
+              <span class="title">🔔 Observer Pattern Feed</span>
+              <span class="badge-pill">Subject Broadcasts</span>
+            </div>
+            <div class="notif-list" id="notificationList">
+              <div class="empty-state">No notifications yet</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile Capsule -->
+        <div class="user-capsule" id="userCapsule">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info">
+            <span class="user-name" id="userNameDisplay">Aryan</span>
+            <span class="user-role-badge role-user" id="userRoleDisplay">USER</span>
+          </div>
+          <button class="switch-role-btn" id="switchUserBtn" title="Switch User or Role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- HERO / BANNER -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-tags">
+          <span class="pill-tag"><span class="dot live-dot"></span> Java Backend Connected</span>
+          <span class="pill-tag pattern-tag">5 Design Patterns Active</span>
+        </div>
+        <h1 class="hero-heading">Explore Curated Cinema & OTT Gems</h1>
+        <p class="hero-subtext">
+          Enterprise recommendation engine implementing <strong>Singleton</strong>, <strong>Factory</strong>, 
+          <strong>Observer</strong>, <strong>Protection Proxy</strong>, and <strong>Chain of Responsibility</strong>.
+        </p>
+        <div class="hero-stats">
+          <div class="stat-card">
+            <span class="stat-number" id="statTotalMovies">--</span>
+            <span class="stat-label">Movies Loaded (Singleton)</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="statTopMovies">--</span>
+            <span class="stat-label">9.0+ Rated Elite</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">3</span>
+            <span class="stat-label">OTT Platforms</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="statObservers">--</span>
+            <span class="stat-label">Subscribed Observers</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: MOVIE CATALOG -->
+    <section class="tab-section active" id="tabCatalog">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">All Movies Catalog</h2>
+          <p class="section-subtitle">Real-time filtering and search over the Java in-memory catalog</p>
+        </div>
+        <!-- Search and Filters Bar -->
+        <div class="filters-bar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="catalogSearchInput" placeholder="Search by title, genre, language...">
+          </div>
+          <div class="filter-group">
+            <select id="catalogGenreFilter" class="custom-select">
+              <option value="Any">All Genres</option>
+              <option value="Action">Action</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Drama">Drama</option>
+              <option value="Sci-Fi">Sci-Fi</option>
+              <option value="Thriller">Thriller</option>
+            </select>
+            <select id="catalogPlatformFilter" class="custom-select">
+              <option value="Any">All Platforms</option>
+              <option value="Netflix">Netflix</option>
+              <option value="Prime Video">Prime Video</option>
+              <option value="Disney+">Disney+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movies Grid -->
+      <div class="movies-grid" id="catalogMoviesGrid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Connecting to Java Backend...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: TOP 5 MOVIES (RATING 9.0+) -->
+    <section class="tab-section" id="tabTopRated">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Top 5 Masterpieces (Rating 9.0+)</h2>
+          <p class="section-subtitle">Specially curated cinema with a score of 9.0 or higher from the Singleton database</p>
+        </div>
+        <div class="badge-pill gold-pill">★ Elite 9.0+ Club</div>
+      </div>
+      <div class="top-rated-container" id="topRatedContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- TAB 3: SMART RECOMMENDER (CHAIN OF RESPONSIBILITY) -->
+    <section class="tab-section" id="tabRecommender">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Chain of Responsibility Recommender</h2>
+          <p class="section-subtitle">
+            Configure your streaming preferences to watch the recommendation pass through each handler in sequence: 
+            <strong>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="recommender-layout">
+        <!-- Filter Controls Form -->
+        <div class="recommender-form-card">
+          <h3 class="form-title">Your Movie Preferences</h3>
+          
+          <div class="form-group">
+            <label for="recGenre">1. Preferred Genre (GenreHandler)</label>
+            <select id="recGenre" class="custom-select">
+              <option value="Any">Any Genre</option>
+              <option value="Action">Action</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Drama">Drama</option>
+              <option value="Sci-Fi">Sci-Fi</option>
+              <option value="Thriller">Thriller</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="recLanguage">2. Audio Language (LanguageHandler)</label>
+            <select id="recLanguage" class="custom-select">
+              <option value="Any">Any Language</option>
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="recRating">3. Minimum IMDb Rating (RatingHandler): <span id="ratingValDisplay" class="rating-val">8.0</span></label>
+            <input type="range" id="recRating" min="0" max="10" step="0.1" value="8.0" class="custom-range">
+            <div class="range-marks">
+              <span>0.0</span>
+              <span>5.0</span>
+              <span>8.0</span>
+              <span>10.0</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="recPlatform">4. OTT Platform (PlatformHandler)</label>
+            <select id="recPlatform" class="custom-select">
+              <option value="Any">Any Platform</option>
+              <option value="Netflix">Netflix</option>
+              <option value="Prime Video">Prime Video</option>
+              <option value="Disney+">Disney+</option>
+            </select>
+          </div>
+
+          <button class="primary-btn pulse-glow" id="runRecommendationBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Execute Chain Pipeline
+          </button>
+        </div>
+
+        <!-- Chain Visualizer and Results -->
+        <div class="recommender-results-card">
+          <!-- Pipeline Progress Bar -->
+          <div class="pipeline-visualizer" id="pipelineVisualizer">
+            <div class="pipeline-node" id="nodeInput">
+              <div class="node-badge">Input</div>
+              <div class="node-name">Database</div>
+              <div class="node-count" id="countInput">--</div>
+            </div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-node" id="nodeGenre">
+              <div class="node-badge">Stage 1</div>
+              <div class="node-name">GenreHandler</div>
+              <div class="node-count" id="countGenre">--</div>
+            </div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-node" id="nodeLanguage">
+              <div class="node-badge">Stage 2</div>
+              <div class="node-name">LanguageHandler</div>
+              <div class="node-count" id="countLanguage">--</div>
+            </div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-node" id="nodeRating">
+              <div class="node-badge">Stage 3</div>
+              <div class="node-name">RatingHandler</div>
+              <div class="node-count" id="countRating">--</div>
+            </div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-node" id="nodePlatform">
+              <div class="node-badge">Stage 4</div>
+              <div class="node-name">PlatformHandler</div>
+              <div class="node-count" id="countPlatform">--</div>
+            </div>
+          </div>
+
+          <!-- Recommendation Output List -->
+          <div class="results-header">
+            <h4>Recommended Matches (<span id="recMatchesCount">0</span>)</h4>
+            <span class="badge-pill" id="recFilterSummary">Awaiting input</span>
+          </div>
+
+          <div class="movies-grid" id="recMoviesGrid">
+            <div class="empty-state">Select criteria and click "Execute Chain Pipeline" to filter movies.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: MY WATCHLIST -->
+    <section class="tab-section" id="tabWatchlist">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">My Personalized Watchlist</h2>
+          <p class="section-subtitle">
+            Saved movies for user <strong id="watchlistUserName">User</strong> (Persisted to <code class="code-tag">data/watchlist.txt</code>)
+          </p>
+        </div>
+      </div>
+      <div class="movies-grid" id="watchlistMoviesGrid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading your watchlist...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ADMIN PORTAL (PROXY PATTERN) -->
+    <section class="tab-section" id="tabAdmin">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Admin Management Portal</h2>
+          <p class="section-subtitle">
+            Secured by the <strong>Protection Proxy Pattern</strong>. The <code class="code-tag">MovieServiceProxy</code> verifies role permissions before delegating to <code class="code-tag">RealMovieService</code>.
+          </p>
+        </div>
+        <div class="role-status-indicator" id="adminAccessIndicator">
+          <span class="status-dot"></span>
+          <span class="status-text" id="adminAccessText">Checking Access...</span>
+        </div>
+      </div>
+
+      <!-- Access Denied Banner for regular users -->
+      <div class="alert-box alert-warning" id="proxyDeniedAlert" style="display: none;">
+        <div class="alert-icon">🛡️</div>
+        <div class="alert-body">
+          <h4>Protection Proxy Enforcement</h4>
+          <p>
+            You are currently logged in as a <strong>USER</strong>. Any attempt to Add or Remove movies will be intercepted and blocked by <code class="code-tag">MovieServiceProxy</code> with a 403 Forbidden!
+          </p>
+          <button class="small-btn" id="switchToAdminBtn">Switch to ADMIN Role</button>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <!-- Add Movie Card (Factory + Proxy) -->
+        <div class="admin-card">
+          <div class="card-header">
+            <div class="card-icon-badge">➕</div>
+            <div>
+              <h3>Add New Movie</h3>
+              <p class="card-sub">Creates via <code class="code-tag">MovieFactory</code> and validates via <code class="code-tag">MovieServiceProxy</code></p>
+            </div>
+          </div>
+          <form id="addMovieForm" class="admin-form">
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="newMovieTitle">Movie Title *</label>
+                <input type="text" id="newMovieTitle" placeholder="e.g. Oppenheimer" required>
+              </div>
+              <div class="form-group flex-1">
+                <label for="newMovieGenre">Genre *</label>
+                <select id="newMovieGenre" class="custom-select" required>
+                  <option value="Action">Action</option>
+                  <option value="Comedy">Comedy</option>
+                  <option value="Drama">Drama</option>
+                  <option value="Sci-Fi">Sci-Fi</option>
+                  <option value="Thriller">Thriller</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="newMovieLang">Language *</label>
+                <select id="newMovieLang" class="custom-select" required>
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                </select>
+              </div>
+              <div class="form-group flex-1">
+                <label for="newMovieRating">Rating (0 - 10) *</label>
+                <input type="number" id="newMovieRating" min="0" max="10" step="0.1" value="8.5" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="newMovieYear">Release Year *</label>
+                <input type="number" id="newMovieYear" min="1900" max="2099" value="2024" required>
+              </div>
+              <div class="form-group flex-1">
+                <label for="newMoviePlatform">OTT Platform *</label>
+                <select id="newMoviePlatform" class="custom-select" required>
+                  <option value="Netflix">Netflix</option>
+                  <option value="Prime Video">Prime Video</option>
+                  <option value="Disney+">Disney+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="primary-btn" id="submitAddMovieBtn">
+              <span>Save & Broadcast (Observer)</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Broadcast Notification Card (Observer Subject) -->
+        <div class="admin-card">
+          <div class="card-header">
+            <div class="card-icon-badge">📢</div>
+            <div>
+              <h3>Broadcast Notification</h3>
+              <p class="card-sub">Triggers <code class="code-tag">NotificationService.notifyObservers()</code></p>
+            </div>
+          </div>
+          <form id="broadcastForm" class="admin-form">
+            <div class="form-group">
+              <label for="broadcastMessage">Announcement Message *</label>
+              <textarea id="broadcastMessage" rows="4" placeholder="Enter message to broadcast to all registered user observers..." required></textarea>
+            </div>
+            <button type="submit" class="accent-btn" id="submitBroadcastBtn">
+              <span>Broadcast to All Observers</span>
+            </button>
+          </form>
+
+          <div class="observer-count-widget">
+            <div class="widget-row">
+              <span>Subscribed User Observers:</span>
+              <strong id="adminObserverCount">0</strong>
+            </div>
+            <div class="subscribers-pill-list" id="adminSubscribersList">
+              <!-- Rendered list of observer names -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: DESIGN PATTERNS INSPECTOR -->
+    <section class="tab-section" id="tabPatterns">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Design Patterns Interactive Inspector</h2>
+          <p class="section-subtitle">Live inspection of all 5 Gang of Four design patterns running inside the Java backend</p>
+        </div>
+        <button class="secondary-btn" id="refreshPatternsBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6"></path>
+            <path d="M1 20v-6h6"></path>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          Refresh Live Metrics
+        </button>
+      </div>
+
+      <div class="patterns-grid">
+        <!-- 1. SINGLETON PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">01</div>
+            <div>
+              <h3>Singleton Pattern</h3>
+              <span class="pattern-class">Class: <code>MovieDatabase.java</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Ensures that only one centralized in-memory database instance exists across the entire application lifecycle with a private constructor and a static <code>getInstance()</code> accessor.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Instance Hash:</span>
+              <span class="metric-val" id="metricSingletonHash">--</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Catalog Movies:</span>
+              <span class="metric-val" id="metricSingletonCount">--</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+<pre><code>public class MovieDatabase {
+    private static MovieDatabase instance;
+    private List&lt;Movie&gt; movies;
+    private MovieDatabase() { ... }
+    public static synchronized MovieDatabase getInstance() {
+        if (instance == null) instance = new MovieDatabase();
+        return instance;
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- 2. FACTORY PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">02</div>
+            <div>
+              <h3>Factory Method Pattern</h3>
+              <span class="pattern-class">Class: <code>MovieFactory.java</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Encapsulates the instantiation logic of Movie objects, decoupling data parsing and construction from business services. Handles raw pipe-delimited data conversion.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Factory Methods:</span>
+              <span class="metric-val">createMovie(), createFromFile()</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+<pre><code>public class MovieFactory {
+    public static Movie createMovie(int id, String title, ...) {
+        return new Movie(id, title, genre, language, rating, year, platform);
+    }
+    public static Movie createMovieFromFile(String line) {
+        String[] parts = line.split("\\|");
+        return new Movie(Integer.parseInt(parts[0]), parts[1], ...);
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- 3. OBSERVER PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">03</div>
+            <div>
+              <h3>Observer Pattern</h3>
+              <span class="pattern-class">Subject: <code>NotificationService</code> | Observer: <code>UserObserver</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Defines a one-to-many publish-subscribe dependency so that when a new movie is added or an admin broadcasts, all registered user observers are automatically notified.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Subscribed Observers:</span>
+              <span class="metric-val" id="metricObserverCount">--</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Broadcast History:</span>
+              <span class="metric-val" id="metricNotificationCount">--</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+<pre><code>interface Subject {
+    void addObserver(Observer o);
+    void notifyObservers(String msg);
+}
+class NotificationService implements Subject {
+    public void notifyObservers(String msg) {
+        for (Observer o : observers) o.update(msg);
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- 4. PROXY PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">04</div>
+            <div>
+              <h3>Protection Proxy Pattern</h3>
+              <span class="pattern-class">Proxy: <code>MovieServiceProxy</code> | Real: <code>RealMovieService</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Controls access to sensitive movie mutation operations. Regular <code>USER</code> roles are blocked with 403 Forbidden before reaching the <code>RealMovieService</code>. Only <code>ADMIN</code> is authorized.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Admin Rights:</span>
+              <span class="metric-val text-green">Full Add / Remove / Broadcast</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">User Rights:</span>
+              <span class="metric-val text-red">Read-Only (Mutations Blocked)</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+<pre><code>class MovieServiceProxy implements MovieService {
+    public void addMovie(Movie movie) {
+        if ("ADMIN".equalsIgnoreCase(role)) {
+            realService.addMovie(movie);
+        } else {
+            throw new SecurityException("Access Denied!");
+        }
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- 5. CHAIN OF RESPONSIBILITY PATTERN -->
+        <div class="pattern-card full-width-card">
+          <div class="pattern-header">
+            <div class="pattern-number">05</div>
+            <div>
+              <h3>Chain of Responsibility Pattern</h3>
+              <span class="pattern-class">Handlers: <code>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Decouples the recommendation sender from multiple filtering processors. Each handler in the chain processes the filtered subset of movies and delegates the result to its successor handler.
+          </p>
+          <div class="chain-pipeline-steps">
+            <div class="step-card">
+              <span class="step-badge">Handler 1</span>
+              <h4>GenreHandler</h4>
+              <p>Filters movie list by selected Genre or passes all if "Any".</p>
+            </div>
+            <div class="step-card">
+              <span class="step-badge">Handler 2</span>
+              <h4>LanguageHandler</h4>
+              <p>Filters remaining list by English, Hindi, or passes all if "Any".</p>
+            </div>
+            <div class="step-card">
+              <span class="step-badge">Handler 3</span>
+              <h4>RatingHandler</h4>
+              <p>Filters remaining list by minimum IMDb score threshold.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-badge">Handler 4</span>
+              <h4>PlatformHandler</h4>
+              <p>Filters remaining list by OTT streaming service (Netflix, Prime, etc.).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- USER LOGIN / SWITCH ROLE MODAL -->
+  <div class="modal-overlay" id="loginModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Select User Profile & Role</h3>
+        <button class="modal-close-btn" id="closeLoginModalBtn">&times;</button>
+      </div>
+      <form id="loginForm" class="modal-form">
+        <p class="modal-subtitle">
+          Test the <strong>Observer Pattern</strong> (users subscribe to updates) and <strong>Proxy Pattern</strong> (ADMIN vs USER permission controls).
+        </p>
+
+        <div class="form-group">
+          <label for="loginNameInput">Your Name</label>
+          <input type="text" id="loginNameInput" placeholder="e.g. Aryan, Karan, Sarah" required>
+        </div>
+
+        <div class="form-group">
+          <label>Select Role</label>
+          <div class="role-selector">
+            <label class="role-option">
+              <input type="radio" name="loginRole" value="USER" checked>
+              <div class="role-box">
+                <span class="role-title">👤 USER</span>
+                <span class="role-desc">Browse movies, get chain recommendations, add to personal watchlist</span>
+              </div>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="loginRole" value="ADMIN">
+              <div class="role-box">
+                <span class="role-title">🛡️ ADMIN</span>
+                <span class="role-desc">Add movies via Factory, remove movies, broadcast to Observers</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="primary-btn" id="loginSubmitBtn">
+          Continue as Selected User
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPT -->
+  <script src="app.js"></script>
+</body>
+</html>
