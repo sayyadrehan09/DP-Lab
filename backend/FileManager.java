@@ -222,4 +222,50 @@ public class FileManager {
         }
         return removed;
     }
+
+    public static List<Integer> getUserWatchlistIds(String user) {
+        initializeFiles();
+        List<Integer> ids = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(watchlistFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1);
+                if (parts.length >= 8 && parts[0].equalsIgnoreCase(user.trim())) {
+                    try {
+                        ids.add(Integer.parseInt(parts[1]));
+                    } catch (NumberFormatException ignored) {}
+                }
+            }
+        } catch (IOException ignored) {}
+        return ids;
+    }
+
+    public static void restoreUserWatchlist(String user, List<Integer> movieIds) {
+        initializeFiles();
+        File src = new File(watchlistFile);
+        File temp = new File(dataFolder + File.separator + "watchlist_restore_temp.txt");
+        MovieDatabase db = MovieDatabase.getInstance();
+        try (BufferedReader reader = new BufferedReader(new FileReader(src));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(temp))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1);
+                if (!parts[0].equalsIgnoreCase(user.trim())) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+            for (Integer id : movieIds) {
+                Movie m = db.findMovieById(id);
+                if (m != null) {
+                    writer.write(user + "|" + m.toFileString());
+                    writer.newLine();
+                }
+            }
+        } catch (IOException ignored) {}
+
+        if (src.delete()) {
+            temp.renameTo(src);
+        }
+    }
 }
