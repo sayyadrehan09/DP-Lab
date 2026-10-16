@@ -1,0 +1,8 @@
+Aryan|USER
+Karan|ADMIN
+asd|USER
+1|USER
+arara|USER
+n|USER
+afsfd|ADMIN
+sdfsdf|USER
