@@ -26,6 +26,8 @@ const state = {
   notifications: [],
   unreadNotifications: 0,
   patternsInfo: null,
+  activeSortStrategy: 'rating',
+  canUndo: false,
 };
 
 // DOM Elements
@@ -53,6 +55,8 @@ const elements = {
   catalogSearchInput: document.getElementById('catalogSearchInput'),
   catalogGenreFilter: document.getElementById('catalogGenreFilter'),
   catalogPlatformFilter: document.getElementById('catalogPlatformFilter'),
+  sortStrategyPills: document.getElementById('sortStrategyPills'),
+  activeStrategyIndicator: document.getElementById('activeStrategyIndicator'),
 
   // Top Rated
   topRatedContainer: document.getElementById('topRatedContainer'),
@@ -76,6 +80,18 @@ const elements = {
   // Watchlist
   watchlistMoviesGrid: document.getElementById('watchlistMoviesGrid'),
   watchlistUserName: document.getElementById('watchlistUserName'),
+  mementoUndoBtn: document.getElementById('mementoUndoBtn'),
+  exportDropdownBtn: document.getElementById('exportDropdownBtn'),
+  exportDropdownMenu: document.getElementById('exportDropdownMenu'),
+
+  // Export Modal (Template Method)
+  exportModal: document.getElementById('exportModal'),
+  closeExportModalBtn: document.getElementById('closeExportModalBtn'),
+  closeExportModalFooterBtn: document.getElementById('closeExportModalFooterBtn'),
+  copyExportContentBtn: document.getElementById('copyExportContentBtn'),
+  exportFormatTag: document.getElementById('exportFormatTag'),
+  exportUserTag: document.getElementById('exportUserTag'),
+  exportContentCode: document.getElementById('exportContentCode'),
 
   // Admin Portal
   adminAccessIndicator: document.getElementById('adminAccessIndicator'),
@@ -93,6 +109,9 @@ const elements = {
   metricSingletonCount: document.getElementById('metricSingletonCount'),
   metricObserverCount: document.getElementById('metricObserverCount'),
   metricNotificationCount: document.getElementById('metricNotificationCount'),
+  metricStrategyActive: document.getElementById('metricStrategyActive'),
+  metricMementoSnapshots: document.getElementById('metricMementoSnapshots'),
+  metricMementoHistory: document.getElementById('metricMementoHistory'),
 
   // Login Modal
   loginModal: document.getElementById('loginModal'),
@@ -224,6 +243,64 @@ function setupEventListeners() {
     fetchPatternsInfo();
     showToast('Design Patterns metrics refreshed from Java backend.', 'info');
   });
+
+  // Strategy Pattern: Dynamic Sorting Algorithm Pills
+  if (elements.sortStrategyPills) {
+    elements.sortStrategyPills.querySelectorAll('.strategy-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const strategyKey = pill.getAttribute('data-sort');
+        elements.sortStrategyPills.querySelectorAll('.strategy-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        state.activeSortStrategy = strategyKey;
+        applyStrategySorting(strategyKey);
+      });
+    });
+  }
+
+  // Memento Pattern: Undo Watchlist State Rollback
+  if (elements.mementoUndoBtn) {
+    elements.mementoUndoBtn.addEventListener('click', handleMementoUndo);
+  }
+
+  // Template Method Pattern: Export Dropdown Toggle
+  if (elements.exportDropdownBtn && elements.exportDropdownMenu) {
+    elements.exportDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = elements.exportDropdownMenu.style.display === 'block';
+      elements.exportDropdownMenu.style.display = isVisible ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!elements.exportDropdownBtn.contains(e.target) && !elements.exportDropdownMenu.contains(e.target)) {
+        elements.exportDropdownMenu.style.display = 'none';
+      }
+    });
+
+    // Template Method: Format Selection
+    elements.exportDropdownMenu.querySelectorAll('.export-menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const format = item.getAttribute('data-format');
+        elements.exportDropdownMenu.style.display = 'none';
+        generateWatchlistReport(format);
+      });
+    });
+  }
+
+  // Template Method: Export Modal Controls
+  if (elements.closeExportModalBtn) {
+    elements.closeExportModalBtn.addEventListener('click', closeExportModal);
+  }
+  if (elements.closeExportModalFooterBtn) {
+    elements.closeExportModalFooterBtn.addEventListener('click', closeExportModal);
+  }
+  if (elements.exportModal) {
+    elements.exportModal.addEventListener('click', (e) => {
+      if (e.target === elements.exportModal) closeExportModal();
+    });
+  }
+  if (elements.copyExportContentBtn) {
+    elements.copyExportContentBtn.addEventListener('click', copyExportReportToClipboard);
+  }
 }
 
 // ============================================================================
@@ -329,7 +406,9 @@ async function fetchCatalog() {
     const res = await fetch(url);
     const movies = await res.json();
     state.movies = movies;
-    renderCatalogGrid(movies, elements.catalogMoviesGrid);
+
+    // Apply the active sorting strategy to the filtered results
+    sortAndRenderCatalog(movies);
 
     elements.statTotalMovies.textContent = movies.length;
   } catch (err) {
@@ -340,6 +419,68 @@ async function fetchCatalog() {
         <p style="margin-top: 0.5rem; font-size: 0.85rem;">Make sure the Java server is running (Run <code>run-backend.bat</code> in backend folder).</p>
       </div>`;
   }
+}
+
+/**
+ * Strategy Pattern: Call backend /api/sort or apply Strategy sorting to catalog
+ */
+async function applyStrategySorting(strategyKey) {
+  try {
+    const res = await fetch(`${API_BASE}/api/sort?by=${encodeURIComponent(strategyKey)}`);
+    const data = await res.json();
+    
+    if (elements.activeStrategyIndicator) {
+      elements.activeStrategyIndicator.textContent = `Strategy: ${data.strategy}`;
+    }
+
+    // Refresh catalog with current search/filter & new sort
+    fetchCatalog();
+    showToast(`Sorted via ${data.strategy}: ${data.description}`, 'info');
+    fetchPatternsInfo();
+  } catch (err) {
+    console.warn('Backend sorting offline, sorting locally via Strategy:', err);
+    sortAndRenderCatalog(state.movies);
+  }
+}
+
+function sortAndRenderCatalog(movies) {
+  const sorted = [...movies];
+  const strategy = state.activeSortStrategy || 'rating';
+
+  switch (strategy) {
+    case 'rating':
+      sorted.sort((a, b) => b.rating - a.rating);
+      if (elements.activeStrategyIndicator) {
+        elements.activeStrategyIndicator.textContent = 'Strategy: RatingSortStrategy (High to Low)';
+      }
+      break;
+    case 'year':
+      sorted.sort((a, b) => b.year - a.year);
+      if (elements.activeStrategyIndicator) {
+        elements.activeStrategyIndicator.textContent = 'Strategy: YearSortStrategy (Newest First)';
+      }
+      break;
+    case 'title':
+      sorted.sort((a, b) => a.title.localeCompare(b.title));
+      if (elements.activeStrategyIndicator) {
+        elements.activeStrategyIndicator.textContent = 'Strategy: TitleSortStrategy (A - Z)';
+      }
+      break;
+    case 'popularity':
+      sorted.sort((a, b) => {
+        const scoreA = a.rating * 10 + (a.year - 2000);
+        const scoreB = b.rating * 10 + (b.year - 2000);
+        return scoreB - scoreA;
+      });
+      if (elements.activeStrategyIndicator) {
+        elements.activeStrategyIndicator.textContent = 'Strategy: PopularitySortStrategy (Binge Score)';
+      }
+      break;
+    default:
+      break;
+  }
+
+  renderCatalogGrid(sorted, elements.catalogMoviesGrid);
 }
 
 function renderCatalogGrid(movies, container, isWatchlistView = false) {
@@ -614,8 +755,10 @@ async function toggleWatchlist(movieId) {
       const data = await res.json();
       if (data.success) {
         showToast(data.message, 'info');
+        setUndoAvailable(true);
         fetchWatchlist();
         fetchCatalog();
+        fetchPatternsInfo();
       }
     } catch (err) {
       showToast('Error removing from watchlist', 'error');
@@ -631,13 +774,101 @@ async function toggleWatchlist(movieId) {
       const data = await res.json();
       if (data.success) {
         showToast(data.message, 'success');
+        setUndoAvailable(true);
         fetchWatchlist();
         fetchCatalog();
+        fetchPatternsInfo();
       }
     } catch (err) {
       showToast('Error adding to watchlist', 'error');
     }
   }
+}
+
+/**
+ * Memento Pattern: Undo Watchlist State Rollback
+ */
+async function handleMementoUndo() {
+  if (!state.canUndo) return;
+
+  try {
+    elements.mementoUndoBtn.disabled = true;
+    const res = await fetch(`${API_BASE}/api/watchlist/undo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user: state.currentUser })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showToast(data.message, 'success');
+      setUndoAvailable(data.canUndo === true);
+      fetchWatchlist();
+      fetchCatalog();
+      fetchPatternsInfo();
+    } else {
+      showToast(data.message || 'Undo not available', 'info');
+      setUndoAvailable(false);
+    }
+  } catch (err) {
+    console.error('Memento rollback error:', err);
+    showToast('Failed to execute undo rollback', 'error');
+  }
+}
+
+function setUndoAvailable(available) {
+  state.canUndo = available;
+  if (elements.mementoUndoBtn) {
+    elements.mementoUndoBtn.disabled = !available;
+    elements.mementoUndoBtn.title = available
+      ? 'Undo last watchlist change via Memento Pattern'
+      : 'No previous state snapshot in Memento Caretaker';
+  }
+}
+
+/**
+ * Template Method Pattern: Export Watchlist Report
+ */
+async function generateWatchlistReport(format) {
+  try {
+    const res = await fetch(`${API_BASE}/api/watchlist/export?user=${encodeURIComponent(state.currentUser)}&format=${encodeURIComponent(format)}`);
+    const data = await res.json();
+
+    if (data.success) {
+      openExportModal(data.format, data.user, data.content);
+      showToast(`Generated ${data.format} via Template Method Pattern`, 'success');
+    } else {
+      showToast(data.message || 'Report generation failed', 'error');
+    }
+  } catch (err) {
+    console.error('Error exporting report:', err);
+    showToast('Failed to contact WatchlistReportTemplate generator', 'error');
+  }
+}
+
+function openExportModal(formatName, userName, content) {
+  if (!elements.exportModal) return;
+  if (elements.exportFormatTag) elements.exportFormatTag.textContent = `Format: ${formatName}`;
+  if (elements.exportUserTag) elements.exportUserTag.textContent = `User: ${userName}`;
+  if (elements.exportContentCode) elements.exportContentCode.textContent = content;
+
+  elements.exportModal.style.display = 'flex';
+}
+
+function closeExportModal() {
+  if (elements.exportModal) {
+    elements.exportModal.style.display = 'none';
+  }
+}
+
+function copyExportReportToClipboard() {
+  if (!elements.exportContentCode) return;
+  const text = elements.exportContentCode.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Report copied to clipboard! 📋', 'success');
+  }).catch(() => {
+    showToast('Could not copy to clipboard', 'info');
+  });
 }
 
 // ============================================================================
@@ -815,6 +1046,23 @@ async function fetchPatternsInfo() {
       elements.adminSubscribersList.innerHTML = data.observer.subscribers.map(name => `
         <span class="subscriber-pill">👤 ${escapeHtml(name)}</span>
       `).join('');
+    }
+
+    // Strategy Pattern Metrics
+    if (data.strategy && elements.metricStrategyActive) {
+      elements.metricStrategyActive.textContent = `${capitalize(state.activeSortStrategy || 'rating')}SortStrategy`;
+    }
+
+    // Memento Pattern Metrics
+    if (data.memento) {
+      if (elements.metricMementoSnapshots) {
+        elements.metricMementoSnapshots.textContent = `${data.memento.totalSnapshotsTaken || 0} Recorded`;
+      }
+      if (elements.metricMementoHistory) {
+        elements.metricMementoHistory.textContent = state.canUndo
+          ? 'Undo Available (Stack ready)'
+          : 'Clean State (No pending undo)';
+      }
     }
   } catch (err) {
     console.warn('Patterns info fetch error:', err);

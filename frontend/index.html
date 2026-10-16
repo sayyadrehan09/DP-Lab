@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CinePattern | Movie & OTT Recommendation System</title>
-  <meta name="description" content="A Next-Gen Movie & OTT Recommendation System powered by 5 Gang of Four Design Patterns: Singleton, Factory, Observer, Proxy, and Chain of Responsibility.">
+  <meta name="description"
+    content="A Next-Gen Movie & OTT Recommendation System powered by 5 Gang of Four Design Patterns: Singleton, Factory, Observer, Proxy, and Chain of Responsibility.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400;1,9..40,700&family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <!-- Background Glow & Particles -->
   <div class="ambient-glow glow-1"></div>
@@ -105,7 +110,7 @@
         </div>
         <h1 class="hero-heading">Explore Curated Cinema & OTT Gems</h1>
         <p class="hero-subtext">
-          Enterprise recommendation engine implementing <strong>Singleton</strong>, <strong>Factory</strong>, 
+          Enterprise recommendation engine implementing <strong>Singleton</strong>, <strong>Factory</strong>,
           <strong>Observer</strong>, <strong>Protection Proxy</strong>, and <strong>Chain of Responsibility</strong>.
         </p>
         <div class="hero-stats">
@@ -164,6 +169,29 @@
         </div>
       </div>
 
+      <!-- Strategy Pattern: Dynamic Sorting Bar -->
+      <div class="sorting-strategy-bar">
+        <div class="strategy-label-group">
+          <span class="strategy-badge">🧩 Strategy Pattern</span>
+          <span class="sort-label">Sort Algorithm:</span>
+        </div>
+        <div class="strategy-pills" id="sortStrategyPills">
+          <button type="button" class="strategy-pill active" data-sort="rating">
+            <span class="pill-icon">★</span> Rating (High to Low)
+          </button>
+          <button type="button" class="strategy-pill" data-sort="year">
+            <span class="pill-icon">📅</span> Year (Newest)
+          </button>
+          <button type="button" class="strategy-pill" data-sort="title">
+            <span class="pill-icon">🔤</span> Title (A - Z)
+          </button>
+          <button type="button" class="strategy-pill" data-sort="popularity">
+            <span class="pill-icon">⚡</span> Binge Score
+          </button>
+        </div>
+        <span class="active-strategy-indicator" id="activeStrategyIndicator">Strategy: RatingSortStrategy</span>
+      </div>
+
       <!-- Movies Grid -->
       <div class="movies-grid" id="catalogMoviesGrid">
         <div class="loading-state">
@@ -178,7 +206,8 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">Top 5 Masterpieces (Rating 9.0+)</h2>
-          <p class="section-subtitle">Specially curated cinema with a score of 9.0 or higher from the Singleton database</p>
+          <p class="section-subtitle">Specially curated cinema with a score of 9.0 or higher from the Singleton database
+          </p>
         </div>
         <div class="badge-pill gold-pill">★ Elite 9.0+ Club</div>
       </div>
@@ -193,7 +222,7 @@
         <div>
           <h2 class="section-title">Chain of Responsibility Recommender</h2>
           <p class="section-subtitle">
-            Configure your streaming preferences to watch the recommendation pass through each handler in sequence: 
+            Configure your streaming preferences to watch the recommendation pass through each handler in sequence:
             <strong>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</strong>
           </p>
         </div>
@@ -203,7 +232,7 @@
         <!-- Filter Controls Form -->
         <div class="recommender-form-card">
           <h3 class="form-title">Your Movie Preferences</h3>
-          
+
           <div class="form-group">
             <label for="recGenre">1. Preferred Genre (GenreHandler)</label>
             <select id="recGenre" class="custom-select">
@@ -226,7 +255,8 @@
           </div>
 
           <div class="form-group">
-            <label for="recRating">3. Minimum IMDb Rating (RatingHandler): <span id="ratingValDisplay" class="rating-val">8.0</span></label>
+            <label for="recRating">3. Minimum IMDb Rating (RatingHandler): <span id="ratingValDisplay"
+                class="rating-val">8.0</span></label>
             <input type="range" id="recRating" min="0" max="10" step="0.1" value="8.0" class="custom-range">
             <div class="range-marks">
               <span>0.0</span>
@@ -308,8 +338,36 @@
         <div>
           <h2 class="section-title">My Personalized Watchlist</h2>
           <p class="section-subtitle">
-            Saved movies for user <strong id="watchlistUserName">User</strong> (Persisted to <code class="code-tag">data/watchlist.txt</code>)
+            Saved movies for user <strong id="watchlistUserName">User</strong> (Persisted to <code
+              class="code-tag">data/watchlist.txt</code>)
           </p>
+        </div>
+        <div class="watchlist-action-controls">
+          <!-- Memento Pattern: Rollback / Undo Button -->
+          <button type="button" class="memento-undo-btn" id="mementoUndoBtn" disabled title="Undo last watchlist change via Memento Pattern">
+            <span class="undo-icon">↺</span> Undo Action
+            <span class="pattern-chip chip-memento">Memento</span>
+          </button>
+
+          <!-- Template Method: Export Dropdown -->
+          <div class="template-export-wrapper">
+            <button type="button" class="export-dropdown-btn" id="exportDropdownBtn">
+              <span>📋 Export Report</span>
+              <span class="pattern-chip chip-template">Template</span>
+              <span class="caret-symbol">▼</span>
+            </button>
+            <div class="export-dropdown-menu" id="exportDropdownMenu" style="display: none;">
+              <button type="button" class="export-menu-item" data-format="markdown">
+                <span class="item-icon">📝</span> Markdown Table (.md)
+              </button>
+              <button type="button" class="export-menu-item" data-format="text">
+                <span class="item-icon">📄</span> Plain Text Receipt (.txt)
+              </button>
+              <button type="button" class="export-menu-item" data-format="json">
+                <span class="item-icon">📦</span> Structured JSON (.json)
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="movies-grid" id="watchlistMoviesGrid">
@@ -326,7 +384,9 @@
         <div>
           <h2 class="section-title">Admin Management Portal</h2>
           <p class="section-subtitle">
-            Secured by the <strong>Protection Proxy Pattern</strong>. The <code class="code-tag">MovieServiceProxy</code> verifies role permissions before delegating to <code class="code-tag">RealMovieService</code>.
+            Secured by the <strong>Protection Proxy Pattern</strong>. The <code
+              class="code-tag">MovieServiceProxy</code> verifies role permissions before delegating to <code
+              class="code-tag">RealMovieService</code>.
           </p>
         </div>
         <div class="role-status-indicator" id="adminAccessIndicator">
@@ -341,7 +401,8 @@
         <div class="alert-body">
           <h4>Protection Proxy Enforcement</h4>
           <p>
-            You are currently logged in as a <strong>USER</strong>. Any attempt to Add or Remove movies will be intercepted and blocked by <code class="code-tag">MovieServiceProxy</code> with a 403 Forbidden!
+            You are currently logged in as a <strong>USER</strong>. Any attempt to Add or Remove movies will be
+            intercepted and blocked by <code class="code-tag">MovieServiceProxy</code> with a 403 Forbidden!
           </p>
           <button class="small-btn" id="switchToAdminBtn">Switch to ADMIN Role</button>
         </div>
@@ -354,7 +415,8 @@
             <div class="card-icon-badge">➕</div>
             <div>
               <h3>Add New Movie</h3>
-              <p class="card-sub">Creates via <code class="code-tag">MovieFactory</code> and validates via <code class="code-tag">MovieServiceProxy</code></p>
+              <p class="card-sub">Creates via <code class="code-tag">MovieFactory</code> and validates via <code
+                  class="code-tag">MovieServiceProxy</code></p>
             </div>
           </div>
           <form id="addMovieForm" class="admin-form">
@@ -422,7 +484,8 @@
           <form id="broadcastForm" class="admin-form">
             <div class="form-group">
               <label for="broadcastMessage">Announcement Message *</label>
-              <textarea id="broadcastMessage" rows="4" placeholder="Enter message to broadcast to all registered user observers..." required></textarea>
+              <textarea id="broadcastMessage" rows="4"
+                placeholder="Enter message to broadcast to all registered user observers..." required></textarea>
             </div>
             <button type="submit" class="accent-btn" id="submitBroadcastBtn">
               <span>Broadcast to All Observers</span>
@@ -447,7 +510,8 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">Design Patterns Interactive Inspector</h2>
-          <p class="section-subtitle">Live inspection of all 5 Gang of Four design patterns running inside the Java backend</p>
+          <p class="section-subtitle">Live inspection of all 5 Gang of Four design patterns running inside the Java
+            backend</p>
         </div>
         <button class="secondary-btn" id="refreshPatternsBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -470,7 +534,8 @@
             </div>
           </div>
           <p class="pattern-desc">
-            Ensures that only one centralized in-memory database instance exists across the entire application lifecycle with a private constructor and a static <code>getInstance()</code> accessor.
+            Ensures that only one centralized in-memory database instance exists across the entire application lifecycle
+            with a private constructor and a static <code>getInstance()</code> accessor.
           </p>
           <div class="pattern-metrics">
             <div class="metric-item">
@@ -483,7 +548,7 @@
             </div>
           </div>
           <div class="pattern-code-preview">
-<pre><code>public class MovieDatabase {
+            <pre><code>public class MovieDatabase {
     private static MovieDatabase instance;
     private List&lt;Movie&gt; movies;
     private MovieDatabase() { ... }
@@ -505,7 +570,8 @@
             </div>
           </div>
           <p class="pattern-desc">
-            Encapsulates the instantiation logic of Movie objects, decoupling data parsing and construction from business services. Handles raw pipe-delimited data conversion.
+            Encapsulates the instantiation logic of Movie objects, decoupling data parsing and construction from
+            business services. Handles raw pipe-delimited data conversion.
           </p>
           <div class="pattern-metrics">
             <div class="metric-item">
@@ -514,7 +580,7 @@
             </div>
           </div>
           <div class="pattern-code-preview">
-<pre><code>public class MovieFactory {
+            <pre><code>public class MovieFactory {
     public static Movie createMovie(int id, String title, ...) {
         return new Movie(id, title, genre, language, rating, year, platform);
     }
@@ -532,11 +598,13 @@
             <div class="pattern-number">03</div>
             <div>
               <h3>Observer Pattern</h3>
-              <span class="pattern-class">Subject: <code>NotificationService</code> | Observer: <code>UserObserver</code></span>
+              <span class="pattern-class">Subject: <code>NotificationService</code> | Observer:
+                <code>UserObserver</code></span>
             </div>
           </div>
           <p class="pattern-desc">
-            Defines a one-to-many publish-subscribe dependency so that when a new movie is added or an admin broadcasts, all registered user observers are automatically notified.
+            Defines a one-to-many publish-subscribe dependency so that when a new movie is added or an admin broadcasts,
+            all registered user observers are automatically notified.
           </p>
           <div class="pattern-metrics">
             <div class="metric-item">
@@ -549,7 +617,7 @@
             </div>
           </div>
           <div class="pattern-code-preview">
-<pre><code>interface Subject {
+            <pre><code>interface Subject {
     void addObserver(Observer o);
     void notifyObservers(String msg);
 }
@@ -567,11 +635,13 @@ class NotificationService implements Subject {
             <div class="pattern-number">04</div>
             <div>
               <h3>Protection Proxy Pattern</h3>
-              <span class="pattern-class">Proxy: <code>MovieServiceProxy</code> | Real: <code>RealMovieService</code></span>
+              <span class="pattern-class">Proxy: <code>MovieServiceProxy</code> | Real:
+                <code>RealMovieService</code></span>
             </div>
           </div>
           <p class="pattern-desc">
-            Controls access to sensitive movie mutation operations. Regular <code>USER</code> roles are blocked with 403 Forbidden before reaching the <code>RealMovieService</code>. Only <code>ADMIN</code> is authorized.
+            Controls access to sensitive movie mutation operations. Regular <code>USER</code> roles are blocked with 403
+            Forbidden before reaching the <code>RealMovieService</code>. Only <code>ADMIN</code> is authorized.
           </p>
           <div class="pattern-metrics">
             <div class="metric-item">
@@ -584,7 +654,7 @@ class NotificationService implements Subject {
             </div>
           </div>
           <div class="pattern-code-preview">
-<pre><code>class MovieServiceProxy implements MovieService {
+            <pre><code>class MovieServiceProxy implements MovieService {
     public void addMovie(Movie movie) {
         if ("ADMIN".equalsIgnoreCase(role)) {
             realService.addMovie(movie);
@@ -602,11 +672,13 @@ class NotificationService implements Subject {
             <div class="pattern-number">05</div>
             <div>
               <h3>Chain of Responsibility Pattern</h3>
-              <span class="pattern-class">Handlers: <code>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</code></span>
+              <span class="pattern-class">Handlers:
+                <code>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</code></span>
             </div>
           </div>
           <p class="pattern-desc">
-            Decouples the recommendation sender from multiple filtering processors. Each handler in the chain processes the filtered subset of movies and delegates the result to its successor handler.
+            Decouples the recommendation sender from multiple filtering processors. Each handler in the chain processes
+            the filtered subset of movies and delegates the result to its successor handler.
           </p>
           <div class="chain-pipeline-steps">
             <div class="step-card">
@@ -631,6 +703,102 @@ class NotificationService implements Subject {
             </div>
           </div>
         </div>
+
+        <!-- PATTERN 6: STRATEGY PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">06</div>
+            <div>
+              <h3>Strategy Pattern</h3>
+              <span class="pattern-class">Context: <code>CatalogSorterContext</code> | Interface: <code>MovieSortStrategy</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Encapsulates dynamic catalog sorting algorithms into interchangeable strategy classes. Strategies can be swapped at runtime without altering client code.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Active Strategy:</span>
+              <span class="metric-val" id="metricStrategyActive">RatingSortStrategy</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Available Strategies:</span>
+              <span class="metric-val">Rating, Year, Title, Binge Score</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+            <pre><code>public interface MovieSortStrategy {
+    List&lt;Movie&gt; sort(List&lt;Movie&gt; movies);
+}
+class RatingSortStrategy implements MovieSortStrategy { ... }
+class YearSortStrategy implements MovieSortStrategy { ... }</code></pre>
+          </div>
+        </div>
+
+        <!-- PATTERN 7: TEMPLATE METHOD PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">07</div>
+            <div>
+              <h3>Template Method Pattern</h3>
+              <span class="pattern-class">Abstract Template: <code>WatchlistReportTemplate</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Defines the invariant skeleton of a watchlist report algorithm in <code>final generateReport()</code>, deferring header, row, and footer formatting to concrete subclass generators.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Algorithm Skeleton:</span>
+              <span class="metric-val">final generateReport()</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Concrete Formats:</span>
+              <span class="metric-val">Markdown, Text, JSON</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+            <pre><code>public abstract class WatchlistReportTemplate {
+    public final String generateReport(...) {
+        append(formatHeader());
+        append(formatRows());
+        append(formatFooter());
+    }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- PATTERN 8: MEMENTO PATTERN -->
+        <div class="pattern-card">
+          <div class="pattern-header">
+            <div class="pattern-number">08</div>
+            <div>
+              <h3>Memento Pattern</h3>
+              <span class="pattern-class">Memento: <code>WatchlistMemento</code> | Caretaker: <code>WatchlistCaretaker</code></span>
+            </div>
+          </div>
+          <p class="pattern-desc">
+            Captures and externalizes deep snapshots of the user's watchlist state before mutations, allowing safe rollback (Undo) without violating encapsulation.
+          </p>
+          <div class="pattern-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Total Snapshots:</span>
+              <span class="metric-val" id="metricMementoSnapshots">0 Recorded</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Caretaker History:</span>
+              <span class="metric-val" id="metricMementoHistory">Stack-backed Undo</span>
+            </div>
+          </div>
+          <div class="pattern-code-preview">
+            <pre><code>public class WatchlistMemento {
+    private final List&lt;Integer&gt; savedIds;
+    public WatchlistMemento(List&lt;Integer&gt; ids) { ... }
+}
+// Caretaker restores via history Stack</code></pre>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -645,12 +813,14 @@ class NotificationService implements Subject {
       </div>
       <form id="loginForm" class="modal-form">
         <p class="modal-subtitle">
-          Test the <strong>Observer Pattern</strong> (users subscribe to updates) and <strong>Proxy Pattern</strong> (ADMIN vs USER permission controls).
+          Test the <strong>Observer Pattern</strong> (users subscribe to updates) and <strong>Proxy Pattern</strong>
+          (ADMIN vs USER permission controls).
         </p>
 
         <div class="auth-segmented-control">
           <button type="button" class="auth-toggle-btn active" id="authTabLogin" data-mode="login">Sign In</button>
-          <button type="button" class="auth-toggle-btn" id="authTabRegister" data-mode="register">Create Account</button>
+          <button type="button" class="auth-toggle-btn" id="authTabRegister" data-mode="register">Create
+            Account</button>
         </div>
 
         <div class="auth-form-views">
@@ -697,7 +867,34 @@ class NotificationService implements Subject {
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- TEMPLATE METHOD EXPORT REPORT PREVIEW MODAL -->
+  <div class="modal-overlay" id="exportModal" style="display: none;">
+    <div class="modal-card export-modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Watchlist Export Report</h3>
+          <span class="modal-badge-subtitle">Generated via Template Method Pattern</span>
+        </div>
+        <button class="modal-close-btn" id="closeExportModalBtn">&times;</button>
+      </div>
+      <div class="export-modal-body">
+        <div class="export-meta-bar">
+          <span class="export-format-tag" id="exportFormatTag">Format: Markdown</span>
+          <span class="export-user-tag" id="exportUserTag">User: Current</span>
+        </div>
+        <pre class="export-code-box"><code id="exportContentCode">Loading report...</code></pre>
+      </div>
+      <div class="export-modal-footer">
+        <button type="button" class="primary-btn" id="copyExportContentBtn">
+          <span>Copy to Clipboard</span> 📋
+        </button>
+        <button type="button" class="secondary-btn" id="closeExportModalFooterBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT -->
   <script src="app.js"></script>
 </body>
+
 </html>
