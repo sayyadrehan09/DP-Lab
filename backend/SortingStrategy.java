@@ -4,7 +4,7 @@ import java.util.*;
  * Strategy Pattern Implementation for CinePattern
  * Encapsulates sorting algorithms into interchangeable strategy classes.
  */
-public interface MovieSortStrategy {
+interface MovieSortStrategy {
     List<Movie> sort(List<Movie> movies);
     String getStrategyName();
     String getDescription();
