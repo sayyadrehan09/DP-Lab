@@ -11,3 +11,4 @@ Aryan|13|Joker|Drama|English|8.4|2019|Prime Video
 Aryan|15|Gladiator|Action|English|8.5|2000|Prime Video
 Aryan|5|Inception|Sci-Fi|English|9.0|2010|Netflix
 Aryan|6|Interstellar|Sci-Fi|English|9.0|2014|Prime Video
+Anas|2|The Godfather|Drama|English|9.2|1972|Prime Video
