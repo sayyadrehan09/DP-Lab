@@ -488,5 +488,6 @@ java Main
 - **Developer:** [Rehan Sayyad](https://github.com/sayyadrehan09)
 - **Co-Developer:** [Aryan Lade](https://github.com/Aryan-Lade)
 - **Co-Developer:** Mohammad Anas
+- **Co-Developer:** [Tanvir Kanoje](https://github.com/tanvirkanoje)
 - **Repository:** [sayyadrehan09/DP-Lab](https://github.com/sayyadrehan09/DP-Lab)
 - **Academic Context:** Developed for the **Design Patterns (DP) Laboratory Assessment** (5th Semester).
