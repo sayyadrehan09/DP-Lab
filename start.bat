@@ -7,8 +7,9 @@ echo ===================================================================
 echo [1/3] Navigating to backend directory...
 cd /d "%~dp0backend"
 
-echo [2/3] Compiling Java backend sources...
-javac -d . *.java
+echo [2/3] Compiling Java backend sources into bin directory...
+if not exist bin mkdir bin
+javac -d bin *.java
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Compilation failed. Please fix Java errors.
     pause
@@ -16,7 +17,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo [3/3] Launching Java REST Server and opening interface...
-start "CinePattern Backend Server" cmd /k "cd /d "%~dp0backend" && java Server"
+start "CinePattern Backend Server" cmd /k "cd /d "%~dp0backend" && java -cp bin Server"
 
 timeout /t 2 >nul
 start http://localhost:8080
