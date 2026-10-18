@@ -12,3 +12,5 @@ Aryan|15|Gladiator|Action|English|8.5|2000|Prime Video
 Aryan|5|Inception|Sci-Fi|English|9.0|2010|Netflix
 Aryan|6|Interstellar|Sci-Fi|English|9.0|2014|Prime Video
 Anas|2|The Godfather|Drama|English|9.2|1972|Prime Video
+Anas|28|Harry Potter and the Philosopher's Stone|Drama|English|7.7|2001|Netflix
+Sayyad|17|The Hangover|Comedy|English|7.7|2009|Prime Video
