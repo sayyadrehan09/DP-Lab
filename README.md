@@ -1,59 +1,68 @@
-# 🎬 Movie & OTT Recommendation System (CinePattern)
+# 🎬 CinePattern — Movie & OTT Recommendation System
 
-[![Java](https://img.shields.io/badge/Language-Java%208%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
-[![Architecture](https://img.shields.io/badge/Architecture-8%20GoF%20Design%20Patterns-blue?style=for-the-badge)](https://en.wikipedia.org/wiki/Design_Patterns)
-[![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20%7C%20CSS3%20%7C%20HTML5-purple?style=for-the-badge)](frontend/)
-[![Persistence](https://img.shields.io/badge/Persistence-Flat%20File%20(I%2FO)-success?style=for-the-badge)](backend/data/)
-[![Course](https://img.shields.io/badge/Course-Design%20Patterns%20Laboratory-orange?style=for-the-badge)](https://github.com/sayyadrehan09/DP-Lab)
+[![Java](https://img.shields.io/badge/Java-8%20%7C%2024%20(LTS)-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.java.com/)
+[![Design Patterns](https://img.shields.io/badge/Architecture-8%20GoF%20Design%20Patterns-blue?style=for-the-badge)](https://en.wikipedia.org/wiki/Design_Patterns)
+[![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20%7C%20CSS3%20Bento-purple?style=for-the-badge)](frontend/)
+[![Persistence](https://img.shields.io/badge/Storage-Flat--File%20I%2FO%20%2B%20Supabase-success?style=for-the-badge)](backend/data/)
+[![Course](https://img.shields.io/badge/Assessment-Design%20Patterns%20Laboratory-orange?style=for-the-badge)](https://github.com/sayyadrehan09/DP-Lab)
 
-A full-stack, enterprise-grade **Movie & OTT Recommendation System** featuring a high-performance Java backend and a modern dark obsidian / flame-orange cinematic web interface (Pinwheel / Atlas Bento-Grid aesthetic).
-
-Built for the **Design Patterns Laboratory Assessment**, this application demonstrates **8 classic Gang of Four (GoF) design patterns** working harmoniously across Creational, Structural, and Behavioral categories. It enables multi-criteria filtering, dynamic strategy-based sorting, personalized watchlists with Memento undo rollback, multi-format template report generation, and role-based protection proxies.
+> **CinePattern (TiMN)** is a full-stack, enterprise-grade **Movie & OTT Recommendation System** engineered for the **Design Patterns Laboratory Assessment**. It features a high-performance native Java REST backend, flat-file persistence, and a modern dark obsidian / flame-cinnabar cinematic web interface (Pinwheel / Atlas Bento-Grid aesthetic).
+>
+> The system harmoniously implements **8 classic Gang of Four (GoF) design patterns** across Creational, Structural, and Behavioral categories, providing dynamic strategy-based catalog sorting, 4-stage sequential recommendation filtering, role-based protection proxies, decoupled real-time push notifications, a Memento-powered watchlist undo engine, and multi-format template report generation.
 
 ---
 
 ## 📑 Table of Contents
 
-- [Key Features](#-key-features)
-  - [Regular User](#regular-user)
-  - [Admin](#admin)
-- [Directory & Folder Structure](#-directory--folder-structure)
-- [Design Patterns Implemented (8 Patterns)](#-design-patterns-implemented-8-patterns)
-  - [1. Singleton Pattern](#1-singleton-pattern)
-  - [2. Factory Method Pattern](#2-factory-method-pattern)
-  - [3. Protection Proxy Pattern](#3-protection-proxy-pattern)
-  - [4. Observer Pattern](#4-observer-pattern)
-  - [5. Chain of Responsibility Pattern](#5-chain-of-responsibility-pattern)
-  - [6. Strategy Pattern](#6-strategy-pattern-new)
-  - [7. Template Method Pattern](#7-template-method-pattern-new)
-  - [8. Memento Pattern](#8-memento-pattern-new)
-- [Design Patterns Summary Matrix](#-design-patterns-summary-matrix)
-- [System Architecture & Workflow](#-system-architecture--workflow)
-- [REST API Endpoints Reference](#-rest-api-endpoints-reference)
-- [Data Storage Schema](#-data-storage-schema)
-- [Getting Started & How to Run](#-getting-started--how-to-run)
-  - [Option A: Web Application (Full-Stack UI + REST Backend)](#option-a-web-application-recommended)
-  - [Option B: One-Click Windows Launcher (`start.bat`)](#option-b-one-click-windows-launcher)
-  - [Option C: Original Terminal CLI (`Main.java`)](#option-c-terminal-cli-console-mode)
-- [Author & Credits](#-author--credits)
+1. [🌟 Key Features](#-key-features)
+   - [Regular User Features](#regular-user-features)
+   - [Admin Features](#admin-features)
+   - [System & Diagnostic Features](#system--diagnostic-features)
+2. [📁 Directory & Folder Structure](#-directory--folder-structure)
+3. [🛠 8 Gang of Four (GoF) Design Patterns Implemented](#-8-gang-of-four-gof-design-patterns-implemented)
+   - [1. Singleton Pattern](#1-singleton-pattern-creational)
+   - [2. Factory Method Pattern](#2-factory-method-pattern-creational)
+   - [3. Protection Proxy Pattern](#3-protection-proxy-pattern-structural)
+   - [4. Observer Pattern](#4-observer-pattern-behavioral)
+   - [5. Chain of Responsibility Pattern](#5-chain-of-responsibility-pattern-behavioral)
+   - [6. Strategy Pattern](#6-strategy-pattern-behavioral)
+   - [7. Template Method Pattern](#7-template-method-pattern-behavioral)
+   - [8. Memento Pattern](#8-memento-pattern-behavioral)
+4. [📊 Design Patterns Summary Matrix](#-design-patterns-summary-matrix)
+5. [🔄 System Architecture & Workflow](#-system-architecture--workflow)
+6. [🌐 REST API Endpoints Reference](#-rest-api-endpoints-reference)
+7. [💾 Data Storage Schema](#-data-storage-schema)
+8. [🚀 Getting Started & How to Run on Localhost](#-getting-started--how-to-run-on-localhost)
+   - [Option A: One-Click Windows Launcher (`start.bat`)](#option-a-one-click-windows-launcher-recommended)
+   - [Option B: Manual Terminal Execution (Web Server on :8080)](#option-b-manual-terminal-execution-web-app)
+   - [Option C: Interactive Terminal Console CLI (`Main.java`)](#option-c-interactive-terminal-console-cli)
+   - [Option D: Running via IDE (IntelliJ IDEA / VS Code)](#option-d-running-via-ide-intellij-idea--vs-code)
+9. [🎓 Lab Viva Defense & Design Trade-offs](#-lab-viva-defense--design-trade-offs)
+10. [👨‍💻 Author & Credits](#-author--credits)
 
 ---
 
 ## 🌟 Key Features
 
-### Regular User
-- **Explore Catalog with Strategy Sorting:** Browse, search by title/genre/platform, and dynamically sort movies using runtime strategies (IMDb rating, release year, alphabetical A–Z, or binge score).
-- **View Top 5 Masterpieces:** Instant access to curated cinema with scores $\ge 9.0$ from the Singleton database.
-- **Smart Chain Recommender:** Custom 4-stage sequential filtering pipeline (`Genre -> Language -> Rating -> Platform`) with live pipeline step animation and candidate counts.
-- **Personalized Watchlist with Memento Undo:** Save and remove movies with persistent flat-file storage, backed by full state snapshotting that allows instant one-click **Undo**.
-- **Template Method Report Export:** Export personal watchlists into formatted **Markdown Tables**, **Plain Text Receipts**, or **Structured JSON** with clipboard copy.
-- **Live Notifications Drawer:** Receive real-time alerts published via the Observer Pattern when new movies are added or broadcasts are sent.
+### Regular User Features
+* **Catalog Exploration & Strategy Sorting:** Explore over 40 curated titles across genres (Sci-Fi, Action, Drama, Comedy, Thriller) and platforms (Netflix, Prime Video, Disney+). Dynamically sort the catalog at runtime by **IMDb Rating**, **Release Year**, **Alphabetical Title (A–Z)**, or compound **Binge Score**.
+* **Curated Top 5 Masterpieces:** Instant access to cinema masterworks with ratings $\ge 9.0$ from the synchronized in-memory database.
+* **4-Stage Smart Recommender:** Custom sequential filtering pipeline (`Genre -> Language -> Rating -> Platform`) with visual step-by-step candidate count elimination.
+* **Personalized Watchlist with Instant Memento Undo:** Save and remove movies with persistent flat-file backing. Includes a dedicated **Undo** rollback mechanism to revert accidental deletions or additions.
+* **Multi-Format Watchlist Export:** Export personal watchlists as **GitHub Markdown Tables**, **Monospaced ASCII Receipts**, or **Structured JSON** with instant copy-to-clipboard.
+* **Live Notifications Drawer:** Real-time push alert feed triggered whenever an admin adds new titles or issues system announcements.
+* **Social Activity & Parties:** Mock friends feed and watch party launcher for modern streaming immersion.
 
-### Admin
-- **Full Catalog Management:** Add new movies (instantiated via `MovieFactory` and authorized by `MovieServiceProxy`) and delete movies.
-- **Live Broadcasts:** Send system-wide announcements to all registered user observers.
-- **Observer Roster Inspection:** View all currently subscribed user sessions in the Admin Portal.
-- **Interactive DP Inspector:** Real-time diagnostics for all 8 Gang of Four design patterns running live inside the JVM.
+### Admin Features
+* **Role-Based Protection Proxy:** Sensitive administrative endpoints are intercepted and verified via `MovieServiceProxy`. Unauthorized regular users are blocked with HTTP `403 Forbidden` / `Access Denied`.
+* **Catalog Management:** Add new movies (instantiated through `MovieFactory` and verified by `MovieServiceProxy`) and delete movies with immediate disk synchronization.
+* **System Broadcasts:** Publish announcements across the entire system, automatically delivered to all registered `UserObserver` subscribers.
+* **Observer Roster Inspection:** Inspect all active user sessions currently subscribed to the notification system.
+
+### System & Diagnostic Features
+* **Interactive DP Inspector:** Real-time in-app dashboard displaying live metrics for all 8 GoF patterns inside the running JVM (e.g., Singleton instance address, observer subscriber count, chain pipeline steps, memento stack depth, active sorting strategy).
+* **Dual Execution Mode:** Run as a full-stack Web Application (`Server.java` + browser on `http://localhost:8080`) or as a standalone interactive Terminal CLI (`Main.java`).
+* **Zero External Dependencies:** Built purely on native Java standard libraries (`com.sun.net.httpserver`, `java.nio`, `java.util`) without heavy third-party framework overhead.
 
 ---
 
@@ -62,39 +71,39 @@ Built for the **Design Patterns Laboratory Assessment**, this application demons
 ```plaintext
 DP-Lab/
 ├── backend/                             # Core Java Engine & REST Web Server
-│   ├── data/                            # Text file persistence storage
+│   ├── data/                            # Persistent flat-file storage
 │   │   ├── movies.txt                   # Pipe-delimited movie catalog dataset
-│   │   ├── users.txt                    # Registered user accounts & roles
+│   │   ├── users.txt                    # Registered user accounts & roles (USER/ADMIN)
 │   │   └── watchlist.txt                # User-specific saved movie watchlists
-│   ├── FileManager.java                 # File I/O persistence handler (load/save/sync)
-│   ├── Main.java                        # Terminal CLI interactive console controller
+│   ├── FileManager.java                 # File I/O persistence handler (load, save, sync)
+│   ├── Main.java                        # Standalone interactive terminal console controller
 │   ├── Movie.java                       # Movie domain entity model
-│   ├── MovieDatabase.java               # [Singleton] In-memory catalog repository
-│   ├── MovieFactory.java                # [Factory Method] Instantiation & file parsing
-│   ├── ObserverPattern.java             # [Observer] Subject & subscriber notifications
-│   ├── ProxyPattern.java                # [Protection Proxy] Role-based access control
-│   ├── RecommendationChain.java         # [Chain of Resp.] 4-stage pipeline filter
-│   ├── SortingStrategy.java             # [Strategy] Dynamic catalog sorting algorithms
-│   ├── WatchlistReportTemplate.java     # [Template Method] Multi-format export engine
-│   ├── WatchlistMemento.java            # [Memento] Watchlist state snapshotting & Caretaker
-│   ├── Server.java                      # High-performance built-in HTTP server & REST routes
-│   └── run-backend.bat                  # Backend launch batch script
+│   ├── MovieDatabase.java               # [Creational] Singleton in-memory repository
+│   ├── MovieFactory.java                # [Creational] Factory Method instantiation & parser
+│   ├── ObserverPattern.java             # [Behavioral] Observer publish-subscribe engine
+│   ├── ProxyPattern.java                # [Structural] Protection Proxy RBAC security gate
+│   ├── RecommendationChain.java         # [Behavioral] Chain of Resp. 4-stage filter
+│   ├── SortingStrategy.java             # [Behavioral] Strategy pattern catalog sorter
+│   ├── WatchlistReportTemplate.java     # [Behavioral] Template Method multi-format export
+│   ├── WatchlistMemento.java            # [Behavioral] Memento state snapshot & Caretaker stack
+│   ├── Server.java                      # Built-in multi-threaded HTTP server & 14 REST routes
+│   └── run-backend.bat                  # Backend launch batch script with JDK auto-detection
 │
-├── frontend/                            # Modern Dark Bento-Grid Web Application
-│   ├── index.html                       # Single Page Application (SPA) with 6 views & modal
+├── frontend/                            # Modern Dark Bento-Grid Single Page Web App
+│   ├── index.html                       # SPA markup with 6 view panels & interactive modals
 │   ├── style.css                        # Obsidian charcoal & flame cinnabar design tokens
-│   └── app.js                           # State manager, REST API client & pipeline animator
+│   ├── app.js                           # State manager, REST API client & pipeline animator
+│   ├── supabase.js                      # Optional Supabase cloud synchronization client
+│   └── images/                          # Movie posters, backdrops, and avatar assets
 │
 ├── .gitignore                           # Git ignore rules for Java bytecode & IDE files
 ├── README.md                            # Comprehensive project documentation
-└── start.bat                            # One-click launcher for Windows
+└── start.bat                            # One-click Windows launcher (compiles & launches browser)
 ```
 
 ---
 
-## 🛠 Design Patterns Implemented (8 Patterns)
-
-The project cleanly implements **8 classic Gang of Four (GoF) design patterns** spanning Creational, Structural, and Behavioral categories:
+## 🛠 8 Gang of Four (GoF) Design Patterns Implemented
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -112,21 +121,23 @@ The project cleanly implements **8 classic Gang of Four (GoF) design patterns** 
 
 ---
 
-### 1. Singleton Pattern
-- **Category:** Creational
-- **Source File:** [`backend/MovieDatabase.java`](backend/MovieDatabase.java)
-- **Purpose:** Guarantees that only a single centralized in-memory database instance exists across the entire JVM lifecycle, preventing multiple conflicting copies of movie records.
-- **Key Implementation Details:**
-  - Private constructor `MovieDatabase()` blocks outside direct instantiation.
-  - Thread-safe static accessor `public static synchronized MovieDatabase getInstance()`.
-  - Coordinates in-memory caching and sync with `FileManager`.
+### 1. Singleton Pattern (Creational)
+* **Source File:** [`backend/MovieDatabase.java`](backend/MovieDatabase.java)
+* **Primary Class:** `MovieDatabase`
+* **Problem Solved:** Prevents multiple uncoordinated copies of the movie database in memory across concurrent HTTP handler threads, avoiding data inconsistencies and wasted heap space.
+* **Implementation Details:**
+  * Private constructor `private MovieDatabase()` prevents direct instantiation from outside.
+  * Thread-safe static accessor `public static synchronized MovieDatabase getInstance()`.
+  * Centralizes all catalog queries, filters Top 5 movies ($\ge 9.0$), and coordinates synchronization with [`FileManager.java`](backend/FileManager.java).
 
 ```java
 public class MovieDatabase {
     private static MovieDatabase instance;
     private List<Movie> movies;
 
-    private MovieDatabase() { movies = new ArrayList<>(); }
+    private MovieDatabase() {
+        movies = new ArrayList<>();
+    }
 
     public static synchronized MovieDatabase getInstance() {
         if (instance == null) {
@@ -139,13 +150,13 @@ public class MovieDatabase {
 
 ---
 
-### 2. Factory Method Pattern
-- **Category:** Creational
-- **Source File:** [`backend/MovieFactory.java`](backend/MovieFactory.java)
-- **Purpose:** Decouples client code from direct entity construction and centralizes string parsing of delimited persistence files into strongly-typed `Movie` domain objects.
-- **Key Implementation Details:**
-  - `createMovie(...)`: Instantiates a `Movie` from validated parameters.
-  - `createMovieFromFile(String line)`: Parses pipe-separated records (`id|title|genre|language|rating|year|platform`) safely.
+### 2. Factory Method Pattern (Creational)
+* **Source File:** [`backend/MovieFactory.java`](backend/MovieFactory.java)
+* **Primary Class:** `MovieFactory`
+* **Problem Solved:** Decouples domain object construction from data format parsing, centralizing validation and shielding the application from corrupted records or schema changes.
+* **Implementation Details:**
+  * `createMovie(...)`: Validates parameters (rating within $0.0-10.0$, positive year, non-empty title) and creates domain instances.
+  * `createMovieFromFile(String line)`: Safely parses pipe-delimited text (`id|title|genre|language|rating|year|platform`), handling token extraction and data conversions.
 
 ```java
 public class MovieFactory {
@@ -164,14 +175,14 @@ public class MovieFactory {
 
 ---
 
-### 3. Protection Proxy Pattern
-- **Category:** Structural
-- **Source File:** [`backend/ProxyPattern.java`](backend/ProxyPattern.java)
-- **Purpose:** Intercepts sensitive administrative operations (`addMovie`, `removeMovie`) to enforce role-based security. Regular `USER` sessions are blocked with `403 Forbidden` / `Access Denied` before reaching the real service.
-- **Key Implementation Details:**
-  - **Subject Interface:** `MovieService`
-  - **Real Subject:** `RealMovieService` (direct mutations on `MovieDatabase`)
-  - **Proxy:** `MovieServiceProxy` checks `role.equalsIgnoreCase("ADMIN")`.
+### 3. Protection Proxy Pattern (Structural)
+* **Source File:** [`backend/ProxyPattern.java`](backend/ProxyPattern.java)
+* **Primary Classes:** `MovieService` (Interface), `RealMovieService` (Real Subject), `MovieServiceProxy` (Proxy)
+* **Problem Solved:** Protects sensitive catalog modifications (adding movies, deleting movies, broadcasting announcements) using Role-Based Access Control (RBAC) without mixing security logic into domain models.
+* **Implementation Details:**
+  * Both `RealMovieService` and `MovieServiceProxy` implement the `MovieService` interface.
+  * When `addMovie()` or `removeMovie()` is invoked, `MovieServiceProxy` inspects the user's role (`ADMIN` vs `USER`).
+  * If the caller is an `ADMIN`, the proxy forwards the request to `RealMovieService`. If the caller is a `USER`, the proxy blocks the operation immediately and returns an `Access Denied` error (HTTP 403 Forbidden).
 
 ```mermaid
 classDiagram
@@ -196,120 +207,127 @@ classDiagram
     }
     MovieService <|.. RealMovieService : implements
     MovieService <|.. MovieServiceProxy : implements
-    MovieServiceProxy --> RealMovieService : forwards only if role is ADMIN
+    MovieServiceProxy --> RealMovieService : delegates only if role == "ADMIN"
 ```
 
 ---
 
-### 4. Observer Pattern
-- **Category:** Behavioral
-- **Source File:** [`backend/ObserverPattern.java`](backend/ObserverPattern.java)
-- **Purpose:** Implements a decoupled publish-subscribe system. When a new movie is registered by an admin or an announcement is broadcast, all subscribed users are automatically notified.
-- **Key Implementation Details:**
-  - **Subject Interface:** `Subject` (`addObserver()`, `removeObserver()`, `notifyObservers()`)
-  - **Concrete Subject:** `NotificationService` (maintains active subscribers and recent broadcast history)
-  - **Observer Interface:** `Observer` (`update(String message)`)
-  - **Concrete Observer:** `UserObserver` (delivers message to active session feed)
+### 4. Observer Pattern (Behavioral)
+* **Source File:** [`backend/ObserverPattern.java`](backend/ObserverPattern.java)
+* **Primary Classes:** `Subject` (Interface), `Observer` (Interface), `NotificationService` (Concrete Subject), `UserObserver` (Concrete Observer)
+* **Problem Solved:** Establishes a loosely coupled one-to-many publish-subscribe communication channel between event producers (admin actions, catalog updates) and event consumers (logged-in user sessions).
+* **Implementation Details:**
+  * `NotificationService` maintains an active subscriber registry `List<Observer>` and notification history.
+  * When a user logs in (`POST /api/login`), a `UserObserver` is registered.
+  * When a new movie is added or a broadcast is sent, `notifyObservers(message)` pushes notifications with timestamps and unique IDs to all active subscribers.
 
 ```java
 public class NotificationService implements Subject {
     private List<Observer> observers = new ArrayList<>();
-    public void addObserver(Observer o) { observers.add(o); }
-    public void notifyObservers(String msg) {
-        for (Observer o : observers) o.update(msg);
+    private List<NotificationRecord> history = new ArrayList<>();
+
+    public void addObserver(Observer observer) { observers.add(observer); }
+    public void removeObserver(Observer observer) { observers.remove(observer); }
+    public void notifyObservers(String message) {
+        history.add(new NotificationRecord(message));
+        for (Observer o : observers) {
+            o.update(message);
+        }
     }
 }
 ```
 
 ---
 
-### 5. Chain of Responsibility Pattern
-- **Category:** Behavioral
-- **Source File:** [`backend/RecommendationChain.java`](backend/RecommendationChain.java)
-- **Purpose:** Decouples complex multi-criteria recommendation filtering into distinct, interchangeable filter stages linked sequentially.
-- **Processing Pipeline:**
-  $$\text{All Movies} \xrightarrow{\quad} \text{GenreHandler} \xrightarrow{\quad} \text{LanguageHandler} \xrightarrow{\quad} \text{RatingHandler} \xrightarrow{\quad} \text{PlatformHandler} \xrightarrow{\quad} \text{Output}$$
+### 5. Chain of Responsibility Pattern (Behavioral)
+* **Source File:** [`backend/RecommendationChain.java`](backend/RecommendationChain.java)
+* **Primary Classes:** `RecommendationHandler` (Abstract Handler), `GenreHandler`, `LanguageHandler`, `RatingHandler`, `PlatformHandler`, `RecommendationChain`
+* **Problem Solved:** Avoids deeply nested conditional structures when filtering movies by multiple criteria. Handlers can be dynamically added, removed, or reordered without modifying existing filtering code.
+* **Implementation Details:**
+  * Forms a sequential processing pipeline:
+    $$\text{All Movies} \xrightarrow{\quad} \text{GenreHandler} \xrightarrow{\quad} \text{LanguageHandler} \xrightarrow{\quad} \text{RatingHandler} \xrightarrow{\quad} \text{PlatformHandler} \xrightarrow{\quad} \text{Recommendations}$$
+  * Implements `filterWithTrace()`: Each handler captures input count, applied criteria, and output count (`ChainTraceStep`), returning an execution trace displayed in the frontend animation.
 
 ```mermaid
 flowchart LR
     In([Full Catalog]) --> G[GenreHandler]
-    G -->|Filter by Genre or 'Any'| L[LanguageHandler]
-    L -->|Filter by Language or 'Any'| R[RatingHandler]
-    R -->|Filter by Rating Threshold| P[PlatformHandler]
-    P -->|Filter by Platform or 'Any'| Out([Filtered Recommendations])
+    G -->|Filter Genre or 'Any'| L[LanguageHandler]
+    L -->|Filter Language or 'Any'| R[RatingHandler]
+    R -->|Filter Min Rating Threshold| P[PlatformHandler]
+    P -->|Filter Platform or 'Any'| Out([Filtered Recommendations])
 ```
 
 ---
 
-### 6. Strategy Pattern *(New)*
-- **Category:** Behavioral
-- **Source File:** [`backend/SortingStrategy.java`](backend/SortingStrategy.java)
-- **Purpose:** Encapsulates catalog sorting algorithms into interchangeable strategy classes, allowing the client to swap sorting criteria dynamically at runtime without modifying client code.
-- **Key Implementation Details:**
-  - **Strategy Interface:** `MovieSortStrategy` with contract `List<Movie> sort(List<Movie> movies)`.
-  - **Concrete Strategies:**
-    1. `RatingSortStrategy`: Sorts descending by IMDb rating ($\text{score} \downarrow$).
-    2. `YearSortStrategy`: Sorts newest releases first ($\text{year} \downarrow$).
-    3. `TitleSortStrategy`: Sorts alphabetically ($A \rightarrow Z$).
-    4. `PopularitySortStrategy`: Ranks by compound binge score ($\text{rating} \times 10 + \text{recency}$).
-  - **Context:** `CatalogSorterContext` holds the active strategy and invokes execution.
-- **API Endpoint:** `GET /api/sort?by={rating|year|title|popularity}`
+### 6. Strategy Pattern (Behavioral)
+* **Source File:** [`backend/SortingStrategy.java`](backend/SortingStrategy.java)
+* **Primary Classes:** `MovieSortStrategy` (Interface), `CatalogSorterContext` (Context), and 4 Concrete Strategies:
+  1. `RatingSortStrategy`: Sorts descending by IMDb score ($\text{Rating} \downarrow$).
+  2. `YearSortStrategy`: Sorts newest release year first ($\text{Year} \downarrow$).
+  3. `TitleSortStrategy`: Alphabetical order ($A \rightarrow Z$).
+  4. `PopularitySortStrategy`: Composite binge score formula: $(\text{Rating} \times 10) + ((\text{Year} - 1970) \times 0.15)$.
+* **Problem Solved:** Enables dynamic swapping of sorting algorithms at runtime through the UI or `GET /api/sort?by=...` without giant switch-case blocks or modifying catalog controllers.
 
 ```java
 public interface MovieSortStrategy {
-    String getStrategyName();
     List<Movie> sort(List<Movie> movies);
+    String getStrategyName();
+    String getDescription();
 }
 
 public class CatalogSorterContext {
     private MovieSortStrategy strategy;
     public CatalogSorterContext(MovieSortStrategy strategy) { this.strategy = strategy; }
+    public void setStrategy(MovieSortStrategy strategy) { this.strategy = strategy; }
     public List<Movie> executeSort(List<Movie> movies) { return strategy.sort(movies); }
 }
 ```
 
 ---
 
-### 7. Template Method Pattern *(New)*
-- **Category:** Behavioral
-- **Source File:** [`backend/WatchlistReportTemplate.java`](backend/WatchlistReportTemplate.java)
-- **Purpose:** Defines the invariant skeleton of a watchlist report generation algorithm in an abstract base class, deferring specific formatting steps (header, movie rows, summary footer) to concrete subclasses.
-- **Key Implementation Details:**
-  - **Abstract Template Class:** `WatchlistReportTemplate` with `public final String generateReport(String username, List<Movie> movies)`.
-  - **Primitive Hooks:** `formatHeader()`, `formatMovieRows()`, `formatFooter()`.
-  - **Concrete Generators:**
-    1. `MarkdownWatchlistReport`: Generates a GitHub-flavored Markdown table.
-    2. `PlainTextWatchlistReport`: Generates a monospaced ASCII receipt.
-    3. `JsonWatchlistReport`: Generates a structured JSON export.
-- **API Endpoint:** `GET /api/watchlist/export?user={username}&format={markdown|text|json}`
+### 7. Template Method Pattern (Behavioral)
+* **Source File:** [`backend/WatchlistReportTemplate.java`](backend/WatchlistReportTemplate.java)
+* **Primary Classes:** `WatchlistReportTemplate` (Abstract Class), `MarkdownWatchlistReport`, `PlainTextWatchlistReport`, `JsonWatchlistReport`
+* **Problem Solved:** Watchlist export across multiple formats requires an identical sequential algorithm (Header $\rightarrow$ Movie Rows $\rightarrow$ Summary Footer $\rightarrow$ Metrics Calculation) with distinct output syntaxes.
+* **Implementation Details:**
+  * Defines the invariant skeleton method `public final String generateReport(String username, List<Movie> movies)`. Subclasses cannot alter the algorithm sequence.
+  * Subclasses implement format-specific primitive hooks: `formatHeader()`, `formatMovieRow()`, `formatFooter()`, `formatEmptyState()`.
+  * Common helper `computeAverageRating()` is shared across all generators.
 
 ```java
 public abstract class WatchlistReportTemplate {
-    // Template Method: Skeleton invariant algorithm
+    // Template Method: algorithm skeleton is invariant
     public final String generateReport(String username, List<Movie> movies) {
         StringBuilder sb = new StringBuilder();
-        sb.append(formatHeader(username, movies.size()));
-        sb.append(formatMovieRows(movies));
-        sb.append(formatFooter(movies));
+        sb.append(formatHeader(username));
+        if (movies == null || movies.isEmpty()) {
+            sb.append(formatEmptyState());
+        } else {
+            for (int i = 0; i < movies.size(); i++) {
+                sb.append(formatMovieRow(movies.get(i), i + 1));
+            }
+        }
+        sb.append(formatFooter((movies != null) ? movies.size() : 0, computeAverageRating(movies)));
         return sb.toString();
     }
-    protected abstract String formatHeader(String username, int count);
-    protected abstract String formatMovieRows(List<Movie> movies);
-    protected abstract String formatFooter(List<Movie> movies);
+
+    protected abstract String formatHeader(String username);
+    protected abstract String formatMovieRow(Movie movie, int index);
+    protected abstract String formatFooter(int count, double avgRating);
+    protected abstract String formatEmptyState();
 }
 ```
 
 ---
 
-### 8. Memento Pattern *(New)*
-- **Category:** Behavioral
-- **Source File:** [`backend/WatchlistMemento.java`](backend/WatchlistMemento.java)
-- **Purpose:** Captures and externalizes the internal state of a user's watchlist before mutations (additions or deletions), enabling clean **Undo** rollback without violating encapsulation.
-- **Key Implementation Details:**
-  - **Memento:** `WatchlistMemento` stores an immutable snapshot of saved movie IDs, timestamp, and action description.
-  - **Caretaker:** `WatchlistCaretaker` maintains an undo `Stack<WatchlistMemento>` for each user, managing history depth and state restoration.
-  - **Rollback Operation:** In [`Server.java`](backend/Server.java) and [`FileManager.java`](backend/FileManager.java), restoring pops the latest Memento and writes it to disk.
-- **API Endpoint:** `POST /api/watchlist/undo` with payload `{"user": "username"}`
+### 8. Memento Pattern (Behavioral)
+* **Source File:** [`backend/WatchlistMemento.java`](backend/WatchlistMemento.java)
+* **Primary Classes:** `WatchlistMemento` (Memento), `WatchlistCaretaker` (Caretaker)
+* **Problem Solved:** Allows users to undo accidental additions or removals from their watchlist without exposing private fields or violating encapsulation.
+* **Implementation Details:**
+  * `WatchlistMemento`: Immutable snapshot capturing the list of movie IDs, timestamp, and action description.
+  * `WatchlistCaretaker`: Maintains an undo history stack `Stack<WatchlistMemento>` per user, capped at 20 states to prevent memory leaks.
+  * When the user clicks **Undo**, `WatchlistCaretaker.undo(username)` pops the preceding state, and [`FileManager.java`](backend/FileManager.java) writes the restored state to disk.
 
 ```java
 public class WatchlistMemento {
@@ -318,7 +336,7 @@ public class WatchlistMemento {
     private final String description;
 
     public WatchlistMemento(List<Integer> ids, String desc) {
-        this.movieIds = new ArrayList<>(ids); // Deep copy
+        this.movieIds = new ArrayList<>(ids); // Deep copy of state
         this.description = desc;
         this.timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
     }
@@ -337,7 +355,7 @@ class WatchlistCaretaker {
 ## 📊 Design Patterns Summary Matrix
 
 | # | Pattern | Category | Source File | Key Classes | Practical Role in System |
-|---|:---|:---:|:---|:---|:---|
+|:---:|:---|:---:|:---|:---|:---|
 | **01** | **Singleton** | Creational | [`MovieDatabase.java`](backend/MovieDatabase.java) | `MovieDatabase` | Single synchronized in-memory movie repository across all threads. |
 | **02** | **Factory Method** | Creational | [`MovieFactory.java`](backend/MovieFactory.java) | `MovieFactory` | Centralized creation and pipe-separated file parsing of `Movie` objects. |
 | **03** | **Protection Proxy** | Structural | [`ProxyPattern.java`](backend/ProxyPattern.java) | `MovieServiceProxy`, `RealMovieService` | Role-based gate blocking unauthorized regular users from modifying catalog. |
@@ -353,35 +371,35 @@ class WatchlistCaretaker {
 
 ```mermaid
 flowchart TD
-    Start([Application Start]) --> InitFiles[FileManager.initializeFiles]
-    InitFiles --> LoadDB[MovieDatabase.getInstance.loadMovies]
-    LoadDB --> BootServer[Server.java starts on :8080]
+    Start([System Boot]) --> InitFiles[FileManager: Initialize flat files]
+    InitFiles --> LoadDB[MovieDatabase Singleton: Load & Cache Movies]
+    LoadDB --> BootServer[Server.java: Start HTTP Server on :8080]
     
-    BootServer --> UI[Open Browser: http://localhost:8080]
+    BootServer --> UI[Open Web Browser: http://localhost:8080]
     UI --> Auth[Sign In / Register Portal]
     Auth --> ObserverReg[Register UserObserver with NotificationService]
     
     ObserverReg --> Nav{User Navigation}
     
-    Nav -->|1. Catalog| Sorter[CatalogSorterContext: Strategy Pattern]
-    Sorter --> SortExec[Rating / Year / Title / Popularity Sort]
+    Nav -->|1. Explore Catalog| Sorter[CatalogSorterContext: Strategy Pattern]
+    Sorter --> SortExec[Rating / Year / Title / Binge Score Sort]
     
     Nav -->|2. Top 5 Movies| TopAction[MovieDatabase filters Rating >= 9.0]
     
     Nav -->|3. Smart Recommender| ChainExec[RecommendationChain: 4 Handlers]
-    ChainExec --> RecResults[Animated Pipeline Trace]
+    ChainExec --> RecResults[Visual Animated Pipeline Trace]
     
     Nav -->|4. Watchlist| WatchlistActions{Watchlist Action}
-    WatchlistActions -->|Add/Remove| CaretakerSnap[WatchlistCaretaker: Save Memento Snapshot]
+    WatchlistActions -->|Add/Remove Movie| CaretakerSnap[WatchlistCaretaker: Save Memento Snapshot]
     CaretakerSnap --> PersistWatchlist[FileManager: Save to watchlist.txt]
-    WatchlistActions -->|Undo Button| UndoRollback[WatchlistCaretaker.undo: Restore Memento State]
+    WatchlistActions -->|Undo Button| UndoRollback[WatchlistCaretaker.undo: Restore Preceding State]
     WatchlistActions -->|Export Report| TemplateReport[WatchlistReportTemplate: Generate MD/TXT/JSON]
     
     Nav -->|5. Admin Portal| AdminProxy{MovieServiceProxy Check}
-    AdminProxy -->|ADMIN: Allowed| Mutate[Factory Create / Remove / Broadcast]
-    AdminProxy -->|USER: Denied| Blocked[403 Forbidden Access Denied]
+    AdminProxy -->|Role: ADMIN| Mutate[Factory Create Movie / Remove / Broadcast]
+    AdminProxy -->|Role: USER| Blocked[403 Forbidden Access Denied]
     
-    Nav -->|6. DP Inspector| LiveMetrics[Inspect live metrics of all 8 Patterns]
+    Nav -->|6. DP Inspector| LiveMetrics[Inspect live JVM metrics for all 8 Patterns]
 ```
 
 ---
@@ -410,7 +428,7 @@ flowchart TD
 
 ## 💾 Data Storage Schema
 
-All persistent data is stored in the [`backend/data/`](backend/data/) directory using clean flat files with pipe (`|`) delimiters:
+All persistent data is stored in the [`backend/data/`](backend/data/) directory using pipe (`|`) delimited flat text files:
 
 ### 1. `backend/data/movies.txt`
 Stores the central movie catalog:
@@ -418,16 +436,19 @@ Stores the central movie catalog:
 id|title|genre|language|rating|year|platform
 1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
 2|The Godfather|Drama|English|9.2|1972|Prime Video
+3|The Dark Knight|Action|English|9.1|2008|Netflix
+4|The Lord of the Rings|Action|English|9.0|2003|Prime Video
 5|Inception|Sci-Fi|English|9.0|2010|Netflix
 ```
 
 ### 2. `backend/data/users.txt`
-Stores registered user accounts and their assigned role:
+Stores registered user credentials and security roles:
 ```plaintext
 username|role
 Aryan|USER
 Rehan|ADMIN
 Sarah|USER
+John Doe|USER
 ```
 
 ### 3. `backend/data/watchlist.txt`
@@ -440,51 +461,86 @@ Aryan|5|Inception|Sci-Fi|English|9.0|2010|Netflix
 
 ---
 
-## 🚀 Getting Started & How to Run
+## 🚀 Getting Started & How to Run on Localhost
 
 ### Prerequisites
-- **Java Development Kit (JDK)**: Version 8 or higher (`javac` and `java` in your system `PATH`).
-- A modern web browser (Chrome, Edge, Firefox, Safari).
+- **Java Development Kit (JDK)**: JDK 8 or higher (e.g., OpenJDK 24, Oracle JDK 17/21).
+- A modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, Brave, Safari).
 
 ---
 
-### Option A: Web Application (Recommended)
-1. Open a terminal and navigate to the backend directory:
-   ```bash
+### Option A: One-Click Windows Launcher (Recommended)
+1. Navigate to the project root and double-click:
+   ```cmd
+   start.bat
+   ```
+2. The script will automatically:
+   - Detect `javac` in your system `PATH`, `JAVA_HOME`, or IntelliJ's OpenJDK directory (`%USERPROFILE%\.jdks\openjdk-24`).
+   - Compile all Java source files into `backend/bin/`.
+   - Start the HTTP REST server on port `8080`.
+   - Launch your default web browser to:
+     ```
+     http://localhost:8080
+     ```
+
+---
+
+### Option B: Manual Terminal Execution (Web App)
+1. Open PowerShell or Command Prompt and navigate to the backend directory:
+   ```powershell
    cd backend
    ```
-2. Compile all Java sources:
-   ```bash
-   javac -d . *.java
+2. Compile all backend sources:
+   ```powershell
+   if (!(Test-Path bin)) { New-Item -ItemType Directory -Path bin }
+   javac -d bin *.java
    ```
-3. Start the HTTP server:
-   ```bash
-   java Server
+   *(Note: If `javac` is not in your global PATH, run using your JDK path, e.g.: `& "$env:USERPROFILE\.jdks\openjdk-24\bin\javac.exe" -d bin *.java`)*
+
+3. Start the Java REST Server:
+   ```powershell
+   java -cp bin Server
    ```
-4. Open your browser and navigate to:
+4. Open your web browser and visit:
    ```
    http://localhost:8080
    ```
 
 ---
 
-### Option B: One-Click Windows Launcher
-Double-click `start.bat` in the project root directory. It will compile the backend, start the HTTP server, and open your browser automatically.
+### Option C: Interactive Terminal Console CLI
+To run the original command-line interface mode:
+```powershell
+cd backend
+javac -d bin *.java
+java -cp bin Main
+```
 
 ---
 
-### Option C: Terminal CLI (Console Mode)
-To run the interactive terminal console application:
-```bash
-cd backend
-javac -d . *.java
-java Main
-```
+### Option D: Running via IDE (IntelliJ IDEA / VS Code)
+1. Open the `DP-Lab` folder in **IntelliJ IDEA** or **VS Code**.
+2. Set the Project SDK to **Java 8+** (e.g., `openjdk-24`).
+3. Locate [`backend/Server.java`](backend/Server.java), right-click, and select **Run 'Server.main()'**.
+4. Open your browser and go to `http://localhost:8080`.
+
+---
+
+## 🎓 Lab Viva Defense & Design Trade-offs
+
+| Question | Evaluation Focus | Technical Defense |
+|:---|:---|:---|
+| **Why use Protection Proxy over simple `if` checks in controllers?** | Single Responsibility & Decoupling | Keeps business logic clean; access rules can change or migrate to OAuth/JWT without touching the core `MovieDatabase`. |
+| **How does Memento protect encapsulation?** | Information Hiding | The `WatchlistCaretaker` stores state snapshots on a stack but cannot inspect or modify their private fields, preserving data integrity. |
+| **Strategy vs Chain of Responsibility?** | Behavioral Pattern Nuance | **Strategy** picks *one* mutually exclusive algorithm at runtime; **Chain of Responsibility** passes a request through *multiple* sequential filters in a pipeline. |
+| **Why is `generateReport()` declared `final` in Template Method?** | Invariant Skeleton Protection | Prevents subclasses from altering the required sequence of steps (Header $\rightarrow$ Rows $\rightarrow$ Footer), while allowing them to customize formatting hooks. |
+| **How does Singleton maintain thread safety?** | Concurrency in Java | `getInstance()` is declared `synchronized`, ensuring only one instance is created in JVM memory even under concurrent HTTP requests. |
 
 ---
 
 ## 👨‍💻 Author & Credits
 
-- **Developer:** [Rehan Sayyad](https://github.com/sayyadrehan09)
-- **Repository:** [sayyadrehan09/DP-Lab](https://github.com/sayyadrehan09/DP-Lab)
-- **Academic Context:** Developed for the **Design Patterns (DP) Laboratory Assessment** (5th Semester).
+* **Developer:** [Rehan Sayyad](https://github.com/sayyadrehan09)
+* **GitHub Repository:** [sayyadrehan09/DP-Lab](https://github.com/sayyadrehan09/DP-Lab)
+* **Course:** Design Patterns Laboratory (5th Semester)
+* **Status:** Verified, Fully Operational on `http://localhost:8080`
