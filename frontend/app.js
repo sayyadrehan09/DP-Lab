@@ -1980,18 +1980,6 @@ function setupEventListeners() {
     });
   }
 
-  // Following list clicks
-  document.querySelectorAll('.following-user').forEach(userEl => {
-    userEl.addEventListener('click', () => {
-      const uName = userEl.getAttribute('data-user');
-      showToast(`Viewing ${uName}'s shared watch activity`);
-    });
-  });
-
-  document.getElementById('loadMoreFriendsBtn').addEventListener('click', () => {
-    showToast('Loaded all 16 connected observers from ObserverPattern.');
-  });
-
   // Role Badge & User profile modal
   document.getElementById('roleBadgeBtn').addEventListener('click', () => {
     document.getElementById('userProfileModal').classList.add('active');
