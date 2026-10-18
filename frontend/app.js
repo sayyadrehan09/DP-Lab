@@ -2039,7 +2039,7 @@ function setupEventListeners() {
       tabRegisterBtn.classList.remove('active');
       if (signInForm) signInForm.style.display = 'flex';
       if (registerForm) registerForm.style.display = 'none';
-      if (authModalTitle) authModalTitle.textContent = 'Sign In to TiMN';
+      if (authModalTitle) authModalTitle.textContent = 'Login to TiMN';
     });
 
     tabRegisterBtn.addEventListener('click', () => {
@@ -2047,7 +2047,7 @@ function setupEventListeners() {
       tabSignInBtn.classList.remove('active');
       if (signInForm) signInForm.style.display = 'none';
       if (registerForm) registerForm.style.display = 'flex';
-      if (authModalTitle) authModalTitle.textContent = 'Create TiMN Account';
+      if (authModalTitle) authModalTitle.textContent = 'Register to TiMN';
     });
   }
 
