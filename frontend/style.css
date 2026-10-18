@@ -1878,6 +1878,14 @@ body {
   padding: 6px 2px 18px 2px;
   scrollbar-width: thin;
   scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+  scroll-behavior: smooth;
+}
+
+.horizontal-scroll-row .movie-card {
+  flex: 0 0 175px;
+  width: 175px;
+  min-width: 175px;
+  max-width: 175px;
 }
 
 .horizontal-scroll-row::-webkit-scrollbar {
