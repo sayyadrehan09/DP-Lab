@@ -23,6 +23,19 @@
 23|Lagaan|Drama|Hindi|8.1|2001|Netflix
 24|PK|Comedy|Hindi|8.1|2014|Disney+
 25|RRR|Action|Hindi|7.8|2022|Netflix
-26|shutter isam|scifi|engllish|8.0|2010|netflix
+26|Avatar|Sci-Fi|English|7.9|2009|Disney+
 27|Dead Poets Society|Drama|English|8.1|1989|Netflix
 28|Harry Potter and the Philosopher's Stone|Drama|English|7.7|2001|Netflix
+29|Elio|Sci-Fi|English|7.9|2025|Disney+
+30|Spider Man|Action|English|8.2|2021|Prime Video
+31|Wonder Woman|Action|English|7.4|2017|Netflix
+32|Mortal Engines|Sci-Fi|English|6.1|2018|Prime Video
+33|Rampage|Action|English|6.1|2018|Netflix
+34|Alita: Battle Angel|Sci-Fi|English|7.3|2019|Disney+
+35|Black Widow|Action|English|6.7|2021|Disney+
+36|Jurassic World: Dominion|Action|English|5.6|2022|Prime Video
+37|Guardians of the Galaxy|Sci-Fi|English|8.0|2023|Disney+
+38|Interstellar 2|Action|English|8.5|2024|Netflix
+39|Avatar: The Way of Water|Action|English|8.5|2024|Netflix
+40|Dune: Part Two|Sci-Fi|English|8.8|2024|Prime Video
+41|Oppenheimer|Drama|English|8.9|2023|Netflix

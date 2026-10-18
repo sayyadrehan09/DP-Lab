@@ -12,3 +12,8 @@ Bhai|USER
 Tanvir Kanoje|USER
 Rehan|USER
 Sayyad|USER
+Lab Evaluator|ADMIN
+Karan (Admin)|ADMIN
+Admin|ADMIN|admin123|admin@gmail.com
+admin@gmail.com|ADMIN|admin123|admin@gmail.com
+John Doe|USER|userpass|john@example.com

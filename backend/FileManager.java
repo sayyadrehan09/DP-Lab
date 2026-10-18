@@ -29,8 +29,14 @@ public class FileManager {
         if (!folder.exists()) folder.mkdirs();
         try {
             new File(movieFile).createNewFile();
-            new File(userFile).createNewFile();
+            File uFile = new File(userFile);
+            boolean created = uFile.createNewFile();
             new File(watchlistFile).createNewFile();
+
+            // Seed admin@gmail.com if not exists
+            if (!userExists("admin@gmail.com")) {
+                saveUser("Admin", "ADMIN", "admin123", "admin@gmail.com");
+            }
         } catch (IOException e) {
             System.out.println("Error creating data files: " + e.getMessage());
         }
@@ -68,22 +74,29 @@ public class FileManager {
     }
 
     public static void saveUser(String name, String role) {
+        saveUser(name, role, "", "");
+    }
+
+    public static void saveUser(String name, String role, String password, String email) {
         initializeFiles();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile, true))) {
-            writer.write(name + "|" + role);
+            writer.write(name + "|" + role + "|" + password + "|" + email);
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error saving user: " + e.getMessage());
         }
     }
 
-    public static boolean userExists(String name) {
+    public static boolean userExists(String identifier) {
+        if (identifier == null || identifier.trim().isEmpty()) return false;
+        if ("admin@gmail.com".equalsIgnoreCase(identifier.trim()) || "admin".equalsIgnoreCase(identifier.trim())) return true;
         initializeFiles();
         try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 1 && parts[0].equalsIgnoreCase(name.trim())) return true;
+                if (parts.length >= 1 && parts[0].equalsIgnoreCase(identifier.trim())) return true;
+                if (parts.length >= 4 && parts[3].equalsIgnoreCase(identifier.trim())) return true;
             }
         } catch (IOException e) {
             return false;
@@ -91,20 +104,68 @@ public class FileManager {
         return false;
     }
 
-    public static String getUserRole(String name) {
+    public static String getUserRole(String identifier) {
+        if (identifier == null) return "USER";
+        if ("admin@gmail.com".equalsIgnoreCase(identifier.trim()) || "admin".equalsIgnoreCase(identifier.trim())) return "ADMIN";
         initializeFiles();
         try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 2 && parts[0].equalsIgnoreCase(name.trim())) {
-                    return parts[1].trim();
+                if (parts.length >= 2) {
+                    if (parts[0].equalsIgnoreCase(identifier.trim()) || (parts.length >= 4 && parts[3].equalsIgnoreCase(identifier.trim()))) {
+                        return parts[1].trim();
+                    }
                 }
             }
         } catch (IOException e) {
             return "USER";
         }
         return "USER";
+    }
+
+    public static boolean verifyPassword(String identifier, String password) {
+        if (identifier == null) return false;
+        if ("admin@gmail.com".equalsIgnoreCase(identifier.trim()) || "admin".equalsIgnoreCase(identifier.trim())) {
+            return "admin123".equals(password);
+        }
+        initializeFiles();
+        try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1);
+                boolean match = (parts.length >= 1 && parts[0].equalsIgnoreCase(identifier.trim())) ||
+                                (parts.length >= 4 && parts[3].equalsIgnoreCase(identifier.trim()));
+                if (match) {
+                    if (parts.length >= 3 && !parts[2].trim().isEmpty()) {
+                        return parts[2].trim().equals(password);
+                    }
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return false;
+    }
+
+    public static String getUserDisplayName(String identifier) {
+        if (identifier == null) return "User";
+        if ("admin@gmail.com".equalsIgnoreCase(identifier.trim()) || "admin".equalsIgnoreCase(identifier.trim())) return "Admin";
+        initializeFiles();
+        try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1);
+                if (parts.length >= 4 && parts[3].equalsIgnoreCase(identifier.trim())) {
+                    return parts[0].trim();
+                }
+                if (parts.length >= 1 && parts[0].equalsIgnoreCase(identifier.trim())) {
+                    return parts[0].trim();
+                }
+            }
+        } catch (IOException ignored) {}
+        return identifier;
     }
 
     public static List<String[]> getAllUsers() {

@@ -1,900 +1,1601 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CinePattern | Movie & OTT Recommendation System</title>
-  <meta name="description"
-    content="A Next-Gen Movie & OTT Recommendation System powered by 5 Gang of Four Design Patterns: Singleton, Factory, Observer, Proxy, and Chain of Responsibility.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
+  <title>TiMN - Premium OTT & Movie Recommendation System</title>
+  <meta name="description" content="TiMN Ultra-Modern OTT Movie Streaming & Recommendation Platform powered by 8 Gang of Four Design Patterns">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b5cf6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
 </head>
-
 <body>
-  <!-- Background Glow & Particles -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-  <div class="ambient-glow glow-3"></div>
 
-  <!-- Main Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-container">
-      <div class="brand-logo" id="brandLogo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+  <div class="app-container">
+
+    <!-- ======================================================================
+         LEFT SIDEBAR
+         ====================================================================== -->
+    <aside class="sidebar">
+      <!-- Brand Logo -->
+      <!-- Brand Header with Sparkling 4-point Star Logo -->
+      <div class="brand-header" id="brandHomeBtn">
+        <div class="brand-star-icon">
+          <svg viewBox="0 0 40 40" class="star-logo-svg">
+            <defs>
+              <linearGradient id="starGlowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="45%" stop-color="#e0e7ff"/>
+                <stop offset="75%" stop-color="#c084fc"/>
+                <stop offset="100%" stop-color="#38bdf8"/>
+              </linearGradient>
+              <filter id="starBloom" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="1.5" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <!-- Sparkling 4-pointed star matching Disney+/Hotstar aesthetics -->
+            <path d="M20 2 C20.7 12.8 22.2 14.3 35 15 C22.2 15.7 20.7 17.2 20 28 C19.3 17.2 17.8 15.7 5 15 C17.8 14.3 19.3 12.8 20 2 Z" fill="url(#starGlowGrad)" filter="url(#starBloom)"/>
+            <circle cx="20" cy="15" r="2.5" fill="#ffffff"/>
           </svg>
         </div>
-        <div class="logo-text">
-          <span class="logo-title">Cine<span class="gradient-text">Pattern</span></span>
-          <span class="logo-subtitle">OTT Recommender & DP Lab</span>
-        </div>
+        <div class="brand-name">TiMN</div>
+        <span class="brand-sub">OTT</span>
       </div>
 
-      <nav class="nav-links" id="mainNav">
-        <button class="nav-tab active" data-tab="catalog" id="navCatalogBtn">
-          <span class="tab-icon">🎬</span> Catalog
-        </button>
-        <button class="nav-tab" data-tab="top-rated" id="navTopRatedBtn">
-          <span class="tab-icon">⭐</span> Top 5 (9.0+)
-        </button>
-        <button class="nav-tab" data-tab="recommender" id="navRecommenderBtn">
-          <span class="tab-icon">⚡</span> Chain Recommender
-        </button>
-        <button class="nav-tab" data-tab="watchlist" id="navWatchlistBtn">
-          <span class="tab-icon">🔖</span> Watchlist <span class="badge" id="watchlistCountBadge">0</span>
-        </button>
-        <button class="nav-tab" data-tab="admin" id="navAdminBtn">
-          <span class="tab-icon">🛡️</span> Admin Portal
-        </button>
-        <button class="nav-tab" data-tab="patterns" id="navPatternsBtn">
-          <span class="tab-icon">🧩</span> DP Inspector
-        </button>
-      </nav>
+      <!-- Main Navigation Section (Home, Search, Movie, Web series, Add to watchlist, Account) -->
+      <div class="sidebar-section">
+        <ul class="nav-menu">
+          <!-- 1. Home -->
+          <li class="nav-item active" id="navItemHome" data-view="home">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              </svg>
+            </span>
+            <span>Home</span>
+          </li>
 
-      <div class="nav-actions">
-        <!-- Notification Bell (Observer Pattern) -->
-        <div class="notification-wrapper" id="notificationWrapper">
-          <button class="icon-btn" id="notificationBtn" title="Observer Notifications">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <!-- 2. Search -->
+          <li class="nav-item" id="navItemSearch" data-view="search">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <span>search</span>
+          </li>
+
+          <!-- 3. Movie -->
+          <li class="nav-item" id="navItemMovies" data-view="movies">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+              </svg>
+            </span>
+            <span>Movie</span>
+          </li>
+
+          <!-- 4. Web series -->
+          <li class="nav-item" id="navItemWebSeries" data-view="webseries">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                <polyline points="17 2 12 7 7 2"></polyline>
+              </svg>
+            </span>
+            <span>Web series</span>
+          </li>
+
+          <!-- 5. Add to watchlist -->
+          <li class="nav-item" id="navItemWatchlist" data-view="watchlist">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                <line x1="12" y1="7" x2="12" y2="13"></line>
+                <line x1="9" y1="10" x2="15" y2="10"></line>
+              </svg>
+            </span>
+            <span>Add to watchlist</span>
+            <span class="nav-badge" id="sidebarWatchlistBadge">0</span>
+          </li>
+
+          <!-- 6. Account -->
+          <li class="nav-item" id="navItemAccount" data-view="account">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <span>Account</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Secondary Links: Parties & Design Patterns -->
+      <div class="sidebar-section">
+        <div class="section-label">Architecture & Social</div>
+        <ul class="nav-menu">
+          <li class="nav-item" id="navPartiesLink">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </span>
+            <span>Parties</span>
+          </li>
+          <li class="nav-item" id="navPatternsBtn">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </span>
+            <span>GoF Patterns</span>
+            <span class="nav-badge" style="background:var(--accent-cyan);">8</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Following Section -->
+      <div class="sidebar-section">
+        <div class="section-label">Following</div>
+        <div class="following-list" id="followingList">
+          <!-- irakli.t -->
+          <div class="following-user" data-user="irakli.t">
+            <div class="user-avatar-wrap">
+              <img src="images/avatar_irakli.jpg" alt="irakli.t" class="user-avatar">
+            </div>
+            <span class="user-name">irakli.t</span>
+            <span class="status-dot"></span>
+          </div>
+
+          <!-- Nick.B -->
+          <div class="following-user" data-user="Nick.B">
+            <div class="user-avatar-wrap">
+              <img src="images/avatar_nick.jpg" alt="Nick.B" class="user-avatar">
+            </div>
+            <span class="user-name">Nick.B</span>
+            <span class="device-chevron">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+          </div>
+
+          <!-- Nanacy.J -->
+          <div class="following-user" data-user="Nanacy.J">
+            <div class="user-avatar-wrap">
+              <img src="images/avatar_nanacy.jpg" alt="Nanacy.J" class="user-avatar">
+            </div>
+            <span class="user-name">Nanacy.J</span>
+            <span class="device-chevron">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+          </div>
+
+          <!-- Alesanda.B -->
+          <div class="following-user" data-user="Alesanda.B">
+            <div class="user-avatar-wrap">
+              <img src="images/avatar_alesanda.jpg" alt="Alesanda.B" class="user-avatar">
+            </div>
+            <span class="user-name">Alesanda.B</span>
+            <span class="device-chevron">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+            </span>
+          </div>
+
+          <!-- Anna.S -->
+          <div class="following-user" data-user="Anna.S">
+            <div class="user-avatar-wrap">
+              <img src="images/avatar_anna.jpg" alt="Anna.S" class="user-avatar">
+            </div>
+            <span class="user-name">Anna.S</span>
+            <span class="status-dot"></span>
+          </div>
+
+          <!-- Mika.H -->
+          <div class="following-user" data-user="Mika.H">
+            <div class="user-avatar-wrap">
+              <img src="images/avatar_mika.jpg" alt="Mika.H" class="user-avatar">
+            </div>
+            <span class="user-name">Mika.H</span>
+            <span class="status-dot"></span>
+          </div>
+        </div>
+
+        <button class="load-more-btn" id="loadMoreFriendsBtn">
+          <span class="load-more-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </span>
+          <span>Load more</span>
+        </button>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <!-- Logged Out Guest Banner -->
+        <div id="sidebarGuestBlock">
+          <div class="guest-banner-card">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);font-weight:700;">Viewing Mode</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-main);margin:2px 0 8px 0;">Guest Explorer</div>
+            <button class="btn-primary" id="sidebarAuthBtn" style="width:100%;justify-content:center;padding:8px 12px;font-size:12.5px;">
+              <span>Sign In / Register</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Logged In User Block -->
+        <div id="sidebarUserBlock" style="display:none;">
+          <div class="current-role-badge" id="roleBadgeBtn" title="Click to View Account Profile">
+            <span>Active: <strong id="sidebarUserName">Aryan</strong></span>
+            <span id="sidebarUserRole" style="color:var(--accent-cyan);font-weight:700;">USER</span>
+          </div>
+          <button class="logout-btn" id="logoutSidebarBtn">
+            <span class="logout-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </span>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         MAIN WRAPPER
+         ====================================================================== -->
+    <main class="main-wrapper">
+
+      <!-- Top Navigation Bar -->
+      <header class="top-navbar">
+        <div class="nav-left-group">
+          <!-- Back / Forward history arrows -->
+          <div class="history-nav">
+            <button class="history-btn" id="histBackBtn" title="Previous View">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="history-btn" id="histForwardBtn" title="Next View">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Search Bar with inside slider filter button -->
+          <div class="search-container">
+            <span class="search-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input type="text" class="search-input" id="globalSearchInput" placeholder="Search everything" autocomplete="off">
+            <button class="filter-tune-btn" id="filterTuneBtn" title="Open Filter & Recommendation Chain">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Nav Right Actions -->
+        <div class="nav-right-group">
+          <!-- Admin Only Add Movie Button (Proxy Pattern) -->
+          <button class="top-admin-add-btn" id="topNavAddMovieBtn" style="display:none;" title="Admin Portal: Add Movie to Website Catalog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ Add Movie</span>
+          </button>
+
+          <!-- Supabase Cloud Status Pill -->
+          <button class="supabase-status-pill" id="supabaseStatusBtn" title="Supabase Cloud Storage (invoices) & Auth">
+            <span class="cloud-pulse-dot"></span>
+            <span>Supabase Cloud</span>
+          </button>
+
+          <!-- Document / Report Export Button (Template Method) -->
+          <button class="action-icon-btn" id="exportReportBtn" title="Export Watchlist Report (Template Method)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Observer Notifications Bell Button -->
+          <button class="action-icon-btn" id="topNotifBellBtn" title="Observer Pattern Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
             </svg>
-            <span class="notif-badge" id="notifBadge">0</span>
-          </button>
-          <!-- Notification Dropdown -->
-          <div class="notification-dropdown" id="notificationDropdown">
-            <div class="dropdown-header">
-              <span class="title">🔔 Observer Pattern Feed</span>
-              <span class="badge-pill">Subject Broadcasts</span>
-            </div>
-            <div class="notif-list" id="notificationList">
-              <div class="empty-state">No notifications yet</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Profile Capsule -->
-        <div class="user-capsule" id="userCapsule">
-          <div class="user-avatar" id="userAvatar">A</div>
-          <div class="user-info">
-            <span class="user-name" id="userNameDisplay">Aryan</span>
-            <span class="user-role-badge role-user" id="userRoleDisplay">USER</span>
-          </div>
-          <button class="switch-role-btn" id="switchUserBtn" title="Switch User or Role">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <polyline points="17 11 19 13 23 9"></polyline>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="main-content">
-
-    <!-- HERO / BANNER -->
-    <section class="hero-section">
-      <div class="hero-content">
-        <div class="hero-tags">
-          <span class="pill-tag"><span class="dot live-dot"></span> Java Backend Connected</span>
-          <span class="pill-tag pattern-tag">5 Design Patterns Active</span>
-        </div>
-        <h1 class="hero-heading">Explore Curated Cinema & OTT Gems</h1>
-        <p class="hero-subtext">
-          Enterprise recommendation engine implementing <strong>Singleton</strong>, <strong>Factory</strong>,
-          <strong>Observer</strong>, <strong>Protection Proxy</strong>, and <strong>Chain of Responsibility</strong>.
-        </p>
-        <div class="hero-stats">
-          <div class="stat-card">
-            <span class="stat-number" id="statTotalMovies">--</span>
-            <span class="stat-label">Movies Loaded (Singleton)</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-number" id="statTopMovies">--</span>
-            <span class="stat-label">9.0+ Rated Elite</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-number">3</span>
-            <span class="stat-label">OTT Platforms</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-number" id="statObservers">--</span>
-            <span class="stat-label">Subscribed Observers</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 1: MOVIE CATALOG -->
-    <section class="tab-section active" id="tabCatalog">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">All Movies Catalog</h2>
-          <p class="section-subtitle">Real-time filtering and search over the Java in-memory catalog</p>
-        </div>
-        <!-- Search and Filters Bar -->
-        <div class="filters-bar">
-          <div class="search-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="catalogSearchInput" placeholder="Search by title, genre, language...">
-          </div>
-          <div class="filter-group">
-            <select id="catalogGenreFilter" class="custom-select">
-              <option value="Any">All Genres</option>
-              <option value="Action">Action</option>
-              <option value="Comedy">Comedy</option>
-              <option value="Drama">Drama</option>
-              <option value="Sci-Fi">Sci-Fi</option>
-              <option value="Thriller">Thriller</option>
-            </select>
-            <select id="catalogPlatformFilter" class="custom-select">
-              <option value="Any">All Platforms</option>
-              <option value="Netflix">Netflix</option>
-              <option value="Prime Video">Prime Video</option>
-              <option value="Disney+">Disney+</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Strategy Pattern: Dynamic Sorting Bar -->
-      <div class="sorting-strategy-bar">
-        <div class="strategy-label-group">
-          <span class="strategy-badge">🧩 Strategy Pattern</span>
-          <span class="sort-label">Sort Algorithm:</span>
-        </div>
-        <div class="strategy-pills" id="sortStrategyPills">
-          <button type="button" class="strategy-pill active" data-sort="rating">
-            <span class="pill-icon">★</span> Rating (High to Low)
-          </button>
-          <button type="button" class="strategy-pill" data-sort="year">
-            <span class="pill-icon">📅</span> Year (Newest)
-          </button>
-          <button type="button" class="strategy-pill" data-sort="title">
-            <span class="pill-icon">🔤</span> Title (A - Z)
-          </button>
-          <button type="button" class="strategy-pill" data-sort="popularity">
-            <span class="pill-icon">⚡</span> Binge Score
-          </button>
-        </div>
-        <span class="active-strategy-indicator" id="activeStrategyIndicator">Strategy: RatingSortStrategy</span>
-      </div>
-
-      <!-- Movies Grid -->
-      <div class="movies-grid" id="catalogMoviesGrid">
-        <div class="loading-state">
-          <div class="spinner"></div>
-          <p>Connecting to Java Backend...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: TOP 5 MOVIES (RATING 9.0+) -->
-    <section class="tab-section" id="tabTopRated">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Top 5 Masterpieces (Rating 9.0+)</h2>
-          <p class="section-subtitle">Specially curated cinema with a score of 9.0 or higher from the Singleton database
-          </p>
-        </div>
-        <div class="badge-pill gold-pill">★ Elite 9.0+ Club</div>
-      </div>
-      <div class="top-rated-container" id="topRatedContainer">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- TAB 3: SMART RECOMMENDER (CHAIN OF RESPONSIBILITY) -->
-    <section class="tab-section" id="tabRecommender">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Chain of Responsibility Recommender</h2>
-          <p class="section-subtitle">
-            Configure your streaming preferences to watch the recommendation pass through each handler in sequence:
-            <strong>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</strong>
-          </p>
-        </div>
-      </div>
-
-      <div class="recommender-layout">
-        <!-- Filter Controls Form -->
-        <div class="recommender-form-card">
-          <h3 class="form-title">Your Movie Preferences</h3>
-
-          <div class="form-group">
-            <label for="recGenre">1. Preferred Genre (GenreHandler)</label>
-            <select id="recGenre" class="custom-select">
-              <option value="Any">Any Genre</option>
-              <option value="Action">Action</option>
-              <option value="Comedy">Comedy</option>
-              <option value="Drama">Drama</option>
-              <option value="Sci-Fi">Sci-Fi</option>
-              <option value="Thriller">Thriller</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="recLanguage">2. Audio Language (LanguageHandler)</label>
-            <select id="recLanguage" class="custom-select">
-              <option value="Any">Any Language</option>
-              <option value="English">English</option>
-              <option value="Hindi">Hindi</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="recRating">3. Minimum IMDb Rating (RatingHandler): <span id="ratingValDisplay"
-                class="rating-val">8.0</span></label>
-            <input type="range" id="recRating" min="0" max="10" step="0.1" value="8.0" class="custom-range">
-            <div class="range-marks">
-              <span>0.0</span>
-              <span>5.0</span>
-              <span>8.0</span>
-              <span>10.0</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="recPlatform">4. OTT Platform (PlatformHandler)</label>
-            <select id="recPlatform" class="custom-select">
-              <option value="Any">Any Platform</option>
-              <option value="Netflix">Netflix</option>
-              <option value="Prime Video">Prime Video</option>
-              <option value="Disney+">Disney+</option>
-            </select>
-          </div>
-
-          <button class="primary-btn pulse-glow" id="runRecommendationBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            Execute Chain Pipeline
-          </button>
-        </div>
-
-        <!-- Chain Visualizer and Results -->
-        <div class="recommender-results-card">
-          <!-- Pipeline Progress Bar -->
-          <div class="pipeline-visualizer" id="pipelineVisualizer">
-            <div class="pipeline-node" id="nodeInput">
-              <div class="node-badge">Input</div>
-              <div class="node-name">Database</div>
-              <div class="node-count" id="countInput">--</div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-node" id="nodeGenre">
-              <div class="node-badge">Stage 1</div>
-              <div class="node-name">GenreHandler</div>
-              <div class="node-count" id="countGenre">--</div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-node" id="nodeLanguage">
-              <div class="node-badge">Stage 2</div>
-              <div class="node-name">LanguageHandler</div>
-              <div class="node-count" id="countLanguage">--</div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-node" id="nodeRating">
-              <div class="node-badge">Stage 3</div>
-              <div class="node-name">RatingHandler</div>
-              <div class="node-count" id="countRating">--</div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-node" id="nodePlatform">
-              <div class="node-badge">Stage 4</div>
-              <div class="node-name">PlatformHandler</div>
-              <div class="node-count" id="countPlatform">--</div>
-            </div>
-          </div>
-
-          <!-- Recommendation Output List -->
-          <div class="results-header">
-            <h4>Recommended Matches (<span id="recMatchesCount">0</span>)</h4>
-            <span class="badge-pill" id="recFilterSummary">Awaiting input</span>
-          </div>
-
-          <div class="movies-grid" id="recMoviesGrid">
-            <div class="empty-state">Select criteria and click "Execute Chain Pipeline" to filter movies.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: MY WATCHLIST -->
-    <section class="tab-section" id="tabWatchlist">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">My Personalized Watchlist</h2>
-          <p class="section-subtitle">
-            Saved movies for user <strong id="watchlistUserName">User</strong> (Persisted to <code
-              class="code-tag">data/watchlist.txt</code>)
-          </p>
-        </div>
-        <div class="watchlist-action-controls">
-          <!-- Memento Pattern: Rollback / Undo Button -->
-          <button type="button" class="memento-undo-btn" id="mementoUndoBtn" disabled title="Undo last watchlist change via Memento Pattern">
-            <span class="undo-icon">↺</span> Undo Action
-            <span class="pattern-chip chip-memento">Memento</span>
+            <span class="notif-badge-dot" id="topNotifDot"></span>
           </button>
 
-          <!-- Template Method: Export Dropdown -->
-          <div class="template-export-wrapper">
-            <button type="button" class="export-dropdown-btn" id="exportDropdownBtn">
-              <span>📋 Export Report</span>
-              <span class="pattern-chip chip-template">Template</span>
-              <span class="caret-symbol">▼</span>
+          <!-- Guest Sign In Button (Shown when logged out) -->
+          <button class="btn-primary" id="topNavSignInBtn" style="padding: 7px 16px; font-size: 13px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+            <span>Sign In</span>
+          </button>
+
+          <!-- Logged In User Avatar Container (Shown when logged in) -->
+          <div class="top-user-wrap" id="topUserWrap" style="display:none; align-items:center; gap:10px;">
+            <div class="top-avatar-btn" id="topProfileAvatarBtn" title="User Profile & Role Settings">
+              <img src="images/avatar_user.jpg" alt="Profile" id="topAvatarImg">
+            </div>
+            <button class="action-icon-btn" id="topNavLogoutBtn" title="Log Out of TiMN" style="color:var(--text-muted);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </button>
-            <div class="export-dropdown-menu" id="exportDropdownMenu" style="display: none;">
-              <button type="button" class="export-menu-item" data-format="markdown">
-                <span class="item-icon">📝</span> Markdown Table (.md)
-              </button>
-              <button type="button" class="export-menu-item" data-format="text">
-                <span class="item-icon">📄</span> Plain Text Receipt (.txt)
-              </button>
-              <button type="button" class="export-menu-item" data-format="json">
-                <span class="item-icon">📦</span> Structured JSON (.json)
-              </button>
-            </div>
           </div>
         </div>
-      </div>
-      <div class="movies-grid" id="watchlistMoviesGrid">
-        <div class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading your watchlist...</p>
-        </div>
-      </div>
-    </section>
+      </header>
 
-    <!-- TAB 5: ADMIN PORTAL (PROXY PATTERN) -->
-    <section class="tab-section" id="tabAdmin">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Admin Management Portal</h2>
-          <p class="section-subtitle">
-            Secured by the <strong>Protection Proxy Pattern</strong>. The <code
-              class="code-tag">MovieServiceProxy</code> verifies role permissions before delegating to <code
-              class="code-tag">RealMovieService</code>.
-          </p>
-        </div>
-        <div class="role-status-indicator" id="adminAccessIndicator">
-          <span class="status-dot"></span>
-          <span class="status-text" id="adminAccessText">Checking Access...</span>
-        </div>
-      </div>
+      <!-- Content Body with 6 Modular View Panels -->
+      <div class="content-body">
 
-      <!-- Access Denied Banner for regular users -->
-      <div class="alert-box alert-warning" id="proxyDeniedAlert" style="display: none;">
-        <div class="alert-icon">🛡️</div>
-        <div class="alert-body">
-          <h4>Protection Proxy Enforcement</h4>
-          <p>
-            You are currently logged in as a <strong>USER</strong>. Any attempt to Add or Remove movies will be
-            intercepted and blocked by <code class="code-tag">MovieServiceProxy</code> with a 403 Forbidden!
-          </p>
-          <button class="small-btn" id="switchToAdminBtn">Switch to ADMIN Role</button>
-        </div>
-      </div>
+        <!-- ==================================================================
+             VIEW 1: HOME PAGE
+             ================================================================== -->
+        <div class="view-panel active" id="viewHome">
+          <!-- Hero Banner: Disney • Pixar ELIO -->
+          <section class="hero-banner" id="heroBannerSection">
+            <img src="images/elio_backdrop.jpg" alt="Disney Pixar Elio" class="hero-backdrop" id="heroBackdropImg">
+            <div class="hero-gradient-overlay"></div>
 
-      <div class="admin-grid">
-        <!-- Add Movie Card (Factory + Proxy) -->
-        <div class="admin-card">
-          <div class="card-header">
-            <div class="card-icon-badge">➕</div>
-            <div>
-              <h3>Add New Movie</h3>
-              <p class="card-sub">Creates via <code class="code-tag">MovieFactory</code> and validates via <code
-                  class="code-tag">MovieServiceProxy</code></p>
-            </div>
-          </div>
-          <form id="addMovieForm" class="admin-form">
-            <div class="form-row">
-              <div class="form-group flex-1">
-                <label for="newMovieTitle">Movie Title *</label>
-                <input type="text" id="newMovieTitle" placeholder="e.g. Oppenheimer" required>
+            <div class="hero-content">
+              <div class="hero-studio" id="heroStudioText">Disney • PIXAR</div>
+              <h1 class="hero-title" id="heroTitleText">
+                ELI<span class="glow-o">O</span>
+              </h1>
+
+              <div class="hero-meta-row">
+                <span class="imdb-badge" id="heroImdbBadge">★ 7.9</span>
+                <span class="meta-bullet">•</span>
+                <span class="meta-lang" id="heroLangText">🇺🇸 English</span>
+                <span class="meta-bullet">•</span>
+                <span id="heroDurationGenre">1h 45m • Sci-Fi, Adventure</span>
               </div>
-              <div class="form-group flex-1">
-                <label for="newMovieGenre">Genre *</label>
-                <select id="newMovieGenre" class="custom-select" required>
-                  <option value="Action">Action</option>
-                  <option value="Comedy">Comedy</option>
-                  <option value="Drama">Drama</option>
-                  <option value="Sci-Fi">Sci-Fi</option>
-                  <option value="Thriller">Thriller</option>
+
+              <div class="hero-actions-row">
+                <button class="hero-watch-btn" id="heroWatchBtn">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Watch Trailer</span>
+                </button>
+
+                <div class="friends-watching-pill" id="heroFriendsPill" title="Friends currently enjoying this title">
+                  <div class="avatar-stack">
+                    <img src="images/avatar_irakli.jpg" alt="Friend 1">
+                    <img src="images/avatar_nick.jpg" alt="Friend 2">
+                    <img src="images/avatar_nanacy.jpg" alt="Friend 3">
+                  </div>
+                  <span>+5 friends are watching</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Right Mini Carousel -->
+            <div class="hero-mini-carousel">
+              <button class="carousel-nav-btn" id="heroCarouselPrev">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <div class="mini-cards-track" id="heroMiniTrack">
+                <div class="mini-thumb-card active" data-title="Elio" data-hero="images/elio_backdrop.jpg">
+                  <img src="images/elio_poster.jpg" alt="Elio Thumbnail">
+                </div>
+                <div class="mini-thumb-card" data-title="Spider Man" data-hero="images/spiderman_backdrop.jpg">
+                  <img src="images/spiderman_poster.jpg" alt="Spider-Man Thumbnail">
+                </div>
+                <div class="mini-thumb-card" data-title="Mortal Engines" data-hero="images/mortalengines_backdrop.jpg">
+                  <img src="images/mortalengines_backdrop.jpg" alt="Mortal Engines Thumbnail">
+                </div>
+              </div>
+              <button class="carousel-nav-btn" id="heroCarouselNext">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </section>
+
+          <!-- Section: Latest Movies -->
+          <section class="section-container" id="latestMoviesSection">
+            <div class="section-header-row">
+              <div>
+                <h2 class="section-title">🔥 Latest Movies</h2>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Fresh blockbusters and new premieres</div>
+              </div>
+              <button class="btn-secondary" id="seeAllLatestBtn" style="font-size:12px;padding:6px 14px;">Explore All Movies →</button>
+            </div>
+            <div class="horizontal-scroll-row" id="latestMoviesRow">
+              <!-- Dynamically populated with latest movies -->
+            </div>
+          </section>
+
+          <!-- Section: Top Movies Today (Ranked 1 to 10) -->
+          <section class="section-container" id="topMoviesTodaySection">
+            <div class="section-header-row">
+              <div>
+                <h2 class="section-title">🏆 Top Movies Today</h2>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Top 10 most popular movies in India today</div>
+              </div>
+              <div class="pill-toggle-switch"></div>
+            </div>
+            <div class="top10-grid" id="top10MoviesGrid">
+              <!-- Populated dynamically with ranked 1-10 movies -->
+            </div>
+          </section>
+
+          <!-- Section: Watch Parties -->
+          <section class="section-container" id="partiesSection">
+            <div class="section-header-row">
+              <div>
+                <h2 class="section-title">🎉 Trending Watch Parties</h2>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Live virtual rooms with synced playback</div>
+              </div>
+              <div class="pill-toggle-switch" id="partiesToggle"></div>
+            </div>
+
+            <div class="parties-grid">
+              <!-- Card 1: Spider Man -->
+              <div class="party-card" data-party="Spider Man">
+                <div class="party-top-row">
+                  <div class="party-thumb-wrap">
+                    <img src="images/spiderman_poster.jpg" alt="Spider Man">
+                  </div>
+                  <div class="party-members-badge">
+                    <span class="party-count-text">+5</span>
+                    <div class="avatar-stack">
+                      <img src="images/avatar_irakli.jpg" alt="p1">
+                      <img src="images/avatar_nick.jpg" alt="p2">
+                      <img src="images/avatar_nanacy.jpg" alt="p3">
+                    </div>
+                  </div>
+                </div>
+                <div class="party-card-title">Spider Man</div>
+                <div class="party-card-subtitle">Science Fiction, Fantasy</div>
+              </div>
+
+              <!-- Card 2: Wonder Woman -->
+              <div class="party-card" data-party="Wonder Woman">
+                <div class="party-top-row">
+                  <div class="party-thumb-wrap">
+                    <img src="images/wonderwoman_poster.jpg" alt="Wonder Woman">
+                  </div>
+                  <div class="party-members-badge">
+                    <span class="party-count-text">+2</span>
+                    <div class="avatar-stack">
+                      <img src="images/avatar_alesanda.jpg" alt="p4">
+                      <img src="images/avatar_anna.jpg" alt="p5">
+                    </div>
+                  </div>
+                </div>
+                <div class="party-card-title">Wonder Woman</div>
+                <div class="party-card-subtitle">Adventure, Action</div>
+              </div>
+
+              <!-- Card 3: Mortal Engines -->
+              <div class="party-card selected" data-party="Mortal Engines">
+                <div class="party-top-row">
+                  <div class="party-thumb-wrap">
+                    <img src="images/mortalengines_poster.jpg" alt="Mortal Engines">
+                  </div>
+                  <div class="party-members-badge">
+                    <span class="party-count-text">+7</span>
+                    <div class="avatar-stack">
+                      <img src="images/avatar_mika.jpg" alt="p6">
+                      <img src="images/avatar_irakli.jpg" alt="p7">
+                      <img src="images/avatar_nick.jpg" alt="p8">
+                    </div>
+                  </div>
+                </div>
+                <div class="party-card-title">Mortal Engines</div>
+                <div class="party-card-subtitle">Science Fiction, Suspense</div>
+              </div>
+
+              <!-- Card 4: Rampage -->
+              <div class="party-card" data-party="Rampage">
+                <div class="party-top-row">
+                  <div class="party-thumb-wrap">
+                    <img src="images/rampage_poster.jpg" alt="Rampage">
+                  </div>
+                  <div class="party-members-badge">
+                    <span class="party-count-text">+3</span>
+                    <div class="avatar-stack">
+                      <img src="images/avatar_nanacy.jpg" alt="p9">
+                      <img src="images/avatar_alesanda.jpg" alt="p10">
+                    </div>
+                  </div>
+                </div>
+                <div class="party-card-title">Rampage</div>
+                <div class="party-card-subtitle">Adventure, Action</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section: Continue Watching -->
+          <section class="section-container" id="continueSection">
+            <div class="section-header-row">
+              <h2 class="section-title">⏯️ Continue Watching</h2>
+              <div class="pill-toggle-switch" id="continueToggle"></div>
+            </div>
+
+            <div class="continue-grid">
+              <!-- Movie 1: Alita -->
+              <div class="continue-card" data-movie="Alita: Battle Angel">
+                <div class="continue-poster-wrap">
+                  <img src="images/alita_backdrop.jpg" alt="Alita: Battle Angel">
+                  <div class="continue-overlay">
+                    <div class="play-circle-btn">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 18 12 6 20 6 4"/></svg>
+                    </div>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-fill" style="width: 72%;"></div>
+                  </div>
+                </div>
+                <div class="continue-info">
+                  <div class="continue-title-row">
+                    <span class="continue-title">Alita: Battle Angel</span>
+                    <span class="ott-badge-tag disney">Disney+</span>
+                  </div>
+                  <span class="continue-sub">34m remaining • Sci-Fi</span>
+                </div>
+              </div>
+
+              <!-- Movie 2: Black Widow -->
+              <div class="continue-card" data-movie="Black Widow">
+                <div class="continue-poster-wrap">
+                  <img src="images/blackwidow_backdrop.jpg" alt="Black Widow">
+                  <div class="continue-overlay">
+                    <div class="play-circle-btn">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 18 12 6 20 6 4"/></svg>
+                    </div>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-fill" style="width: 88%;"></div>
+                  </div>
+                </div>
+                <div class="continue-info">
+                  <div class="continue-title-row">
+                    <span class="continue-title">Black Widow</span>
+                    <span class="ott-badge-tag disney">Disney+</span>
+                  </div>
+                  <span class="continue-sub">18m remaining • Action</span>
+                </div>
+              </div>
+
+              <!-- Movie 3: Jurassic World -->
+              <div class="continue-card" data-movie="Jurassic World: Dominion">
+                <div class="continue-poster-wrap">
+                  <img src="images/jurassicworld_poster.jpg" alt="Jurassic World: Dominion">
+                  <div class="continue-overlay">
+                    <div class="play-circle-btn">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 18 12 6 20 6 4"/></svg>
+                    </div>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-fill" style="width: 45%;"></div>
+                  </div>
+                </div>
+                <div class="continue-info">
+                  <div class="continue-title-row">
+                    <span class="continue-title">Jurassic World: Dominion</span>
+                    <span class="ott-badge-tag prime">Prime Video</span>
+                  </div>
+                  <span class="continue-sub">1h 10m remaining • Action</span>
+                </div>
+              </div>
+
+              <!-- Movie 4: Guardians -->
+              <div class="continue-card" data-movie="Guardians of the Galaxy">
+                <div class="continue-poster-wrap">
+                  <img src="images/guardians_poster.jpg" alt="Guardians of the Galaxy">
+                  <div class="continue-overlay">
+                    <div class="play-circle-btn">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 18 12 6 20 6 4"/></svg>
+                    </div>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-fill" style="width: 92%;"></div>
+                  </div>
+                </div>
+                <div class="continue-info">
+                  <div class="continue-title-row">
+                    <span class="continue-title">Guardians of the Galaxy</span>
+                    <span class="ott-badge-tag disney">Disney+</span>
+                  </div>
+                  <span class="continue-sub">12m remaining • Sci-Fi</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section: Design Patterns Architecture (GoF Patterns Implementation at End of Page) -->
+          <section class="patterns-section-container" id="designPatternsSection">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+              <div>
+                <span class="pattern-badge-gof">Software Architecture & Engineering</span>
+                <h2 style="font-size:24px;font-weight:800;color:#fff;margin:6px 0 4px 0;">🏛️ Gang of Four (GoF) Design Patterns Implementation</h2>
+                <p style="font-size:13.5px;color:var(--text-secondary);max-width:760px;line-height:1.6;">
+                  TiMN is built from the ground up using 8 Gang of Four (GoF) design patterns to ensure robust modularity, loose coupling, enterprise security, and algorithmic extensibility across our Java backend and frontend.
+                </p>
+              </div>
+              <button class="btn-primary" id="openFullPatternsModalBtn" style="padding:8px 18px;font-size:12.5px;">
+                <span>View UML & Details</span>
+              </button>
+            </div>
+
+            <div class="gof-cards-grid">
+              <!-- Pattern 1: Singleton -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">1. Singleton Pattern</span>
+                  <span class="gof-card-tag">Creational</span>
+                </div>
+                <div class="gof-card-file">MovieDatabase.java</div>
+                <p class="gof-card-desc">Guarantees a single in-memory database instance managing all loaded movies, catalog lookups, and state synchronization across concurrent user requests.</p>
+                <button class="btn-secondary" onclick="showToast('Singleton Pattern: Single MovieDatabase instance is active across server.')" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Inspect Singleton</button>
+              </div>
+
+              <!-- Pattern 2: Factory Method -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">2. Factory Method</span>
+                  <span class="gof-card-tag">Creational</span>
+                </div>
+                <div class="gof-card-file">MovieFactory.java</div>
+                <p class="gof-card-desc">Encapsulates object instantiation logic from formatted text storage and admin payloads, parsing attributes into polymorphic Movie instances cleanly.</p>
+                <button class="btn-secondary" onclick="showToast('Factory Method: MovieFactory instantiated 37+ polymorphic movie records.')" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Test Factory</button>
+              </div>
+
+              <!-- Pattern 3: Observer -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">3. Observer Pattern</span>
+                  <span class="gof-card-tag">Behavioral</span>
+                </div>
+                <div class="gof-card-file">NotificationService.java</div>
+                <p class="gof-card-desc">Implements a one-to-many publish-subscribe communication engine. When movies are added or broadcasts sent, all registered UserObservers are notified.</p>
+                <button class="btn-secondary" id="gofObserverBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">View Observers</button>
+              </div>
+
+              <!-- Pattern 4: Protection Proxy -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">4. Protection Proxy</span>
+                  <span class="gof-card-tag">Structural</span>
+                </div>
+                <div class="gof-card-file">MovieServiceProxy.java</div>
+                <p class="gof-card-desc">Enforces strict role-based access control. Only authenticated admins (admin@gmail.com) can publish movies; standard users receive HTTP 403 Forbidden.</p>
+                <button class="btn-secondary" id="gofProxyBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Verify Proxy</button>
+              </div>
+
+              <!-- Pattern 5: Chain of Responsibility -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">5. Chain of Responsibility</span>
+                  <span class="gof-card-tag">Behavioral</span>
+                </div>
+                <div class="gof-card-file">RecommendationChain.java</div>
+                <p class="gof-card-desc">Processes search queries sequentially along a decoupled handler pipeline: GenreHandler → LanguageHandler → RatingHandler → PlatformHandler.</p>
+                <button class="btn-secondary" id="gofChainBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Run Pipeline</button>
+              </div>
+
+              <!-- Pattern 6: Strategy -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">6. Strategy Pattern</span>
+                  <span class="gof-card-tag">Behavioral</span>
+                </div>
+                <div class="gof-card-file">SortingStrategy.java</div>
+                <p class="gof-card-desc">Encapsulates sorting algorithms (RatingStrategy, YearStrategy, TitleStrategy, CompositeStrategy) into interchangeable strategies selectable at runtime.</p>
+                <button class="btn-secondary" id="gofStrategyBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Change Strategy</button>
+              </div>
+
+              <!-- Pattern 7: Template Method -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">7. Template Method</span>
+                  <span class="gof-card-tag">Behavioral</span>
+                </div>
+                <div class="gof-card-file">WatchlistReportTemplate.java</div>
+                <p class="gof-card-desc">Defines invariant report export skeleton algorithm, deferring header, movie rows, and summary footer rendering to JsonWatchlistReport and TextWatchlistReport.</p>
+                <button class="btn-secondary" id="gofTemplateBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Export Report</button>
+              </div>
+
+              <!-- Pattern 8: Memento -->
+              <div class="gof-card">
+                <div class="gof-card-header">
+                  <span class="gof-card-title">8. Memento Pattern</span>
+                  <span class="gof-card-tag">Behavioral</span>
+                </div>
+                <div class="gof-card-file">WatchlistMemento.java</div>
+                <p class="gof-card-desc">Captures and restores user watchlist snapshots inside WatchlistCaretaker, allowing instantaneous Undo operations without exposing internal state.</p>
+                <button class="btn-secondary" id="gofMementoBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Undo (Memento)</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ==================================================================
+             VIEW 2: SEARCH PAGE
+             ================================================================== -->
+        <div class="view-panel" id="viewSearch" style="display:none;">
+          <div class="search-view-container">
+            <div class="search-hero-box">
+              <h2 style="font-size:26px;font-weight:800;color:#fff;margin-bottom:8px;">🔍 Search Everything</h2>
+              <p style="font-size:14px;color:var(--text-secondary);margin-bottom:20px;">Search through our entire database of blockbusters, directors, genres, and streaming platforms in real-time.</p>
+
+              <div class="search-large-bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22" style="color:var(--primary);flex-shrink:0;">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="dedicatedSearchInput" placeholder="Type any movie title (e.g. Inception, Dune, Spider-Man)..." autocomplete="off">
+                <button class="btn-secondary" id="clearSearchBtn" style="padding:6px 12px;font-size:12px;">Clear</button>
+              </div>
+
+              <!-- Popular & Trending Search Chips -->
+              <div class="trending-chips-row">
+                <span style="font-size:12px;font-weight:700;color:var(--text-muted);margin-right:4px;">POPULAR:</span>
+                <span class="trending-chip" data-query="Dune">🔥 Dune: Part Two</span>
+                <span class="trending-chip" data-query="Inception">🔥 Inception</span>
+                <span class="trending-chip" data-query="Interstellar">🔥 Interstellar</span>
+                <span class="trending-chip" data-query="Action">🔥 Action Hits</span>
+                <span class="trending-chip" data-query="Sci-Fi">🔥 Sci-Fi</span>
+                <span class="trending-chip" data-query="Netflix">🔥 Netflix Originals</span>
+                <span class="trending-chip" data-query="Hindi">🔥 Bollywood Hits</span>
+                <span class="trending-chip" data-query="Nolan">🔥 Christopher Nolan</span>
+              </div>
+            </div>
+
+            <!-- Search Quick Filters -->
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+              <div class="filter-pills-group" id="searchFilterPills">
+                <button class="filter-pill active" data-filter="platform" data-val="all">All</button>
+                <button class="filter-pill" data-filter="platform" data-val="Netflix">Netflix</button>
+                <button class="filter-pill" data-filter="platform" data-val="Prime Video">Prime Video</button>
+                <button class="filter-pill" data-filter="platform" data-val="Disney+">Disney+</button>
+                <button class="filter-pill" data-filter="genre" data-val="Action">Action</button>
+                <button class="filter-pill" data-filter="genre" data-val="Sci-Fi">Sci-Fi</button>
+                <button class="filter-pill" data-filter="genre" data-val="Drama">Drama</button>
+              </div>
+              <div style="font-size:13.5px;color:var(--text-secondary);" id="searchResultCount">
+                Showing all movies
+              </div>
+            </div>
+
+            <!-- Search Results Grid -->
+            <div class="movies-catalog-grid" id="searchResultsGrid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             VIEW 3: MOVIES PAGE
+             ================================================================== -->
+        <div class="view-panel" id="viewMovies" style="display:none;">
+          <!-- Categories Bar on Top -->
+          <div style="margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <h2 style="font-size:22px;font-weight:800;color:#fff;">🎬 Movie Categories</h2>
+              <span style="font-size:12.5px;color:var(--text-muted);">Select a category to filter movies</span>
+            </div>
+            <div class="categories-scroll-bar" id="movieCategoriesBar">
+              <button class="category-chip active" data-category="all"><span>🎬</span> All Movies</button>
+              <button class="category-chip" data-category="Action"><span>💥</span> Action</button>
+              <button class="category-chip" data-category="Sci-Fi"><span>🚀</span> Sci-Fi</button>
+              <button class="category-chip" data-category="Drama"><span>🎭</span> Drama</button>
+              <button class="category-chip" data-category="Comedy"><span>😂</span> Comedy</button>
+              <button class="category-chip" data-category="Thriller"><span>🔪</span> Thriller</button>
+              <button class="category-chip" data-category="Horror"><span>👻</span> Horror</button>
+              <button class="category-chip" data-category="Adventure"><span>🗺️</span> Adventure</button>
+              <button class="category-chip" data-category="Romance"><span>💖</span> Romance</button>
+              <button class="category-chip" data-category="Animation"><span>🎨</span> Animation</button>
+              <button class="category-chip" data-category="Crime"><span>🕵️</span> Crime</button>
+            </div>
+          </div>
+
+          <!-- Section: Latest Movies Currently Trending -->
+          <section class="section-container" style="margin-bottom:34px;">
+            <div class="section-header-row">
+              <div>
+                <h3 class="section-title">🔥 Latest Movies Currently Trending</h3>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Trending across box office and top digital premieres</div>
+              </div>
+            </div>
+            <div class="horizontal-scroll-row" id="moviesTrendingRow">
+              <!-- Dynamically populated with trending blockbusters -->
+            </div>
+          </section>
+
+          <!-- Section: Explore Full Movie Catalog with Strategy Sorting -->
+          <section class="section-container" id="catalogSection">
+            <div class="section-header-row">
+              <div>
+                <h3 class="section-title">⭐ Explore All Movies</h3>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Connected to 37+ backend movies with Strategy Sorting</div>
+              </div>
+              <div class="sort-controls-group">
+                <span class="sort-label">Strategy Sort:</span>
+                <select class="sort-select" id="sortStrategySelect">
+                  <option value="rating">★ Highest Rated (RatingStrategy)</option>
+                  <option value="year">📅 Release Year (YearStrategy)</option>
+                  <option value="title">🔤 Title A-Z (TitleStrategy)</option>
+                  <option value="popularity">🔥 Popularity (CompositeStrategy)</option>
                 </select>
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="form-group flex-1">
-                <label for="newMovieLang">Language *</label>
-                <select id="newMovieLang" class="custom-select" required>
-                  <option value="English">English</option>
-                  <option value="Hindi">Hindi</option>
-                </select>
+            <!-- Full Movies Grid from Server -->
+            <div class="movies-catalog-grid" id="catalogMoviesGrid">
+              <!-- Populated dynamically by app.js from /api/movies -->
+            </div>
+          </section>
+        </div>
+
+        <!-- ==================================================================
+             VIEW 4: WEB SERIES PAGE
+             ================================================================== -->
+        <div class="view-panel" id="viewWebSeries" style="display:none;">
+          <!-- Types of Web Series on Top -->
+          <div style="margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <h2 style="font-size:22px;font-weight:800;color:#fff;">📺 Web Series & Anime</h2>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">Binge-worthy series and trending anime across OTT platforms</div>
               </div>
-              <div class="form-group flex-1">
-                <label for="newMovieRating">Rating (0 - 10) *</label>
-                <input type="number" id="newMovieRating" min="0" max="10" step="0.1" value="8.5" required>
-              </div>
+              <span id="seriesCountPill" class="pipeline-count-pill">Showing 18 Series</span>
             </div>
 
-            <div class="form-row">
-              <div class="form-group flex-1">
-                <label for="newMovieYear">Release Year *</label>
-                <input type="number" id="newMovieYear" min="1900" max="2099" value="2024" required>
-              </div>
-              <div class="form-group flex-1">
-                <label for="newMoviePlatform">OTT Platform *</label>
-                <select id="newMoviePlatform" class="custom-select" required>
-                  <option value="Netflix">Netflix</option>
-                  <option value="Prime Video">Prime Video</option>
-                  <option value="Disney+">Disney+</option>
-                </select>
-              </div>
+            <!-- Types of Web Series Filter Bar -->
+            <div class="categories-scroll-bar" id="seriesTypesBar">
+              <button class="category-chip active" data-type="all"><span>📺</span> All Series</button>
+              <button class="category-chip" data-type="Thriller"><span>🔪</span> Thriller</button>
+              <button class="category-chip" data-type="Comedy"><span>😂</span> Comedy</button>
+              <button class="category-chip" data-type="Anime"><span>⚔️</span> Anime</button>
+              <button class="category-chip" data-type="Crime Drama"><span>🕵️</span> Crime Drama</button>
+              <button class="category-chip" data-type="Sci-Fi & Mystery"><span>🚀</span> Sci-Fi & Mystery</button>
+              <button class="category-chip" data-type="Action"><span>🏹</span> Action</button>
             </div>
+          </div>
 
-            <button type="submit" class="primary-btn" id="submitAddMovieBtn">
-              <span>Save & Broadcast (Observer)</span>
+          <!-- Web Series Catalog Grid -->
+          <div class="movies-catalog-grid" id="webSeriesGrid">
+            <!-- Populated dynamically with rich web series & anime -->
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             VIEW 5: WATCHLIST PAGE
+             ================================================================== -->
+        <div class="view-panel" id="viewWatchlist" style="display:none;">
+          <!-- Guest Callout (Visible when NOT logged in) -->
+          <div id="watchlistGuestCallout" class="guest-banner-card" style="padding:28px;margin-bottom:24px;text-align:center;">
+            <div style="font-size:36px;margin-bottom:8px;">🔒</div>
+            <h2 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;">Sign In to Access Your Watchlist</h2>
+            <p style="font-size:13.5px;color:var(--text-secondary);max-width:520px;margin:0 auto 18px auto;">
+              Your personal Watchlist lets you curate movies, undo accidental removals via the <strong>Memento Pattern</strong>, and export structured reports via the <strong>Template Method Pattern</strong>.
+            </p>
+            <button class="btn-primary" id="watchlistPageLoginBtn" style="padding:10px 24px;font-size:14px;margin:0 auto;">
+              <span>Sign In / Create Account</span>
             </button>
-          </form>
-        </div>
+          </div>
 
-        <!-- Broadcast Notification Card (Observer Subject) -->
-        <div class="admin-card">
-          <div class="card-header">
-            <div class="card-icon-badge">📢</div>
-            <div>
-              <h3>Broadcast Notification</h3>
-              <p class="card-sub">Triggers <code class="code-tag">NotificationService.notifyObservers()</code></p>
-            </div>
-          </div>
-          <form id="broadcastForm" class="admin-form">
-            <div class="form-group">
-              <label for="broadcastMessage">Announcement Message *</label>
-              <textarea id="broadcastMessage" rows="4"
-                placeholder="Enter message to broadcast to all registered user observers..." required></textarea>
-            </div>
-            <button type="submit" class="accent-btn" id="submitBroadcastBtn">
-              <span>Broadcast to All Observers</span>
-            </button>
-          </form>
+          <!-- Logged In Watchlist View (Visible when logged in) -->
+          <div id="watchlistUserView" style="display:none;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:24px;">
+              <div>
+                <h2 style="font-size:22px;font-weight:800;color:#fff;" id="watchlistPageHeading">My Curated Watchlist</h2>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;" id="watchlistPageSub">Manage your saved movies and export watchlist reports</div>
+              </div>
 
-          <div class="observer-count-widget">
-            <div class="widget-row">
-              <span>Subscribed User Observers:</span>
-              <strong id="adminObserverCount">0</strong>
+              <!-- Pattern Action Buttons -->
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn-secondary" id="pageMementoUndoBtn" title="Restore previous watchlist state via Memento Pattern">
+                  <span>↩ Undo (Memento)</span>
+                </button>
+                <button class="btn-secondary" id="pageExportJsonBtn">
+                  <span>📄 Export JSON</span>
+                </button>
+                <button class="btn-secondary" id="pageExportTxtBtn">
+                  <span>📝 Export Text</span>
+                </button>
+                <button class="btn-primary" id="pageSupabaseSyncBtn">
+                  <span>☁️ Cloud Backup</span>
+                </button>
+              </div>
             </div>
-            <div class="subscribers-pill-list" id="adminSubscribersList">
-              <!-- Rendered list of observer names -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- TAB 6: DESIGN PATTERNS INSPECTOR -->
-    <section class="tab-section" id="tabPatterns">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">Design Patterns Interactive Inspector</h2>
-          <p class="section-subtitle">Live inspection of all 5 Gang of Four design patterns running inside the Java
-            backend</p>
-        </div>
-        <button class="secondary-btn" id="refreshPatternsBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M23 4v6h-6"></path>
-            <path d="M1 20v-6h6"></path>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-          </svg>
-          Refresh Live Metrics
-        </button>
-      </div>
-
-      <div class="patterns-grid">
-        <!-- 1. SINGLETON PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">01</div>
-            <div>
-              <h3>Singleton Pattern</h3>
-              <span class="pattern-class">Class: <code>MovieDatabase.java</code></span>
-            </div>
-          </div>
-          <p class="pattern-desc">
-            Ensures that only one centralized in-memory database instance exists across the entire application lifecycle
-            with a private constructor and a static <code>getInstance()</code> accessor.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Instance Hash:</span>
-              <span class="metric-val" id="metricSingletonHash">--</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Catalog Movies:</span>
-              <span class="metric-val" id="metricSingletonCount">--</span>
-            </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>public class MovieDatabase {
-    private static MovieDatabase instance;
-    private List&lt;Movie&gt; movies;
-    private MovieDatabase() { ... }
-    public static synchronized MovieDatabase getInstance() {
-        if (instance == null) instance = new MovieDatabase();
-        return instance;
-    }
-}</code></pre>
-          </div>
-        </div>
-
-        <!-- 2. FACTORY PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">02</div>
-            <div>
-              <h3>Factory Method Pattern</h3>
-              <span class="pattern-class">Class: <code>MovieFactory.java</code></span>
-            </div>
-          </div>
-          <p class="pattern-desc">
-            Encapsulates the instantiation logic of Movie objects, decoupling data parsing and construction from
-            business services. Handles raw pipe-delimited data conversion.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Factory Methods:</span>
-              <span class="metric-val">createMovie(), createFromFile()</span>
-            </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>public class MovieFactory {
-    public static Movie createMovie(int id, String title, ...) {
-        return new Movie(id, title, genre, language, rating, year, platform);
-    }
-    public static Movie createMovieFromFile(String line) {
-        String[] parts = line.split("\\|");
-        return new Movie(Integer.parseInt(parts[0]), parts[1], ...);
-    }
-}</code></pre>
-          </div>
-        </div>
-
-        <!-- 3. OBSERVER PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">03</div>
-            <div>
-              <h3>Observer Pattern</h3>
-              <span class="pattern-class">Subject: <code>NotificationService</code> | Observer:
-                <code>UserObserver</code></span>
-            </div>
-          </div>
-          <p class="pattern-desc">
-            Defines a one-to-many publish-subscribe dependency so that when a new movie is added or an admin broadcasts,
-            all registered user observers are automatically notified.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Subscribed Observers:</span>
-              <span class="metric-val" id="metricObserverCount">--</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Broadcast History:</span>
-              <span class="metric-val" id="metricNotificationCount">--</span>
-            </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>interface Subject {
-    void addObserver(Observer o);
-    void notifyObservers(String msg);
-}
-class NotificationService implements Subject {
-    public void notifyObservers(String msg) {
-        for (Observer o : observers) o.update(msg);
-    }
-}</code></pre>
-          </div>
-        </div>
-
-        <!-- 4. PROXY PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">04</div>
-            <div>
-              <h3>Protection Proxy Pattern</h3>
-              <span class="pattern-class">Proxy: <code>MovieServiceProxy</code> | Real:
-                <code>RealMovieService</code></span>
-            </div>
-          </div>
-          <p class="pattern-desc">
-            Controls access to sensitive movie mutation operations. Regular <code>USER</code> roles are blocked with 403
-            Forbidden before reaching the <code>RealMovieService</code>. Only <code>ADMIN</code> is authorized.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Admin Rights:</span>
-              <span class="metric-val text-green">Full Add / Remove / Broadcast</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">User Rights:</span>
-              <span class="metric-val text-red">Read-Only (Mutations Blocked)</span>
-            </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>class MovieServiceProxy implements MovieService {
-    public void addMovie(Movie movie) {
-        if ("ADMIN".equalsIgnoreCase(role)) {
-            realService.addMovie(movie);
-        } else {
-            throw new SecurityException("Access Denied!");
-        }
-    }
-}</code></pre>
-          </div>
-        </div>
-
-        <!-- 5. CHAIN OF RESPONSIBILITY PATTERN -->
-        <div class="pattern-card full-width-card">
-          <div class="pattern-header">
-            <div class="pattern-number">05</div>
-            <div>
-              <h3>Chain of Responsibility Pattern</h3>
-              <span class="pattern-class">Handlers:
-                <code>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</code></span>
-            </div>
-          </div>
-          <p class="pattern-desc">
-            Decouples the recommendation sender from multiple filtering processors. Each handler in the chain processes
-            the filtered subset of movies and delegates the result to its successor handler.
-          </p>
-          <div class="chain-pipeline-steps">
-            <div class="step-card">
-              <span class="step-badge">Handler 1</span>
-              <h4>GenreHandler</h4>
-              <p>Filters movie list by selected Genre or passes all if "Any".</p>
-            </div>
-            <div class="step-card">
-              <span class="step-badge">Handler 2</span>
-              <h4>LanguageHandler</h4>
-              <p>Filters remaining list by English, Hindi, or passes all if "Any".</p>
-            </div>
-            <div class="step-card">
-              <span class="step-badge">Handler 3</span>
-              <h4>RatingHandler</h4>
-              <p>Filters remaining list by minimum IMDb score threshold.</p>
-            </div>
-            <div class="step-card">
-              <span class="step-badge">Handler 4</span>
-              <h4>PlatformHandler</h4>
-              <p>Filters remaining list by OTT streaming service (Netflix, Prime, etc.).</p>
+            <!-- Watchlist Movies Grid -->
+            <div class="movies-catalog-grid" id="watchlistPageViewGrid">
+              <!-- Populated dynamically with user's saved movies -->
             </div>
           </div>
         </div>
 
-        <!-- PATTERN 6: STRATEGY PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">06</div>
-            <div>
-              <h3>Strategy Pattern</h3>
-              <span class="pattern-class">Context: <code>CatalogSorterContext</code> | Interface: <code>MovieSortStrategy</code></span>
-            </div>
-          </div>
-          <p class="pattern-desc">
-            Encapsulates dynamic catalog sorting algorithms into interchangeable strategy classes. Strategies can be swapped at runtime without altering client code.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Active Strategy:</span>
-              <span class="metric-val" id="metricStrategyActive">RatingSortStrategy</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Available Strategies:</span>
-              <span class="metric-val">Rating, Year, Title, Binge Score</span>
-            </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>public interface MovieSortStrategy {
-    List&lt;Movie&gt; sort(List&lt;Movie&gt; movies);
-}
-class RatingSortStrategy implements MovieSortStrategy { ... }
-class YearSortStrategy implements MovieSortStrategy { ... }</code></pre>
-          </div>
-        </div>
+        <!-- ==================================================================
+             VIEW 6: ACCOUNT PAGE
+             ================================================================== -->
+        <div class="view-panel" id="viewAccount" style="display:none;">
+          <!-- Guest Account State -->
+          <div id="accountGuestView" class="guest-banner-card" style="padding:32px;margin-bottom:24px;text-align:center;">
+            <div style="font-size:42px;margin-bottom:12px;">👤</div>
+            <h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">Welcome to TiMN OTT</h2>
+            <p style="font-size:14px;color:var(--text-secondary);max-width:540px;margin:0 auto 20px auto;">
+              You are currently exploring as a <strong>Guest</strong>. Sign in to unlock your personal watchlist, join real-time watch parties, or log in with the administrator portal.
+            </p>
 
-        <!-- PATTERN 7: TEMPLATE METHOD PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">07</div>
-            <div>
-              <h3>Template Method Pattern</h3>
-              <span class="pattern-class">Abstract Template: <code>WatchlistReportTemplate</code></span>
+            <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+              <button class="btn-primary" id="accountPageSignInBtn" style="padding:10px 24px;font-size:14px;">
+                <span>Sign In / Register</span>
+              </button>
             </div>
-          </div>
-          <p class="pattern-desc">
-            Defines the invariant skeleton of a watchlist report algorithm in <code>final generateReport()</code>, deferring header, row, and footer formatting to concrete subclass generators.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Algorithm Skeleton:</span>
-              <span class="metric-val">final generateReport()</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Concrete Formats:</span>
-              <span class="metric-val">Markdown, Text, JSON</span>
-            </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>public abstract class WatchlistReportTemplate {
-    public final String generateReport(...) {
-        append(formatHeader());
-        append(formatRows());
-        append(formatFooter());
-    }
-}</code></pre>
-          </div>
-        </div>
 
-        <!-- PATTERN 8: MEMENTO PATTERN -->
-        <div class="pattern-card">
-          <div class="pattern-header">
-            <div class="pattern-number">08</div>
-            <div>
-              <h3>Memento Pattern</h3>
-              <span class="pattern-class">Memento: <code>WatchlistMemento</code> | Caretaker: <code>WatchlistCaretaker</code></span>
+            <!-- Demo Quick Sign In Options -->
+            <div style="background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;max-width:500px;margin:0 auto;text-align:left;">
+              <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Quick Demo Accounts:</div>
+              <div style="display:flex;gap:10px;">
+                <button class="btn-secondary" id="accDemoAdminBtn" style="flex:1;font-size:12px;padding:8px 10px;">
+                  🛡️ Admin (admin@gmail.com / admin123)
+                </button>
+                <button class="btn-secondary" id="accDemoUserBtn" style="flex:1;font-size:12px;padding:8px 10px;">
+                  👤 User (Aryan / user123)
+                </button>
+              </div>
             </div>
           </div>
-          <p class="pattern-desc">
-            Captures and externalizes deep snapshots of the user's watchlist state before mutations, allowing safe rollback (Undo) without violating encapsulation.
-          </p>
-          <div class="pattern-metrics">
-            <div class="metric-item">
-              <span class="metric-label">Total Snapshots:</span>
-              <span class="metric-val" id="metricMementoSnapshots">0 Recorded</span>
+
+          <!-- Logged In Account Dashboard -->
+          <div id="accountUserView" style="display:none;">
+            <!-- Hero User Profile Card -->
+            <div class="account-card-hero">
+              <div class="account-avatar-large">
+                <img src="images/avatar_user.jpg" alt="Profile" id="accountAvatarImg">
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                  <h2 style="font-size:24px;font-weight:800;color:#fff;" id="accDashboardName">Aryan</h2>
+                  <span id="accDashboardRoleBadge" class="gof-card-tag" style="font-size:12px;padding:3px 10px;">USER</span>
+                </div>
+                <div style="font-size:14px;color:var(--accent-cyan);margin:4px 0 10px 0;" id="accDashboardEmail">admin@gmail.com</div>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);">
+                  <span>🟢 Session: <strong>Active</strong></span>
+                  <span>🔒 Auth: <strong>Encrypted Password</strong></span>
+                  <span>☁️ Storage: <strong>Supabase Bucket 'invoices'</strong></span>
+                </div>
+              </div>
+              <button class="logout-btn" id="accountPageLogoutBtn" style="align-self:flex-start;">
+                <span class="logout-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </span>
+                <span>Log Out</span>
+              </button>
             </div>
-            <div class="metric-item">
-              <span class="metric-label">Caretaker History:</span>
-              <span class="metric-val" id="metricMementoHistory">Stack-backed Undo</span>
+
+            <!-- Account Statistics Matrix -->
+            <div class="account-stats-row">
+              <div class="account-stat-card">
+                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Watchlist Items</div>
+                <div style="font-size:26px;font-weight:800;color:#fff;margin:6px 0;" id="accWatchlistCount">0</div>
+                <div style="font-size:12px;color:var(--accent-cyan);">Saved to Personal List</div>
+              </div>
+
+              <div class="account-stat-card">
+                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Account Permission</div>
+                <div style="font-size:20px;font-weight:800;color:var(--primary);margin:6px 0;" id="accPermissionText">Standard USER</div>
+                <div style="font-size:12px;color:var(--text-secondary);" id="accPermissionSub">Watchlist curation only</div>
+              </div>
+
+              <div class="account-stat-card">
+                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Active Watch Parties</div>
+                <div style="font-size:26px;font-weight:800;color:#34d399;margin:6px 0;">4 Rooms</div>
+                <div style="font-size:12px;color:var(--text-secondary);">Synchronized streaming</div>
+              </div>
+
+              <div class="account-stat-card">
+                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Design Patterns</div>
+                <div style="font-size:26px;font-weight:800;color:#38bdf8;margin:6px 0;">8 Patterns</div>
+                <div style="font-size:12px;color:var(--text-secondary);">GoF Architectural Engine</div>
+              </div>
             </div>
-          </div>
-          <div class="pattern-code-preview">
-            <pre><code>public class WatchlistMemento {
-    private final List&lt;Integer&gt; savedIds;
-    public WatchlistMemento(List&lt;Integer&gt; ids) { ... }
-}
-// Caretaker restores via history Stack</code></pre>
+
+            <!-- Admin Privilege Control Panel (Visible ONLY to Admin) -->
+            <div id="accAdminControlPanel" style="display:none;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:24px;margin-bottom:24px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;">
+                    <span>🛡️ Administrator Publishing Portal</span>
+                    <span class="gof-card-tag" style="background:#8b5cf6;color:#fff;">MovieServiceProxy</span>
+                  </div>
+                  <div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px;">
+                    As an authenticated Admin, you have full privileges to add movies to the global website catalog and broadcast notifications to observers.
+                  </div>
+                </div>
+                <button class="btn-primary" id="accOpenAddMovieModalBtn" style="padding:8px 18px;font-size:13px;">
+                  <span>+ Add Movie to Website</span>
+                </button>
+              </div>
+
+              <!-- Admin Broadcast Tool -->
+              <div style="border-top:1px solid rgba(139,92,246,0.2);padding-top:14px;margin-top:10px;">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Broadcast Live Notification to Observers (Observer Pattern):</div>
+                <div style="display:flex;gap:8px;">
+                  <input type="text" id="accBroadcastInput" placeholder="Enter alert for all users..." class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;">
+                  <button class="btn-primary" id="accBroadcastBtn" style="padding:8px 16px;font-size:12.5px;">Broadcast</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Account Navigation Shortcuts -->
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn-secondary" id="accGoToWatchlistBtn">
+                <span>📋 View My Watchlist</span>
+              </button>
+              <button class="btn-secondary" id="accBrowseMoviesBtn">
+                <span>🎬 Explore Movies</span>
+              </button>
+              <button class="btn-secondary" id="accOpenSupabaseModalBtn">
+                <span>☁️ Supabase Cloud Storage</span>
+              </button>
+            </div>
           </div>
         </div>
 
       </div>
-    </section>
+    </main>
 
-  </main>
+  </div>
 
-  <!-- USER LOGIN / SWITCH ROLE MODAL -->
-  <div class="modal-overlay" id="loginModal" style="display: none;">
+  <!-- ======================================================================
+       MODAL 1: MOVIE DETAILS & STREAMING PLAYER
+       ====================================================================== -->
+  <div class="modal-overlay" id="movieDetailModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">Auth Gateway</h3>
-        <button class="modal-close-btn" id="closeLoginModalBtn">&times;</button>
+        <div class="modal-title" id="modalMovieTitle">Movie Details</div>
+        <button class="modal-close-btn" id="closeDetailModalBtn">&times;</button>
       </div>
-      <form id="loginForm" class="modal-form">
-        <p class="modal-subtitle">
-          Test the <strong>Observer Pattern</strong> (users subscribe to updates) and <strong>Proxy Pattern</strong>
-          (ADMIN vs USER permission controls).
+      <div class="modal-body">
+        <img src="" alt="Backdrop" class="detail-hero-backdrop" id="modalBackdrop">
+        <div class="detail-row">
+          <img src="" alt="Poster" class="detail-poster-thumb" id="modalPoster">
+          <div class="detail-info">
+            <div class="detail-title" id="modalMovieName">Movie Name</div>
+            <div class="hero-meta-row" style="margin-bottom:8px;">
+              <span class="imdb-badge" id="modalRatingBadge">★ 8.5</span>
+              <span class="meta-bullet">•</span>
+              <span id="modalLanguage">English</span>
+              <span class="meta-bullet">•</span>
+              <span id="modalYear">2023</span>
+              <span class="meta-bullet">•</span>
+              <span class="ott-badge-tag netflix" id="modalOttTag">Netflix</span>
+            </div>
+            <p class="detail-synopsis" id="modalSynopsis">Loading movie synopsis...</p>
+            <div class="detail-actions">
+              <button class="btn-primary" id="modalWatchNowBtn">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span>Stream Now</span>
+              </button>
+              <button class="btn-secondary" id="modalWatchlistToggleBtn">
+                <span>+ Add to Watchlist</span>
+              </button>
+              <button class="btn-secondary" id="modalStartPartyBtn">
+                <span>🎉 Start Party</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 2: FILTER & RECOMMENDATION (Chain of Responsibility Pattern)
+       ====================================================================== -->
+  <div class="modal-overlay" id="filterModal">
+    <div class="modal-card" style="max-width: 560px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+          </svg>
+          <span>Chain of Responsibility Pipeline</span>
+        </div>
+        <button class="modal-close-btn" id="closeFilterModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:18px;">
+          Filter queries are processed sequentially through 4 handlers: <strong>GenreHandler → LanguageHandler → RatingHandler → PlatformHandler</strong>.
         </p>
 
-        <div class="auth-segmented-control">
-          <button type="button" class="auth-toggle-btn active" id="authTabLogin" data-mode="login">Sign In</button>
-          <button type="button" class="auth-toggle-btn" id="authTabRegister" data-mode="register">Create
-            Account</button>
+        <!-- Step 1: Genre -->
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-title">1. GenreHandler</span>
+            <span class="pipeline-count-pill" id="pipeCountGenre">All Genres</span>
+          </div>
+          <select class="sort-select" id="recGenreSelect" style="width:100%;">
+            <option value="">Any Genre</option>
+            <option value="Action">Action</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Drama">Drama</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Thriller">Thriller</option>
+          </select>
         </div>
 
-        <div class="auth-form-views">
-          <div class="auth-form-view login-view active">
-            <div class="form-group">
-              <label for="loginNameInput">Your Name</label>
-              <input type="text" id="loginNameInput" placeholder="e.g. Aryan, Karan, Sarah" required>
-            </div>
+        <!-- Step 2: Language -->
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-title">2. LanguageHandler</span>
+            <span class="pipeline-count-pill" id="pipeCountLang">All Languages</span>
           </div>
-          <div class="auth-form-view register-view">
-            <div class="form-group">
-              <label for="loginNameInput">Your Name</label>
-              <input type="text" id="loginNameInput" placeholder="e.g. Aryan, Karan, Sarah" required>
-            </div>
-            <div class="form-group">
-              <label>Select Role</label>
-              <div class="role-selector">
-                <label class="role-option">
-                  <input type="radio" name="loginRole" value="USER" checked>
-                  <div class="role-box">
-                    <span class="role-title">👤 USER</span>
-                    <span class="role-desc">Browse movies, get chain recommendations, add to personal watchlist</span>
-                  </div>
-                </label>
-                <label class="role-option">
-                  <input type="radio" name="loginRole" value="ADMIN">
-                  <div class="role-box">
-                    <span class="role-title">🛡️ ADMIN</span>
-                    <span class="role-desc">Add movies via Factory, remove movies, broadcast to Observers</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </div>
+          <select class="sort-select" id="recLangSelect" style="width:100%;">
+            <option value="">Any Language</option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+          </select>
         </div>
 
-        <button type="submit" class="primary-btn" id="loginSubmitBtn">
-          Continue
-        </button>
-      </form>
+        <!-- Step 3: Rating -->
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-title">3. RatingHandler</span>
+            <span class="pipeline-count-pill" id="pipeCountRating">Min Rating: 7.0</span>
+          </div>
+          <input type="range" id="recMinRating" min="5" max="9.5" step="0.5" value="7.0" style="width:100%;accent-color:var(--primary);">
+        </div>
+
+        <!-- Step 4: Platform -->
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-title">4. PlatformHandler</span>
+            <span class="pipeline-count-pill" id="pipeCountPlatform">Any Platform</span>
+          </div>
+          <select class="sort-select" id="recPlatformSelect" style="width:100%;">
+            <option value="">Any Platform</option>
+            <option value="Netflix">Netflix</option>
+            <option value="Prime Video">Prime Video</option>
+            <option value="Disney+">Disney+</option>
+          </select>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+          <span style="font-size:13.5px;color:var(--text-main);">Pipeline Matches: <strong id="pipeTotalMatches" style="color:var(--primary);">37</strong></span>
+          <button class="btn-primary" id="applyChainFilterBtn">Apply Filter Pipeline</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
+  <!-- ======================================================================
+       MODAL 3: 8 GOF DESIGN PATTERNS SHOWCASE
+       ====================================================================== -->
+  <div class="modal-overlay" id="patternsModal">
+    <div class="modal-card" style="max-width: 780px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>8 Gang of Four Design Patterns Implementation</span>
+        </div>
+        <button class="modal-close-btn" id="closePatternsModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="patterns-grid">
+          <div class="pattern-card">
+            <div class="pattern-title">1. Singleton Pattern</div>
+            <div class="pattern-class">MovieDatabase.java</div>
+            <div class="pattern-desc">Guarantees a single in-memory database instance managing all loaded movies and preventing duplicate state across threads.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">2. Factory Method</div>
+            <div class="pattern-class">MovieFactory.java</div>
+            <div class="pattern-desc">Encapsulates object instantiation logic from formatted text files, creating polymorphic Movie objects cleanly.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">3. Observer Pattern</div>
+            <div class="pattern-class">NotificationService.java</div>
+            <div class="pattern-desc">Maintains one-to-many dependency so when state changes (watchlist update, broadcast), all registered UserObservers are notified.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">4. Protection Proxy</div>
+            <div class="pattern-class">MovieServiceProxy.java</div>
+            <div class="pattern-desc">Controls access to sensitive admin operations (adding movies, broadcasting alerts) based on caller role authorization.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">5. Chain of Responsibility</div>
+            <div class="pattern-class">RecommendationChain.java</div>
+            <div class="pattern-desc">Passes search requests along a chain of handlers (Genre -> Language -> Rating -> Platform) with decoupled filter criteria.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">6. Strategy Pattern</div>
+            <div class="pattern-class">SortingStrategy.java</div>
+            <div class="pattern-desc">Defines a family of sorting algorithms (Rating, Year, Title, Popularity) and encapsulates each to make them interchangeable at runtime.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">7. Template Method</div>
+            <div class="pattern-class">WatchlistReportTemplate.java</div>
+            <div class="pattern-desc">Defines the skeleton of the watchlist export algorithm, deferring header, movie rows, and summary formatting to subclasses.</div>
+          </div>
+          <div class="pattern-card">
+            <div class="pattern-title">8. Memento Pattern</div>
+            <div class="pattern-class">WatchlistMemento.java</div>
+            <div class="pattern-desc">Captures and restores user watchlist snapshots, allowing seamless Undo operations without violating encapsulation.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       DRAWER 1: WATCHLIST (Memento & Template Method)
+       ====================================================================== -->
+  <aside class="drawer" id="watchlistDrawer">
+    <div class="drawer-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>My Watchlist</span>
+      </div>
+      <button class="modal-close-btn" id="closeWatchlistDrawerBtn">&times;</button>
+    </div>
+    <div class="drawer-body" id="watchlistItemsContainer">
+      <!-- Items dynamically populated -->
+    </div>
+    <div class="drawer-footer">
+      <div style="display:flex;gap:10px;">
+        <button class="btn-secondary" id="mementoUndoBtn" style="flex:1;">
+          <span>↩ Undo Last (Memento)</span>
+        </button>
+        <button class="btn-primary" id="watchlistExportTriggerBtn" style="flex:1;">
+          <span>Export (Template)</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ======================================================================
+       DRAWER 2: OBSERVER NOTIFICATIONS
+       ====================================================================== -->
+  <aside class="drawer" id="notificationsDrawer">
+    <div class="drawer-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span>Live Notifications (Observer)</span>
+      </div>
+      <button class="modal-close-btn" id="closeNotifDrawerBtn">&times;</button>
+    </div>
+    <div class="drawer-body" id="notifListContainer">
+      <!-- Notifications populated dynamically -->
+    </div>
+    <div class="drawer-footer" id="adminBroadcastFooter">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Broadcast as Admin:</div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="broadcastInput" placeholder="Send announcement to all observers..." class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:6px 10px;font-size:12px;">
+        <button class="btn-primary" id="broadcastSendBtn" style="padding:6px 14px;font-size:12px;">Send</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ======================================================================
+       MODAL 4: USER & AUTH SWITCHER (Proxy Pattern Role Enforcer)
+       ====================================================================== -->
+  <div class="modal-overlay" id="userProfileModal">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <div class="modal-title">User Account & Proxy Role</div>
+        <button class="modal-close-btn" id="closeUserModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="font-size:13px;color:var(--text-secondary);">
+            Switch roles to test <strong>Protection Proxy Pattern</strong> permissions:
+          </div>
+
+          <div style="display:flex;gap:12px;">
+            <button class="btn-secondary" id="switchAryanBtn" style="flex:1;">
+              👤 Aryan (User)
+            </button>
+            <button class="btn-primary" id="switchKaranAdminBtn" style="flex:1;">
+              🛡️ Karan (Admin)
+            </button>
+          </div>
+
+          <div style="background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px;margin-top:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--accent-cyan);margin-bottom:4px;">Proxy Authorization Status:</div>
+            <div style="font-size:12.5px;color:var(--text-secondary);" id="proxyStatusExplanation">
+              Currently logged in as standard user. Admin endpoints (Movie addition, Broadcast) are protected by <code>MovieServiceProxy</code>.
+            </div>
+          </div>
+
+          <!-- Add Movie Form (Only works for Admin) -->
+          <div id="adminAddMovieSection" style="margin-top:10px;border-top:1px solid var(--border-subtle);padding-top:14px;">
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">Add New Movie (Admin Proxy Feature)</div>
+            <form id="addMovieForm" style="display:flex;flex-direction:column;gap:10px;">
+              <input type="text" id="addMovieTitle" placeholder="Title (e.g. Dune: Part Two)" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;" required>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="addMovieGenre" placeholder="Genre" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;flex:1;" required>
+                <input type="text" id="addMovieLang" placeholder="Language" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;flex:1;" value="English" required>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <input type="number" id="addMovieRating" placeholder="Rating (e.g. 8.6)" step="0.1" min="1" max="10" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;flex:1;" required>
+                <input type="number" id="addMovieYear" placeholder="Year" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;flex:1;" value="2024" required>
+                <input type="text" id="addMoviePlatform" placeholder="Platform" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;flex:1;" value="Netflix" required>
+              </div>
+              <button type="submit" class="btn-primary" style="margin-top:6px;">Add Movie to Database</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 5: SUPABASE CLOUD MANAGEMENT (invoices Bucket & Auth)
+       ====================================================================== -->
+  <div class="modal-overlay" id="supabaseCloudModal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <div class="modal-title" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+            <path d="M12.6 1.8c-.5-.8-1.7-.8-2.2 0L2.3 14.5c-.5.8 0 1.9 1.1 1.9h7.4l-1.8 5.8c-.3 1 1 1.7 1.8 1l9.1-8.7c.8-.8.3-2.1-.8-2.1h-6.2l3-7.6c.3-.9-.3-1.8-1.1-2l-2.2-1z" fill="#3ECF8E"/>
+          </svg>
+          <span>Supabase Cloud (Bucket: invoices)</span>
+        </div>
+        <button class="modal-close-btn" id="closeSupabaseModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Supabase Cloud Connection Status Banner -->
+        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-md);padding:14px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#34d399;display:flex;align-items:center;gap:6px;">
+              <span class="cloud-pulse-dot"></span> Cloud Connected: mhxkftnldxziqhydyfbf
+            </div>
+            <div style="font-size:11.5px;color:var(--text-secondary);margin-top:2px;">
+              Active Storage Bucket: <code style="color:var(--accent-cyan);font-weight:700;">invoices</code> • Auth API: Active
+            </div>
+          </div>
+          <button class="btn-primary" id="uploadWatchlistToSupabaseBtn" style="font-size:12px;padding:6px 14px;">
+            ☁️ Upload Report
+          </button>
+        </div>
+
+        <!-- Section 1: Invoices Bucket File Explorer -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:700;color:#fff;">Storage Bucket Objects: <code>/invoices</code></div>
+            <button class="btn-secondary" id="refreshSupabaseFilesBtn" style="font-size:11px;padding:4px 10px;">↻ Refresh Files</button>
+          </div>
+          <div id="supabaseFilesList" style="display:flex;flex-direction:column;gap:8px;max-height:160px;overflow-y:auto;background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:10px;">
+            <div style="font-size:12px;color:var(--text-muted);text-align:center;padding:12px;">Loading Supabase Storage files...</div>
+          </div>
+        </div>
+
+        <!-- Section 2: Supabase User Authentication -->
+        <div style="border-top:1px solid var(--border-subtle);padding-top:16px;">
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">Supabase Cloud Authentication</div>
+          <form id="supabaseAuthForm" style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:10px;">
+              <input type="email" id="sbEmailInput" placeholder="Email address (e.g. user@cinepattern.com)" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:12.5px;flex:1;" required>
+              <input type="password" id="sbPasswordInput" placeholder="Password" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:12.5px;flex:1;" required>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <input type="text" id="sbFullNameInput" placeholder="Full Name (optional for signup)" class="search-input" style="background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:8px 12px;font-size:12.5px;flex:1;">
+              <select id="sbRoleSelect" class="sort-select" style="flex:1;">
+                <option value="USER">Role: USER</option>
+                <option value="ADMIN">Role: ADMIN</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+              <button type="button" class="btn-primary" id="sbSignInBtn" style="flex:1;">Sign In with Supabase</button>
+              <button type="button" class="btn-secondary" id="sbSignUpBtn" style="flex:1;">Register with Supabase</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 6: LOGIN / SIGNUP PORTAL (Required for Watchlist & Admin)
+       ====================================================================== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span id="authModalTitle">Sign In to TiMN</span>
+        </div>
+        <button class="modal-close-btn" id="closeAuthModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Watchlist Protection Alert Notice -->
+        <div id="authNoticeBanner" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:18px;">🔒</span>
+          <div style="font-size:12.5px;color:var(--text-main);line-height:1.45;">
+            <strong>Login Required:</strong> Please sign in to save movies to your personal Watchlist and track your watchlist history with Memento rollback.
+          </div>
+        </div>
+
+        <!-- Quick 1-Click Evaluation Credentials -->
+        <div style="background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px;margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:8px;">
+            Quick Evaluation Credentials (1-Click Fill):
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="quick-cred-btn" id="quickFillAdminBtn" style="flex:1;">
+              <span style="color:var(--accent-gold);font-weight:700;">🛡️ Admin Demo</span>
+              <small style="color:var(--text-secondary);display:block;font-size:10.5px;">admin@gmail.com / admin123</small>
+            </button>
+            <button type="button" class="quick-cred-btn" id="quickFillUserBtn" style="flex:1;">
+              <span style="color:var(--accent-cyan);font-weight:700;">👤 User Demo</span>
+              <small style="color:var(--text-secondary);display:block;font-size:10.5px;">Aryan / user123</small>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabs: Sign In / Create Account -->
+        <div class="auth-tabs" style="display:flex;border-bottom:1px solid var(--border-subtle);margin-bottom:18px;">
+          <button type="button" class="auth-tab-btn active" id="tabSignInBtn" style="flex:1;padding:10px;background:none;border:none;border-bottom:2px solid var(--primary);color:#fff;font-weight:700;font-size:13.5px;cursor:pointer;">Sign In</button>
+          <button type="button" class="auth-tab-btn" id="tabRegisterBtn" style="flex:1;padding:10px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-secondary);font-weight:600;font-size:13.5px;cursor:pointer;">Create Account</button>
+        </div>
+
+        <!-- Form: Sign In -->
+        <form id="signInForm" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Email or Username</label>
+            <input type="text" id="loginEmailInput" placeholder="admin@gmail.com or username" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Password</label>
+            <input type="password" id="loginPasswordInput" placeholder="Password (admin123 for Admin)" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+          </div>
+          <button type="submit" class="btn-primary" style="justify-content:center;padding:11px;font-size:14px;margin-top:6px;">
+            <span>Sign In to TiMN</span>
+          </button>
+        </form>
+
+        <!-- Form: Create Account -->
+        <form id="registerForm" style="display:none;flex-direction:column;gap:14px;">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Full Name</label>
+            <input type="text" id="regNameInput" placeholder="Your Name (e.g. John Doe)" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Email Address</label>
+            <input type="email" id="regEmailInput" placeholder="you@example.com" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Create Password</label>
+            <input type="password" id="regPasswordInput" placeholder="Choose a password" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+          </div>
+          <div style="font-size:11.5px;color:var(--text-muted);background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:var(--radius-sm);">
+            🛡️ <strong>Note:</strong> Standard accounts are granted the <code>USER</code> role. Users can curate personal watchlists, export reports, and receive notifications. Admin movie publishing permissions are reserved for verified admin credentials (<code>admin@gmail.com</code> / <code>admin123</code>).
+          </div>
+          <button type="submit" class="btn-primary" style="justify-content:center;padding:11px;font-size:14px;margin-top:4px;">
+            <span>Create TiMN Account</span>
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 7: ADMIN PORTAL - ADD MOVIE TO WEBSITE (Protection Proxy)
+       ====================================================================== -->
+  <div class="modal-overlay" id="adminAddMovieModal">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <div class="modal-title" style="display:flex;align-items:center;gap:10px;">
+          <span style="background:rgba(251,191,36,0.15);color:var(--accent-gold);border:1px solid rgba(251,191,36,0.3);padding:4px 8px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;">ADMIN PORTAL</span>
+          <span>Add Movie to Website</span>
+        </div>
+        <button class="modal-close-btn" id="closeAdminAddMovieModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-green);font-size:16px;">✓</span>
+          <span style="font-size:12px;color:#86efac;"><strong>Protection Proxy Verified:</strong> Logged in as Admin (<code style="color:#fff;">admin@gmail.com</code>). You are authorized to publish new movies to the global website database.</span>
+        </div>
+
+        <form id="adminCatalogForm" style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Movie Title</label>
+            <input type="text" id="admTitle" placeholder="e.g. Dune: Part Two" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;" required>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <div style="flex:1;">
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Genre</label>
+              <select id="admGenre" class="sort-select" style="width:100%;padding:9px 12px;">
+                <option value="Action">Action</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Drama">Drama</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Animation">Animation</option>
+              </select>
+            </div>
+            <div style="flex:1;">
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Language</label>
+              <select id="admLanguage" class="sort-select" style="width:100%;padding:9px 12px;">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Korean">Korean</option>
+                <option value="Japanese">Japanese</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <div style="flex:1;">
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">IMDb Rating (1.0 - 10.0)</label>
+              <input type="number" id="admRating" placeholder="8.6" step="0.1" min="1.0" max="10.0" value="8.5" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;" required>
+            </div>
+            <div style="flex:1;">
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Release Year</label>
+              <input type="number" id="admYear" placeholder="2024" value="2024" min="1900" max="2030" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;" required>
+            </div>
+            <div style="flex:1;">
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Platform</label>
+              <select id="admPlatform" class="sort-select" style="width:100%;padding:9px 12px;">
+                <option value="Netflix">Netflix</option>
+                <option value="Prime Video">Prime Video</option>
+                <option value="Disney+">Disney+</option>
+                <option value="HBO Max">HBO Max</option>
+                <option value="Apple TV">Apple TV</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Poster Image (Local filename or URL)</label>
+            <input type="text" id="admPoster" placeholder="images/rampage_poster.jpg or https://..." class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">Synopsis / Storyline</label>
+            <textarea id="admSynopsis" rows="2" placeholder="Brief storyline of the film..." class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;resize:vertical;"></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="justify-content:center;padding:12px;font-size:14px;margin-top:6px;background:linear-gradient(135deg, var(--primary) 0%, #38bdf8 100%);">
+            <span>+ Publish Movie to Website Database</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Center -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- TEMPLATE METHOD EXPORT REPORT PREVIEW MODAL -->
-  <div class="modal-overlay" id="exportModal" style="display: none;">
-    <div class="modal-card export-modal-card">
-      <div class="modal-header">
-        <div>
-          <h3 class="modal-title">Watchlist Export Report</h3>
-          <span class="modal-badge-subtitle">Generated via Template Method Pattern</span>
-        </div>
-        <button class="modal-close-btn" id="closeExportModalBtn">&times;</button>
-      </div>
-      <div class="export-modal-body">
-        <div class="export-meta-bar">
-          <span class="export-format-tag" id="exportFormatTag">Format: Markdown</span>
-          <span class="export-user-tag" id="exportUserTag">User: Current</span>
-        </div>
-        <pre class="export-code-box"><code id="exportContentCode">Loading report...</code></pre>
-      </div>
-      <div class="export-modal-footer">
-        <button type="button" class="primary-btn" id="copyExportContentBtn">
-          <span>Copy to Clipboard</span> 📋
-        </button>
-        <button type="button" class="secondary-btn" id="closeExportModalFooterBtn">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCRIPT -->
+  <!-- Supabase Client SDK & Main JavaScript Application Logic -->
+  <script src="supabase.js"></script>
   <script src="app.js"></script>
 </body>
-
 </html>

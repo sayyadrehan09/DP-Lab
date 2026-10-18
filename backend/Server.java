@@ -4,7 +4,11 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.net.URLDecoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -16,6 +20,13 @@ public class Server {
     private static NotificationService notificationService;
     private static MovieDatabase database;
     private static File frontendDir;
+
+    // Supabase Cloud Configuration
+    public static final String SUPABASE_URL = "https://mhxkftnldxziqhydyfbf.supabase.co";
+    public static final String SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oeGtmdG5sZHh6aXFoeWR5ZmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MjM5NDIsImV4cCI6MjEwNzE5OTk0Mn0.3PSHd6qK3WuhN69gXZhcC_yTmHwmFf5sEwyVTdMe714";
+    public static final String SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oeGtmdG5sZHh6aXFoeWR5ZmJmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MTYyMzk0MiwiZXhwIjoyMTA3MTk5OTQyfQ.Ip5R7TTG_JgRQ32dtxwK0JnQvFUcaqrlvYVH9THynhc";
+    public static final String SUPABASE_JWT_SECRET = "vAWhjRnsisKYjoBpOezWIKpJ42fjaLfyTD6GxYfxlj+t/DwRkisc2AETxm8CUMoDW2Bc/o7aK4l/Huc7+WfRxg==";
+    public static final String SUPABASE_BUCKET = "invoices";
 
     public static void main(String[] args) throws IOException {
         FileManager.initializeFiles();
@@ -65,6 +76,9 @@ public class Server {
         server.createContext("/api/watchlist/export", new WatchlistExportHandler());
         server.createContext("/api/watchlist/undo", new WatchlistUndoHandler());
         server.createContext("/api/login", new LoginHandler());
+        server.createContext("/api/auth/supabase-signup", new SupabaseSignupHandler());
+        server.createContext("/api/auth/supabase-config", new SupabaseConfigHandler());
+        server.createContext("/api/supabase/invoices", new SupabaseInvoicesHandler());
         server.createContext("/api/notifications", new NotificationsHandler());
         server.createContext("/api/notify", new BroadcastHandler());
         server.createContext("/api/design-patterns", new PatternsHandler());
@@ -386,7 +400,7 @@ public class Server {
 
             if ("GET".equalsIgnoreCase(method)) {
                 Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
-                String user = params.getOrDefault("user", "").trim();
+                String user = params.getOrDefault("user", params.getOrDefault("username", "")).trim();
 
                 if (user.isEmpty()) {
                     sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"User parameter required\"}");
@@ -404,7 +418,7 @@ public class Server {
 
             } else if ("POST".equalsIgnoreCase(method)) {
                 String body = readBody(exchange);
-                String user = getJsonString(body, "user", "").trim();
+                String user = getJsonString(body, "user", getJsonString(body, "username", "")).trim();
                 int movieId = getJsonInt(body, "movieId", -1);
 
                 if (user.isEmpty() || movieId <= 0) {
@@ -427,7 +441,7 @@ public class Server {
 
             } else if ("DELETE".equalsIgnoreCase(method)) {
                 Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
-                String user = params.getOrDefault("user", "").trim();
+                String user = params.getOrDefault("user", params.getOrDefault("username", "")).trim();
                 int movieId = -1;
                 try {
                     movieId = Integer.parseInt(params.getOrDefault("movieId", "-1"));
@@ -493,7 +507,7 @@ public class Server {
             if (handlePreflight(exchange)) return;
 
             Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
-            String user = params.getOrDefault("user", "").trim();
+            String user = params.getOrDefault("user", params.getOrDefault("username", "")).trim();
             String format = params.getOrDefault("format", "markdown").trim();
 
             if (user.isEmpty()) {
@@ -529,7 +543,7 @@ public class Server {
             }
 
             String body = readBody(exchange);
-            String user = getJsonString(body, "user", "").trim();
+            String user = getJsonString(body, "user", getJsonString(body, "username", "")).trim();
 
             if (user.isEmpty()) {
                 sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user is required\"}");
@@ -578,32 +592,214 @@ public class Server {
             String body = readBody(exchange);
             String action = getJsonString(body, "action", "login").trim().toLowerCase();
             String name = getJsonString(body, "name", "").trim();
-            String role = getJsonString(body, "role", "USER").trim().toUpperCase();
+            String email = getJsonString(body, "email", "").trim();
+            String password = getJsonString(body, "password", "").trim();
+            String provider = getJsonString(body, "provider", "local").trim().toLowerCase();
 
-            if (name.isEmpty()) {
-                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Name is required\"}");
+            String identifier = !email.isEmpty() ? email : name;
+
+            if (identifier.isEmpty()) {
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Email or Username is required\"}");
                 return;
             }
 
-            if ("login".equals(action)) {
-                if (!FileManager.userExists(name)) {
-                    sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"User not found. Please create an account first.\"}");
+            // ADMIN CREDENTIALS SPECIFIED BY USER:
+            // admin email: admin@gmail.com and pass: admin123
+            boolean isAdminAttempt = "admin@gmail.com".equalsIgnoreCase(email) ||
+                                     "admin@gmail.com".equalsIgnoreCase(name) ||
+                                     "admin".equalsIgnoreCase(name);
+
+            if (isAdminAttempt) {
+                if ("admin123".equals(password)) {
+                    String role = "ADMIN";
+                    String displayName = "Admin";
+                    notificationService.addObserver(new UserObserver(displayName));
+                    notificationService.notifyObservers("Admin logged in to the portal with full catalog permissions.");
+                    sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"Admin\",\"role\":\"ADMIN\",\"email\":\"admin@gmail.com\",\"provider\":\"local\",\"message\":\"Welcome Admin! Full portal and movie management permissions unlocked.\"}");
+                    return;
+                } else {
+                    sendJsonResponse(exchange, 401, "{\"success\":false,\"message\":\"Invalid Admin password! Admin password must be admin123\"}");
                     return;
                 }
-                String actualRole = FileManager.getUserRole(name);
-                notificationService.addObserver(new UserObserver(name));
-                sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + name.replace("\"", "\\\"") + "\",\"role\":\"" + actualRole + "\"}");
-            } else if ("register".equals(action)) {
-                if (FileManager.userExists(name)) {
-                    sendJsonResponse(exchange, 409, "{\"success\":false,\"message\":\"Username already taken. Please choose another or sign in.\"}");
+            }
+
+            // Standard User Role: strictly USER (can only add movies to their watchlist)
+            String role = "USER";
+
+            if ("register".equals(action)) {
+                if (FileManager.userExists(identifier)) {
+                    sendJsonResponse(exchange, 409, "{\"success\":false,\"message\":\"An account with this username or email already exists. Please Sign In.\"}");
                     return;
                 }
-                FileManager.saveUser(name, role);
-                notificationService.addObserver(new UserObserver(name));
-                notificationService.notifyObservers("New user " + name + " joined as " + role);
-                sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + name.replace("\"", "\\\"") + "\",\"role\":\"" + role + "\"}");
+                String displayName = !name.isEmpty() ? name : (!email.isEmpty() ? email.split("@")[0] : identifier);
+                FileManager.saveUser(displayName, role, password, email);
+                notificationService.addObserver(new UserObserver(displayName));
+                notificationService.notifyObservers("New user " + displayName + " registered (" + role + ")");
+                sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + displayName.replace("\"", "\\\"") + "\",\"role\":\"" + role + "\",\"email\":\"" + email.replace("\"", "\\\"") + "\",\"message\":\"Account created successfully! Welcome to TiMN.\"}");
+                return;
+            } else { // "login"
+                if (!FileManager.userExists(identifier)) {
+                    // Create account on first login
+                    String displayName = !name.isEmpty() ? name : (!email.isEmpty() ? email.split("@")[0] : identifier);
+                    FileManager.saveUser(displayName, role, password, email);
+                    notificationService.addObserver(new UserObserver(displayName));
+                    sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + displayName.replace("\"", "\\\"") + "\",\"role\":\"" + role + "\",\"email\":\"" + email.replace("\"", "\\\"") + "\",\"message\":\"Logged in successfully!\"}");
+                    return;
+                }
+
+                if (!password.isEmpty() && !FileManager.verifyPassword(identifier, password)) {
+                    sendJsonResponse(exchange, 401, "{\"success\":false,\"message\":\"Invalid password. Please check your credentials and try again.\"}");
+                    return;
+                }
+
+                String displayName = FileManager.getUserDisplayName(identifier);
+                String userRole = FileManager.getUserRole(identifier);
+                if (!"ADMIN".equals(userRole)) {
+                    userRole = "USER";
+                }
+
+                notificationService.addObserver(new UserObserver(displayName));
+                sendJsonResponse(exchange, 200, "{\"success\":true,\"name\":\"" + displayName.replace("\"", "\\\"") + "\",\"role\":\"" + userRole + "\",\"email\":\"" + email.replace("\"", "\\\"") + "\",\"message\":\"Logged in successfully!\"}");
+                return;
+            }
+        }
+    }
+
+    static class SupabaseSignupHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handlePreflight(exchange)) return;
+
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendJsonResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
+                return;
+            }
+
+            String body = readBody(exchange);
+            String email = getJsonString(body, "email", "").trim();
+            String password = getJsonString(body, "password", "").trim();
+            String name = getJsonString(body, "name", "").trim();
+            String role = getJsonString(body, "role", "USER").trim().toUpperCase();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Email and Password are required\"}");
+                return;
+            }
+
+            if (name.isEmpty()) {
+                name = email.split("@")[0];
+            }
+
+            try {
+                // Call Supabase Admin API with service role key to auto-confirm user
+                String payload = "{" +
+                        "\"email\":\"" + email + "\"," +
+                        "\"password\":\"" + password + "\"," +
+                        "\"email_confirm\":true," +
+                        "\"user_metadata\":{" +
+                        "\"full_name\":\"" + name.replace("\"", "\\\"") + "\"," +
+                        "\"role\":\"" + role + "\"" +
+                        "}" +
+                        "}";
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest req = HttpRequest.newBuilder()
+                        .uri(URI.create(SUPABASE_URL + "/auth/v1/admin/users"))
+                        .header("apikey", SUPABASE_SERVICE_ROLE_KEY)
+                        .header("Authorization", "Bearer " + SUPABASE_SERVICE_ROLE_KEY)
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(payload))
+                        .build();
+
+                HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+                if (resp.statusCode() == 200 || resp.statusCode() == 201) {
+                    if (!FileManager.userExists(name)) {
+                        FileManager.saveUser(name, role);
+                    }
+                    notificationService.addObserver(new UserObserver(name));
+                    notificationService.notifyObservers("New Supabase user " + name + " registered as " + role + "!");
+                    sendJsonResponse(exchange, 200, "{\"success\":true,\"message\":\"Account created in Supabase successfully!\",\"name\":\"" + name.replace("\"", "\\\"") + "\",\"role\":\"" + role + "\",\"email\":\"" + email + "\"}");
+                } else {
+                    String respBody = resp.body();
+                    String errorMsg = getJsonString(respBody, "msg", "");
+                    if (errorMsg.isEmpty()) errorMsg = getJsonString(respBody, "message", "");
+                    if (errorMsg.isEmpty()) errorMsg = "Supabase error (HTTP " + resp.statusCode() + ")";
+                    sendJsonResponse(exchange, resp.statusCode(), "{\"success\":false,\"message\":\"" + errorMsg.replace("\"", "\\\"") + "\"}");
+                }
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, "{\"success\":false,\"message\":\"Internal error connecting to Supabase: " + e.getMessage() + "\"}");
+            }
+        }
+    }
+
+    static class SupabaseConfigHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handlePreflight(exchange)) return;
+            String json = "{" +
+                    "\"success\":true," +
+                    "\"url\":\"" + SUPABASE_URL + "\"," +
+                    "\"anonKey\":\"" + SUPABASE_ANON_KEY + "\"," +
+                    "\"bucket\":\"" + SUPABASE_BUCKET + "\"," +
+                    "\"status\":\"connected\"" +
+                    "}";
+            sendJsonResponse(exchange, 200, json);
+        }
+    }
+
+    static class SupabaseInvoicesHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handlePreflight(exchange)) return;
+
+            String method = exchange.getRequestMethod().toUpperCase();
+            HttpClient client = HttpClient.newHttpClient();
+
+            if ("GET".equals(method)) {
+                try {
+                    String payload = "{\"prefix\":\"\",\"limit\":100}";
+                    HttpRequest req = HttpRequest.newBuilder()
+                            .uri(URI.create(SUPABASE_URL + "/storage/v1/object/list/" + SUPABASE_BUCKET))
+                            .header("apikey", SUPABASE_SERVICE_ROLE_KEY)
+                            .header("Authorization", "Bearer " + SUPABASE_SERVICE_ROLE_KEY)
+                            .header("Content-Type", "application/json")
+                            .POST(HttpRequest.BodyPublishers.ofString(payload))
+                            .build();
+
+                    HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+                    sendJsonResponse(exchange, resp.statusCode(), resp.body());
+                } catch (Exception e) {
+                    sendJsonResponse(exchange, 500, "{\"error\":\"" + e.getMessage() + "\"}");
+                }
+            } else if ("POST".equals(method)) {
+                try {
+                    String body = readBody(exchange);
+                    String filename = getJsonString(body, "filename", "report_" + System.currentTimeMillis() + ".html").trim();
+                    String content = getJsonString(body, "content", "Empty report");
+                    String contentType = filename.endsWith(".json") ? "application/json" : (filename.endsWith(".html") ? "text/html" : "text/plain");
+
+                    HttpRequest req = HttpRequest.newBuilder()
+                            .uri(URI.create(SUPABASE_URL + "/storage/v1/object/" + SUPABASE_BUCKET + "/" + filename))
+                            .header("apikey", SUPABASE_SERVICE_ROLE_KEY)
+                            .header("Authorization", "Bearer " + SUPABASE_SERVICE_ROLE_KEY)
+                            .header("Content-Type", contentType)
+                            .POST(HttpRequest.BodyPublishers.ofString(content, StandardCharsets.UTF_8))
+                            .build();
+
+                    HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+                    if (resp.statusCode() == 200 || resp.statusCode() == 201) {
+                        String publicUrl = SUPABASE_URL + "/storage/v1/object/public/" + SUPABASE_BUCKET + "/" + filename;
+                        notificationService.notifyObservers("File '" + filename + "' uploaded to Supabase Storage bucket '" + SUPABASE_BUCKET + "'");
+                        sendJsonResponse(exchange, 200, "{\"success\":true,\"message\":\"Uploaded to Supabase bucket '" + SUPABASE_BUCKET + "'!\",\"filename\":\"" + filename + "\",\"url\":\"" + publicUrl + "\"}");
+                    } else {
+                        sendJsonResponse(exchange, resp.statusCode(), resp.body());
+                    }
+                } catch (Exception e) {
+                    sendJsonResponse(exchange, 500, "{\"error\":\"" + e.getMessage() + "\"}");
+                }
             } else {
-                sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"Invalid action. Use 'login' or 'register'.\"}");
+                sendJsonResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
             }
         }
     }

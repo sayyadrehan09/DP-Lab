@@ -2,7 +2,7 @@
 title CinePattern - Movie & OTT Recommendation System
 echo ===================================================================
 echo             MOVIE ^& OTT RECOMMENDATION SYSTEM
-echo        5 Gang of Four Design Patterns Lab Assessment
+echo        8 Gang of Four Design Patterns Lab Assessment
 echo ===================================================================
 echo [1/3] Navigating to backend directory...
 cd /d "%~dp0backend"
