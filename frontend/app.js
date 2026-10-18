@@ -1811,23 +1811,6 @@ function setupEventListeners() {
     });
   }
 
-  const accDemoAdminBtn = document.getElementById('accDemoAdminBtn');
-  if (accDemoAdminBtn) {
-    accDemoAdminBtn.addEventListener('click', () => {
-      handleSuccessfulLogin({ name: 'Admin', role: 'ADMIN' });
-      showToast('✓ Logged in as Administrator (admin@gmail.com)');
-      switchView('account');
-    });
-  }
-
-  const accDemoUserBtn = document.getElementById('accDemoUserBtn');
-  if (accDemoUserBtn) {
-    accDemoUserBtn.addEventListener('click', () => {
-      handleSuccessfulLogin({ name: 'Aryan', role: 'USER' });
-      showToast('✓ Logged in as User (Aryan)');
-      switchView('account');
-    });
-  }
 
   const accountPageLogoutBtn = document.getElementById('accountPageLogoutBtn');
   if (accountPageLogoutBtn) {
@@ -2051,26 +2034,6 @@ function setupEventListeners() {
     });
   }
 
-  // Quick 1-click Demo Fill buttons
-  const quickFillAdminBtn = document.getElementById('quickFillAdminBtn');
-  if (quickFillAdminBtn) {
-    quickFillAdminBtn.addEventListener('click', () => {
-      if (tabSignInBtn) tabSignInBtn.click();
-      document.getElementById('loginEmailInput').value = 'admin@gmail.com';
-      document.getElementById('loginPasswordInput').value = 'admin123';
-      showToast('Pre-filled Admin credentials: admin@gmail.com / admin123');
-    });
-  }
-
-  const quickFillUserBtn = document.getElementById('quickFillUserBtn');
-  if (quickFillUserBtn) {
-    quickFillUserBtn.addEventListener('click', () => {
-      if (tabSignInBtn) tabSignInBtn.click();
-      document.getElementById('loginEmailInput').value = 'Aryan';
-      document.getElementById('loginPasswordInput').value = 'user123';
-      showToast('Pre-filled User credentials: Aryan / user123');
-    });
-  }
 
   // Sign In / Register Form submissions
   if (signInForm) {
