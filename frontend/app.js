@@ -675,10 +675,16 @@ async function triggerMementoUndo() {
 
 // 4. Template Method Pattern: Export Watchlist Report
 async function exportWatchlistReport(format = 'html') {
+  if (!appState.currentUser) {
+    showToast('Please sign in first to export your watchlist.');
+    openAuthModal();
+    return;
+  }
   try {
     const res = await fetch(`${API_BASE}/api/watchlist/export?username=${encodeURIComponent(appState.currentUser)}&format=${format}`);
     if (!res.ok) throw new Error('Export failed');
-    const content = await res.text();
+    const data = await res.json();
+    const content = data.content || '';
 
     if (format === 'html') {
       const blob = new Blob([content], { type: 'text/html' });
@@ -686,12 +692,14 @@ async function exportWatchlistReport(format = 'html') {
       window.open(url, '_blank');
       showToast('Generated HTML report via Template Method Pattern');
     } else {
-      const blob = new Blob([content], { type: 'text/plain' });
+      const mime = format === 'json' ? 'application/json' : (format === 'markdown' || format === 'md' ? 'text/markdown' : 'text/plain');
+      const ext = format === 'json' ? 'json' : (format === 'markdown' || format === 'md' ? 'md' : 'txt');
+      const blob = new Blob([content], { type: mime });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `Watchlist_${appState.currentUser}.${format === 'json' ? 'json' : 'txt'}`;
+      link.download = `Watchlist_${appState.currentUser}.${ext}`;
       link.click();
-      showToast(`Exported ${format.toUpperCase()} report via Template Method Pattern`);
+      showToast(`Exported ${data.format || format.toUpperCase()} report via Template Method Pattern`);
     }
   } catch (e) {
     showToast('Export failed');
@@ -1548,13 +1556,17 @@ function completeLoginSuccess(data) {
 
   showToast(`✓ Welcome, ${data.name}! Logged in with ${data.role} permissions.`);
 
-  // If there was a pending movie clicked before login, add it now!
   if (appState.pendingWatchlistMovie) {
     const pending = appState.pendingWatchlistMovie;
     appState.pendingWatchlistMovie = null;
     toggleWatchlistMovie(pending);
   }
 }
+
+const handleSuccessfulLogin = completeLoginSuccess;
+const triggerSupabaseReportUpload = () => {
+  if (typeof uploadReportToSupabase === 'function') uploadReportToSupabase();
+};
 
 function handleLogOut() {
   appState.currentUser = null;
@@ -1786,7 +1798,9 @@ function setupEventListeners() {
 
   const pageSupabaseSyncBtn = document.getElementById('pageSupabaseSyncBtn');
   if (pageSupabaseSyncBtn) {
-    pageSupabaseSyncBtn.addEventListener('click', triggerSupabaseReportUpload);
+    pageSupabaseSyncBtn.addEventListener('click', () => {
+      uploadReportToSupabase();
+    });
   }
 
   // Account Page Action Buttons
@@ -1965,18 +1979,6 @@ function setupEventListeners() {
       }
     });
   }
-
-  // Following list clicks
-  document.querySelectorAll('.following-user').forEach(userEl => {
-    userEl.addEventListener('click', () => {
-      const uName = userEl.getAttribute('data-user');
-      showToast(`Viewing ${uName}'s shared watch activity`);
-    });
-  });
-
-  document.getElementById('loadMoreFriendsBtn').addEventListener('click', () => {
-    showToast('Loaded all 16 connected observers from ObserverPattern.');
-  });
 
   // Role Badge & User profile modal
   document.getElementById('roleBadgeBtn').addEventListener('click', () => {
@@ -2163,12 +2165,50 @@ function setupEventListeners() {
   document.getElementById('broadcastSendBtn').addEventListener('click', sendAdminBroadcast);
 
   // Close Buttons for Modals & Drawers
-  document.getElementById('closeDetailModalBtn').addEventListener('click', closeAllModals);
-  document.getElementById('closeFilterModalBtn').addEventListener('click', closeAllModals);
-  document.getElementById('closePatternsModalBtn').addEventListener('click', closeAllModals);
-  document.getElementById('closeUserModalBtn').addEventListener('click', closeAllModals);
-  document.getElementById('closeWatchlistDrawerBtn').addEventListener('click', closeAllDrawers);
-  document.getElementById('closeNotifDrawerBtn').addEventListener('click', closeAllDrawers);
+  const modalCloseBtns = [
+    'closeAuthModalBtn',
+    'closeAdminAddMovieModalBtn',
+    'closeDetailModalBtn',
+    'closeFilterModalBtn',
+    'closePatternsModalBtn',
+    'closeUserModalBtn',
+    'closeSupabaseModalBtn',
+    'closeWatchlistDrawerBtn',
+    'closeNotifDrawerBtn'
+  ];
+  modalCloseBtns.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const parentModal = btn.closest('.modal-overlay');
+        if (parentModal) parentModal.classList.remove('active');
+        const parentDrawer = btn.closest('.drawer');
+        if (parentDrawer) parentDrawer.classList.remove('open');
+        closeAllModals();
+      });
+    }
+  });
+
+  // Universal close for ANY .modal-close-btn
+  document.querySelectorAll('.modal-close-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const parentModal = btn.closest('.modal-overlay');
+      if (parentModal) parentModal.classList.remove('active');
+      const parentDrawer = btn.closest('.drawer');
+      if (parentDrawer) parentDrawer.classList.remove('open');
+      closeAllModals();
+    });
+  });
+
+  // Global escape key to close active modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+      closeAllDrawers();
+    }
+  });
 
   // Close on outside click
   document.querySelectorAll('.modal-overlay').forEach(modal => {
@@ -2372,10 +2412,17 @@ async function loadSupabaseStorageFiles() {
 }
 
 async function uploadReportToSupabase() {
+  if (!appState.currentUser) {
+    showToast('Please sign in first to back up your watchlist to cloud storage.');
+    openAuthModal();
+    return;
+  }
   try {
     showToast('Generating report via Template Method Pattern...');
     const reportRes = await fetch(`${API_BASE}/api/watchlist/export?username=${encodeURIComponent(appState.currentUser)}&format=html`);
-    const htmlContent = await reportRes.text();
+    if (!reportRes.ok) throw new Error('Failed to generate report from backend');
+    const reportData = await reportRes.json();
+    const htmlContent = reportData.content || '';
 
     const filename = `Watchlist_${appState.currentUser}_${Date.now()}.html`;
     const res = await fetch(`${API_BASE}/api/supabase/invoices`, {
