@@ -1225,7 +1225,8 @@ function switchView(viewName, pushHistory = true) {
     movies: 'navItemMovies',
     webseries: 'navItemWebSeries',
     watchlist: 'navItemWatchlist',
-    account: 'navItemAccount'
+    account: 'navItemAccount',
+    patterns: 'navItemPatterns'
   };
 
   document.querySelectorAll('.nav-menu .nav-item').forEach(el => el.classList.remove('active'));
@@ -1239,7 +1240,8 @@ function switchView(viewName, pushHistory = true) {
     movies: 'viewMovies',
     webseries: 'viewWebSeries',
     watchlist: 'viewWatchlist',
-    account: 'viewAccount'
+    account: 'viewAccount',
+    patterns: 'viewPatterns'
   };
 
   Object.values(panels).forEach(panelId => {
@@ -1660,14 +1662,15 @@ function setupEventListeners() {
     switchView('home');
   });
 
-  // 6 Primary Left Navbar Items
+  // Primary Left Navbar Items
   const navMap = [
     { id: 'navItemHome', view: 'home' },
     { id: 'navItemSearch', view: 'search' },
     { id: 'navItemMovies', view: 'movies' },
     { id: 'navItemWebSeries', view: 'webseries' },
     { id: 'navItemWatchlist', view: 'watchlist' },
-    { id: 'navItemAccount', view: 'account' }
+    { id: 'navItemAccount', view: 'account' },
+    { id: 'navItemPatterns', view: 'patterns' }
   ];
 
   navMap.forEach(item => {
@@ -1929,17 +1932,77 @@ function setupEventListeners() {
     gofMementoBtn.addEventListener('click', triggerMementoUndo);
   }
 
-  // Secondary Sidebar Links
-  document.getElementById('navPartiesLink').addEventListener('click', () => {
-    switchView('home');
-    setTimeout(() => {
-      document.getElementById('partiesSection').scrollIntoView({ behavior: 'smooth' });
-    }, 200);
-  });
+  // Secondary / Design Patterns Sidebar Links
+  const navPartiesLink = document.getElementById('navPartiesLink');
+  if (navPartiesLink) {
+    navPartiesLink.addEventListener('click', () => {
+      switchView('home');
+      setTimeout(() => {
+        const el = document.getElementById('partiesSection');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    });
+  }
 
-  document.getElementById('navPatternsBtn').addEventListener('click', () => {
-    document.getElementById('patternsModal').classList.add('active');
-  });
+  const navPatternsBtn = document.getElementById('navPatternsBtn');
+  if (navPatternsBtn) {
+    navPatternsBtn.addEventListener('click', () => {
+      switchView('patterns');
+    });
+  }
+
+  // Neo-Card Design Pattern Details Action Buttons
+  const neoGofObserverBtn = document.getElementById('neoGofObserverBtn');
+  if (neoGofObserverBtn) {
+    neoGofObserverBtn.addEventListener('click', () => {
+      const modal = document.getElementById('patternsModal');
+      if (modal) modal.classList.add('active');
+      else showToast('Observer Pattern: NotificationService manages registered UserObservers.');
+    });
+  }
+
+  const neoGofProxyBtn = document.getElementById('neoGofProxyBtn');
+  if (neoGofProxyBtn) {
+    neoGofProxyBtn.addEventListener('click', () => {
+      const isAdm = (appState.currentUserRole === 'ADMIN');
+      showToast(isAdm
+        ? 'Protection Proxy: You are ADMIN (Full Access granted to create/delete movies).'
+        : 'Protection Proxy: Active user is standard USER. Protected admin routes return HTTP 403.'
+      );
+    });
+  }
+
+  const neoGofChainBtn = document.getElementById('neoGofChainBtn');
+  if (neoGofChainBtn) {
+    neoGofChainBtn.addEventListener('click', () => {
+      const modal = document.getElementById('filterModal');
+      if (modal) modal.classList.add('active');
+    });
+  }
+
+  const neoGofStrategyBtn = document.getElementById('neoGofStrategyBtn');
+  if (neoGofStrategyBtn) {
+    neoGofStrategyBtn.addEventListener('click', () => {
+      switchView('movies');
+      setTimeout(() => {
+        const select = document.getElementById('sortStrategySelect');
+        if (select) {
+          select.focus();
+          showToast('Strategy Pattern: Select dynamic sorting algorithm below.');
+        }
+      }, 300);
+    });
+  }
+
+  const neoGofTemplateBtn = document.getElementById('neoGofTemplateBtn');
+  if (neoGofTemplateBtn) {
+    neoGofTemplateBtn.addEventListener('click', () => exportWatchlistReport('json'));
+  }
+
+  const neoGofMementoBtn = document.getElementById('neoGofMementoBtn');
+  if (neoGofMementoBtn) {
+    neoGofMementoBtn.addEventListener('click', triggerMementoUndo);
+  }
 
   // Top Nav Back / Forward History Controls
   const histBackBtn = document.getElementById('histBackBtn');

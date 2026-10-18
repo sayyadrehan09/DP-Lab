@@ -123,22 +123,11 @@
         </ul>
       </div>
 
-      <!-- Secondary Links: Parties & Design Patterns -->
+      <!-- Secondary Links: Design Pattern Details -->
       <div class="sidebar-section">
-        <div class="section-label">Architecture & Social</div>
+        <div class="section-label">Architecture</div>
         <ul class="nav-menu">
-          <li class="nav-item" id="navPartiesLink">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            </span>
-            <span>Parties</span>
-          </li>
-          <li class="nav-item" id="navPatternsBtn">
+          <li class="nav-item" id="navItemPatterns">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -146,8 +135,8 @@
                 <line x1="12" y1="17" x2="12" y2="21"></line>
               </svg>
             </span>
-            <span>GoF Patterns</span>
-            <span class="nav-badge" style="background:var(--accent-cyan);">8</span>
+            <span>Design Pattern Details</span>
+            <span class="nav-badge" style="background:#bef264;color:#000;font-weight:800;">8</span>
           </li>
         </ul>
       </div>
@@ -1054,6 +1043,257 @@
               <button class="btn-secondary" id="accOpenSupabaseModalBtn">
                 <span>☁️ Supabase Cloud Storage</span>
               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             VIEW 7: DESIGN PATTERN DETAILS (NEO-CARD AESTHETIC MATCHING USER SPECIFICATION)
+             ================================================================== -->
+        <div class="view-panel" id="viewPatterns" style="display:none;">
+          <div class="dp-details-view">
+            <!-- Header Title -->
+            <div class="dp-view-hero">
+              <div class="dp-view-title">
+                <span>🏛️</span>
+                <span>Design Pattern Details</span>
+                <span class="gof-card-tag" style="background:#bef264;color:#000;border:1.2px solid #000;font-weight:800;font-size:12px;padding:3px 10px;">8 Patterns Implemented</span>
+              </div>
+              <p class="dp-view-subtitle">
+                Complete architectural breakdown of software design patterns powering the TiMN OTT Platform. Explore the theoretical meaning of each pattern and how it is practically engineered into our project.
+              </p>
+            </div>
+
+            <!-- Hero Intro Card: What is a Design Pattern? -->
+            <div class="neo-dp-hero-card">
+              <div class="neo-dp-badge-circle">!</div>
+              <div class="neo-dp-header">
+                <div>
+                  <h2 class="neo-dp-title" style="font-size:22px;">What is a Design Pattern?</h2>
+                  <div style="font-size:12px;color:#64748b;font-weight:600;margin-top:2px;">Software Engineering &amp; Architectural Foundation</div>
+                </div>
+                <span class="neo-dp-tag" style="background:#bef264;">Overview</span>
+              </div>
+              
+              <div class="neo-dp-section">
+                <div class="neo-dp-label">💡 Meaning &amp; Definition:</div>
+                <p class="neo-dp-text">
+                  A <strong>Design Pattern</strong> is a formalized, reusable architectural template and proven best-practice solution to commonly occurring software engineering problems. Rather than writing ad-hoc, tightly coupled code, design patterns introduce clean object-oriented structures (separation of concerns, loose coupling, single responsibility, open-closed principle) that make enterprise applications robust, modular, testable, and easily extensible.
+                </p>
+              </div>
+
+              <div class="neo-dp-section" style="margin-bottom:0;">
+                <div class="neo-dp-label">🎯 How it is Implemented in TiMN (Features):</div>
+                <p class="neo-dp-text">
+                  TiMN is built from the ground up using <strong>8 classic Gang of Four (GoF)</strong> design patterns across all 3 software design categories:
+                  <strong>Creational</strong> (Singleton, Factory Method), <strong>Structural</strong> (Protection Proxy), and <strong>Behavioral</strong> (Observer, Chain of Responsibility, Strategy, Template Method, Memento). Every core interaction—from dynamic movie recommendation filters and user watchlist undo states to role-based access security and report exports—is backed by a concrete design pattern.
+                </p>
+              </div>
+            </div>
+
+            <!-- Grid of 8 Design Patterns (Image 2 Signature Neo-Card Style) -->
+            <div class="dp-cards-grid">
+
+              <!-- Pattern 1: Singleton -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">1. Singleton Pattern</h3>
+                  <span class="neo-dp-tag creational">Creational</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Ensures that a class has only <strong>one single global instance</strong> throughout the entire lifetime of the application, and provides a centralized global access point to it. This guarantees shared state consistency and prevents duplicate resource allocations.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>MovieDatabase.java &amp; api/index.js:</strong> Central in-memory repository managing all 41 movies, user accounts, watchlists, and active observers. All HTTP API requests across users query and synchronize with this single shared database instance.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">MovieDatabase.java</span>
+                  <button class="neo-dp-action-btn" onclick="showToast('Singleton Pattern: Single MovieDatabase instance is active across server.')">Inspect Singleton</button>
+                </div>
+              </div>
+
+              <!-- Pattern 2: Factory Method -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">2. Factory Method</h3>
+                  <span class="neo-dp-tag creational">Creational</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Defines an interface for creating objects, but encapsulates the concrete instantiation logic inside a dedicated factory method. This decouples object creation from business logic, making adding new movie types seamless without modifying existing client code.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>MovieFactory.java:</strong> Encapsulates movie object instantiation from both persistent flat files (<code>createMovieFromFile</code>) and admin creation requests (<code>createMovie</code>), safely parsing genres, IMDb ratings, and streaming platform metadata.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">MovieFactory.java</span>
+                  <button class="neo-dp-action-btn" onclick="showToast('Factory Method: MovieFactory instantiated 41 polymorphic movie records.')">Test Factory</button>
+                </div>
+              </div>
+
+              <!-- Pattern 3: Observer Pattern -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">3. Observer Pattern</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Defines a one-to-many publish-subscribe communication dependency. When a subject (publisher) changes state or publishes a message, all registered observers (subscribers) are automatically notified and updated in real-time without tight coupling.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>NotificationService.java &amp; UserObserver.java:</strong> Whenever an admin uploads a new title, deletes content, or sends a platform announcement broadcast, all active user observers automatically receive live push alerts inside the notification bell feed.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">NotificationService.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofObserverBtn">View Observers</button>
+                </div>
+              </div>
+
+              <!-- Pattern 4: Protection Proxy -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">4. Protection Proxy</h3>
+                  <span class="neo-dp-tag structural">Structural</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Acts as an intermediary security guard that controls access to a sensitive service. It intercepts client requests, verifies identity and authorization credentials, and blocks unauthorized actions before delegating legitimate requests to the real underlying service.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>MovieServiceProxy.java:</strong> Enforces role-based security. Only users authenticated with the <code>ADMIN</code> role (e.g. <code>admin@gmail.com</code>) are allowed to add or delete movies. Regular user accounts are intercepted and blocked with HTTP 403 Forbidden.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">MovieServiceProxy.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofProxyBtn">Verify Proxy</button>
+                </div>
+              </div>
+
+              <!-- Pattern 5: Chain of Responsibility -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">5. Chain of Responsibility</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Decouples request senders from processing receivers by passing data sequentially through an ordered chain of independent filtering handlers. Each handler performs its specific check and passes the filtered candidate list to the next handler in line.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>RecommendationChain.java:</strong> Powers movie recommendations by executing an extensible 4-stage pipeline: <code>GenreHandler</code> ➔ <code>LanguageHandler</code> ➔ <code>RatingHandler</code> ➔ <code>PlatformHandler</code>. Each handler isolates filtering criteria cleanly.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">RecommendationChain.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofChainBtn">Run Pipeline</button>
+                </div>
+              </div>
+
+              <!-- Pattern 6: Strategy Pattern -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">6. Strategy Pattern</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Encapsulates a family of algorithms into separate, interchangeable strategy classes and makes them swappable at runtime. The client context delegates execution to the chosen strategy without needing messy <code>if-else</code> or <code>switch</code> logic.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>SortingStrategy.java &amp; CatalogSorterContext.java:</strong> Enables real-time catalog sorting. Users dynamically switch between <code>RatingSortStrategy</code>, <code>YearSortStrategy</code>, <code>TitleSortStrategy</code>, and <code>PopularitySortStrategy</code> on the Movies page.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">SortingStrategy.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofStrategyBtn">Change Strategy</button>
+                </div>
+              </div>
+
+              <!-- Pattern 7: Template Method -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">7. Template Method</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Defines the skeleton of an algorithm in an abstract base class template, deferring concrete rendering and formatting steps to specialized subclasses without altering the invariant structure and sequence of execution.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>WatchlistReportTemplate.java:</strong> Outlines the standard 3-phase algorithm (Header ➔ Movie Rows ➔ Summary Footer) for exporting user watchlists into diverse formats: <code>JsonWatchlistReport</code>, <code>MarkdownWatchlistReport</code>, <code>HtmlWatchlistReport</code>, and <code>PlainTextWatchlistReport</code>.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">WatchlistReportTemplate.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofTemplateBtn">Export Report</button>
+                </div>
+              </div>
+
+              <!-- Pattern 8: Memento Pattern -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">8. Memento Pattern</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Captures and externalizes an object's internal state into an immutable memento snapshot without violating encapsulation rules. The object can be restored to this exact previous state at any time, implementing clean Undo and Rollback capabilities.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>WatchlistMemento.java &amp; WatchlistCaretaker.java:</strong> Whenever a movie is added or removed from a user's watchlist, a snapshot memento is saved to the caretaker stack. Clicking "Undo (Memento)" instantly restores the previous watchlist state.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">WatchlistMemento.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofMementoBtn">Undo (Memento)</button>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
