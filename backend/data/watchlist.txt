@@ -1,6 +1,7 @@
 Bhai|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
 Aryan|10|KGF|Action|Hindi|8.2|2018|Prime Video
 Aryan|2|The Godfather|Drama|English|9.2|1972|Prime Video
+Aryan|8|Dangal|Drama|Hindi|8.3|2016|Netflix
 Admin|2|The Godfather|Drama|English|9.2|1972|Prime Video
 Admin|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
 Admin|3|The Dark Knight|Action|English|9.1|2008|Netflix

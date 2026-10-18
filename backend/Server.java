@@ -913,7 +913,7 @@ public class Server {
                     "\"abstractClass\":\"WatchlistReportTemplate\"," +
                     "\"templateMethod\":\"generateReport(username, movies)\"," +
                     "\"description\":\"Defines the skeleton of a watchlist report in a base template class, deferring header, row, and footer formatting to concrete subclasses.\"," +
-                    "\"concreteTemplates\":[\"MarkdownWatchlistReport\", \"PlainTextWatchlistReport\", \"JsonWatchlistReport\"]" +
+                    "\"concreteTemplates\":[\"MarkdownWatchlistReport\", \"PlainTextWatchlistReport\", \"JsonWatchlistReport\", \"HtmlWatchlistReport\"]" +
                     "}," +
                     "\"memento\":{" +
                     "\"pattern\":\"Memento Pattern\"," +
