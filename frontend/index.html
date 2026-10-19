@@ -849,61 +849,119 @@
           </div>
 
           <!-- Logged In Account Dashboard -->
-          <div id="accountUserView" style="display:none;">
-            <!-- Hero User Profile Card -->
-            <div class="account-card-hero">
-              <div class="account-avatar-large">
-                <img src="images/avatar_user.jpg" alt="Profile" id="accountAvatarImg">
+          <div id="accountUserView" style="display:none;" class="account-dashboard-wrapper">
+            <!-- Section Title & Top Actions -->
+            <div class="account-section-header">
+              <div>
+                <h1 class="account-section-title">My Account &amp; Profile</h1>
+                <p class="account-section-subtitle">Manage your session, GoF permissions, watchlist curation, and cloud backups.</p>
               </div>
-              <div style="flex:1;">
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                  <h2 style="font-size:24px;font-weight:800;color:#fff;" id="accDashboardName">Aryan</h2>
-                  <span id="accDashboardRoleBadge" class="gof-card-tag" style="font-size:12px;padding:3px 10px;">USER</span>
-                </div>
-                <div style="font-size:14px;color:var(--accent-cyan);margin:4px 0 10px 0;" id="accDashboardEmail">admin@gmail.com</div>
-                <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);">
-                  <span>🟢 Session: <strong>Active</strong></span>
-                  <span>🔒 Auth: <strong>Encrypted Password</strong></span>
-                  <span>☁️ Storage: <strong>Supabase Bucket 'invoices'</strong></span>
-                </div>
+              <div class="account-header-actions">
+                <button class="account-header-action-btn" id="accSwitchRoleBtn" title="Quick Switch Role between Admin and User">
+                  <span id="accSwitchRoleIcon">🔄</span>
+                  <span id="accSwitchRoleText">Switch to Admin</span>
+                </button>
+                <button class="account-logout-btn" id="accountPageLogoutBtn" title="Sign out of current session">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  <span>Sign Out</span>
+                </button>
               </div>
-              <button class="logout-btn" id="accountPageLogoutBtn" style="align-self:flex-start;">
-                <span class="logout-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                </span>
-                <span>Log Out</span>
-              </button>
             </div>
 
-            <!-- Account Statistics Matrix -->
-            <div class="account-stats-row">
-              <div class="account-stat-card">
-                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Watchlist Items</div>
-                <div style="font-size:26px;font-weight:800;color:#fff;margin:6px 0;" id="accWatchlistCount">0</div>
-                <div style="font-size:12px;color:var(--accent-cyan);">Saved to Personal List</div>
+            <!-- Hero User Profile Card -->
+            <div class="account-profile-card">
+              <div class="account-profile-main">
+                <div class="account-avatar-wrapper">
+                  <img src="images/avatar_user.jpg" alt="Profile" id="accountAvatarImg" class="account-avatar-img">
+                  <span class="account-online-indicator" title="Session Active"></span>
+                </div>
+                <div class="account-profile-details">
+                  <div class="account-name-row">
+                    <h2 class="account-display-name" id="accDashboardName">Aryan</h2>
+                    <span id="accDashboardRoleBadge" class="account-role-pill">USER</span>
+                  </div>
+                  <div class="account-email-row">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                    <span id="accDashboardEmail">aryan@cinepattern.com</span>
+                  </div>
+                  <div class="account-chips-grid">
+                    <div class="account-chip">
+                      <span class="chip-dot active"></span>
+                      <span>Session: <strong>Active</strong></span>
+                    </div>
+                    <div class="account-chip">
+                      <span>🔒</span>
+                      <span>Auth: <strong>Encrypted Credential</strong></span>
+                    </div>
+                    <div class="account-chip">
+                      <span>☁️</span>
+                      <span>Cloud: <strong>Supabase Connected</strong></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Statistics Matrix (4 Clean Metrics) -->
+            <div class="account-metrics-grid">
+              <!-- Metric 1: Watchlist Items -->
+              <div class="account-metric-card" id="metricCardWatchlist">
+                <div class="metric-top">
+                  <span class="metric-label">Watchlist Saved</span>
+                  <div class="metric-icon-wrap violet">📋</div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-number" id="accWatchlistCount">0</span>
+                  <span class="metric-unit">Titles</span>
+                </div>
+                <div class="metric-footer-action">
+                  <button class="metric-link-btn" id="accMetricWatchlistLink">View Watchlist →</button>
+                </div>
               </div>
 
-              <div class="account-stat-card">
-                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Account Permission</div>
-                <div style="font-size:20px;font-weight:800;color:var(--primary);margin:6px 0;" id="accPermissionText">Standard USER</div>
-                <div style="font-size:12px;color:var(--text-secondary);" id="accPermissionSub">Watchlist curation only</div>
+              <!-- Metric 2: Account Role & Permissions -->
+              <div class="account-metric-card">
+                <div class="metric-top">
+                  <span class="metric-label">Access Control</span>
+                  <div class="metric-icon-wrap emerald">🛡️</div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-number text-accent" id="accPermissionText" style="font-size:18px;">Standard USER</span>
+                </div>
+                <div class="metric-sub" id="accPermissionSub">Protection Proxy Pattern Enforcement</div>
               </div>
 
-              <div class="account-stat-card">
-                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Active Watch Parties</div>
-                <div style="font-size:26px;font-weight:800;color:#34d399;margin:6px 0;">4 Rooms</div>
-                <div style="font-size:12px;color:var(--text-secondary);">Synchronized streaming</div>
+              <!-- Metric 3: Architectural Patterns -->
+              <div class="account-metric-card">
+                <div class="metric-top">
+                  <span class="metric-label">Architectural Engine</span>
+                  <div class="metric-icon-wrap cyan">🧩</div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-number text-cyan">8 Patterns</span>
+                </div>
+                <div class="metric-sub">Full GoF Software Architecture</div>
               </div>
 
-              <div class="account-stat-card">
-                <div style="font-size:11.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;">Design Patterns</div>
-                <div style="font-size:26px;font-weight:800;color:#38bdf8;margin:6px 0;">8 Patterns</div>
-                <div style="font-size:12px;color:var(--text-secondary);">GoF Architectural Engine</div>
+              <!-- Metric 4: Cloud Backup & Storage -->
+              <div class="account-metric-card">
+                <div class="metric-top">
+                  <span class="metric-label">Cloud Backup</span>
+                  <div class="metric-icon-wrap amber">☁️</div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-number text-amber" style="font-size:18px;">Supabase Vault</span>
+                </div>
+                <div class="metric-sub">Bucket: 'invoices' (Template Method)</div>
               </div>
             </div>
 
             <!-- Admin Privilege Control Panel (Visible ONLY to Admin) -->
-            <div id="accAdminControlPanel" style="display:none;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:24px;margin-bottom:24px;">
+            <div id="accAdminControlPanel" style="display:none;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:24px;margin-bottom:28px;">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
                 <div>
                   <div style="font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;">
@@ -929,17 +987,74 @@
               </div>
             </div>
 
-            <!-- Quick Account Navigation Shortcuts -->
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <button class="btn-secondary" id="accGoToWatchlistBtn">
-                <span>📋 View My Watchlist</span>
-              </button>
-              <button class="btn-secondary" id="accBrowseMoviesBtn">
-                <span>🎬 Explore Movies</span>
-              </button>
-              <button class="btn-secondary" id="accOpenSupabaseModalBtn">
-                <span>☁️ Supabase Cloud Storage</span>
-              </button>
+            <!-- Organized Quick Actions & Pattern Tools Hub -->
+            <div class="account-hub-section">
+              <div class="account-hub-header">
+                <h3 class="account-hub-title">⚡ Quick Navigation &amp; Pattern Tools</h3>
+                <p class="account-hub-subtitle">One-click shortcuts to explore system features and GoF pattern implementations</p>
+              </div>
+
+              <div class="account-tools-grid">
+                <!-- Tool 1: Watchlist -->
+                <div class="account-tool-card" id="accToolWatchlist">
+                  <div>
+                    <div class="tool-card-icon">📋</div>
+                    <div class="tool-card-content">
+                      <h4>Personal Watchlist</h4>
+                      <p>Curate your movie list, remove titles, or undo actions via the Memento Pattern.</p>
+                    </div>
+                  </div>
+                  <button class="tool-card-action-btn" id="accGoToWatchlistBtn">
+                    <span>Open Watchlist</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                </div>
+
+                <!-- Tool 2: Catalog -->
+                <div class="account-tool-card" id="accToolCatalog">
+                  <div>
+                    <div class="tool-card-icon">🎬</div>
+                    <div class="tool-card-content">
+                      <h4>Browse Full Catalog</h4>
+                      <p>Explore 59+ movies, anime, and web series with Strategy Pattern dynamic sorting.</p>
+                    </div>
+                  </div>
+                  <button class="tool-card-action-btn" id="accBrowseMoviesBtn">
+                    <span>Explore Catalog</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                </div>
+
+                <!-- Tool 3: Supabase -->
+                <div class="account-tool-card" id="accToolCloud">
+                  <div>
+                    <div class="tool-card-icon">☁️</div>
+                    <div class="tool-card-content">
+                      <h4>Supabase Cloud Vault</h4>
+                      <p>Backup and download watchlist report summaries from cloud bucket storage.</p>
+                    </div>
+                  </div>
+                  <button class="tool-card-action-btn" id="accOpenSupabaseModalBtn">
+                    <span>Cloud Storage</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                </div>
+
+                <!-- Tool 4: Design Patterns -->
+                <div class="account-tool-card" id="accToolPatterns">
+                  <div>
+                    <div class="tool-card-icon">🏛️</div>
+                    <div class="tool-card-content">
+                      <h4>Design Pattern Details</h4>
+                      <p>Learn how Singleton, Factory, Observer, Proxy, Chain, Strategy, Template &amp; Memento work.</p>
+                    </div>
+                  </div>
+                  <button class="tool-card-action-btn" id="accViewPatternsBtn">
+                    <span>View 8 Patterns</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

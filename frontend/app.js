@@ -11,16 +11,10 @@
  * 8. Memento (WatchlistMemento)
  */
 
-<<<<<<< HEAD
-const API_BASE = (window.location.hostname === 'localhost' && window.location.port && window.location.port !== '8080')
-  ? 'http://localhost:8080' 
-  : '';
-=======
 const API_BASE = (window.location.protocol.startsWith('http') && (
   (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ||
   window.location.port === '8080'
 )) ? '' : 'http://localhost:8080';
->>>>>>> 8e70fefccc43b5fb57559f6ea852de60193788a7
 
 // Supabase Cloud Configuration
 const SUPABASE_URL = "https://mhxkftnldxziqhydyfbf.supabase.co";
@@ -1302,7 +1296,7 @@ function updateAccountUI() {
   const emailEl = document.getElementById('accDashboardEmail');
   if (emailEl) {
     emailEl.textContent = appState.currentRole === 'ADMIN' 
-      ? 'admin@gmail.com' 
+      ? 'admin@cinepattern.com' 
       : (localStorage.getItem('cp_timn_email') || `${appState.currentUser.toLowerCase()}@cinepattern.com`);
   }
 
@@ -1310,29 +1304,33 @@ function updateAccountUI() {
   const permText = document.getElementById('accPermissionText');
   const permSub = document.getElementById('accPermissionSub');
   const adminPanel = document.getElementById('accAdminControlPanel');
+  const switchRoleText = document.getElementById('accSwitchRoleText');
+  const avatarImg = document.getElementById('accountAvatarImg');
 
   if (appState.currentRole === 'ADMIN') {
     if (roleBadge) {
-      roleBadge.textContent = '🛡️ ADMINISTRATOR';
-      roleBadge.style.background = '#8b5cf6';
-      roleBadge.style.color = '#fff';
+      roleBadge.textContent = 'ADMIN';
+      roleBadge.className = 'account-role-pill admin';
     }
     if (permText) permText.textContent = 'Administrator (Full Access)';
     if (permSub) permSub.textContent = 'MovieServiceProxy granted catalog modifications';
     if (adminPanel) adminPanel.style.display = 'block';
+    if (switchRoleText) switchRoleText.textContent = 'Switch to User (Aryan)';
+    if (avatarImg) avatarImg.src = 'images/avatar_nick.jpg';
   } else {
     if (roleBadge) {
-      roleBadge.textContent = '👤 REGULAR USER';
-      roleBadge.style.background = 'rgba(56, 189, 248, 0.15)';
-      roleBadge.style.color = 'var(--accent-cyan)';
+      roleBadge.textContent = 'REGULAR USER';
+      roleBadge.className = 'account-role-pill user';
     }
     if (permText) permText.textContent = 'Standard Member';
-    if (permSub) permSub.textContent = 'Watchlist curation & streaming';
+    if (permSub) permSub.textContent = 'Protection Proxy Pattern Enforcement';
     if (adminPanel) adminPanel.style.display = 'none';
+    if (switchRoleText) switchRoleText.textContent = 'Switch to Admin';
+    if (avatarImg) avatarImg.src = 'images/avatar_user.jpg';
   }
 
   const countEl = document.getElementById('accWatchlistCount');
-  if (countEl) countEl.textContent = appState.watchlist.length;
+  if (countEl) countEl.textContent = appState.watchlist ? appState.watchlist.length : 0;
 }
 
 // Central View Switcher
@@ -2021,6 +2019,11 @@ function setupEventListeners() {
     accGoToWatchlistBtn.addEventListener('click', () => switchView('watchlist'));
   }
 
+  const accMetricWatchlistLink = document.getElementById('accMetricWatchlistLink');
+  if (accMetricWatchlistLink) {
+    accMetricWatchlistLink.addEventListener('click', () => switchView('watchlist'));
+  }
+
   const accBrowseMoviesBtn = document.getElementById('accBrowseMoviesBtn');
   if (accBrowseMoviesBtn) {
     accBrowseMoviesBtn.addEventListener('click', () => switchView('movies'));
@@ -2031,6 +2034,33 @@ function setupEventListeners() {
     accOpenSupabaseModalBtn.addEventListener('click', () => {
       document.getElementById('supabaseCloudModal').classList.add('active');
       loadSupabaseStorageFiles();
+    });
+  }
+
+  const accViewPatternsBtn = document.getElementById('accViewPatternsBtn');
+  if (accViewPatternsBtn) {
+    accViewPatternsBtn.addEventListener('click', () => switchView('patterns'));
+  }
+
+  const accSwitchRoleBtn = document.getElementById('accSwitchRoleBtn');
+  if (accSwitchRoleBtn) {
+    accSwitchRoleBtn.addEventListener('click', () => {
+      if (appState.currentRole === 'ADMIN') {
+        appState.currentUser = 'Aryan';
+        appState.currentRole = 'USER';
+        localStorage.setItem('cp_timn_user', 'Aryan');
+        localStorage.setItem('cp_timn_role', 'USER');
+        localStorage.setItem('cp_timn_email', 'aryan@cinepattern.com');
+      } else {
+        appState.currentUser = 'Admin';
+        appState.currentRole = 'ADMIN';
+        localStorage.setItem('cp_timn_user', 'Admin');
+        localStorage.setItem('cp_timn_role', 'ADMIN');
+        localStorage.setItem('cp_timn_email', 'admin@cinepattern.com');
+      }
+      initUserSession();
+      updateAccountUI();
+      showToast(`✓ Switched role to ${appState.currentRole} (${appState.currentUser})`);
     });
   }
 
