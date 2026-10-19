@@ -201,13 +201,26 @@ public class FileManager {
         return list;
     }
 
+    public static boolean matchesUser(String entryUser, String queryUser) {
+        if (entryUser == null || queryUser == null) return false;
+        String e = entryUser.trim();
+        String q = queryUser.trim();
+        if (e.equalsIgnoreCase(q)) return true;
+        String canonicalE = getUserDisplayName(e);
+        String canonicalQ = getUserDisplayName(q);
+        if (canonicalE.equalsIgnoreCase(canonicalQ)) return true;
+        if (canonicalE.equalsIgnoreCase(q) || canonicalQ.equalsIgnoreCase(e)) return true;
+        return false;
+    }
+
     public static void saveWatchlist(String user, Movie movie) {
         initializeFiles();
         if (isMovieInWatchlist(user, movie.getId())) {
             return; // Already in watchlist
         }
+        String canonicalUser = getUserDisplayName(user);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(watchlistFile, true))) {
-            writer.write(user + "|" + movie.toFileString());
+            writer.write(canonicalUser + "|" + movie.toFileString());
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error saving watchlist: " + e.getMessage());
@@ -220,7 +233,7 @@ public class FileManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 8 && parts[0].equalsIgnoreCase(user.trim())) {
+                if (parts.length >= 8 && matchesUser(parts[0], user)) {
                     try {
                         if (Integer.parseInt(parts[1]) == movieId) return true;
                     } catch (NumberFormatException ignored) {}
@@ -237,7 +250,7 @@ public class FileManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 8 && parts[0].equalsIgnoreCase(user.trim())) watchlist.add(parts[2]);
+                if (parts.length >= 8 && matchesUser(parts[0], user)) watchlist.add(parts[2]);
             }
         } catch (IOException e) {
             System.out.println("Error loading watchlist: " + e.getMessage());
@@ -252,7 +265,7 @@ public class FileManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 8 && parts[0].equalsIgnoreCase(user.trim())) {
+                if (parts.length >= 8 && matchesUser(parts[0], user)) {
                     try {
                         Movie m = new Movie(
                                 Integer.parseInt(parts[1]),
@@ -281,7 +294,7 @@ public class FileManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 8 && parts[0].equalsIgnoreCase(user.trim())) {
+                if (parts.length >= 8 && matchesUser(parts[0], user)) {
                     try {
                         if (Integer.parseInt(parts[1]) == movieId) {
                             removed = true;
@@ -304,6 +317,35 @@ public class FileManager {
         return removed;
     }
 
+    public static boolean clearUserWatchlist(String user) {
+        initializeFiles();
+        File src = new File(watchlistFile);
+        File temp = new File(dataFolder + File.separator + "watchlist_clear_temp.txt");
+        boolean anyRemoved = false;
+        try (BufferedReader reader = new BufferedReader(new FileReader(src));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(temp))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1);
+                if (parts.length >= 8 && matchesUser(parts[0], user)) {
+                    anyRemoved = true;
+                    continue; // Skip this line
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            return false;
+        }
+
+        try {
+            java.nio.file.Files.move(temp.toPath(), src.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            return false;
+        }
+        return anyRemoved;
+    }
+
     public static List<Integer> getUserWatchlistIds(String user) {
         initializeFiles();
         List<Integer> ids = new ArrayList<>();
@@ -311,7 +353,7 @@ public class FileManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 8 && parts[0].equalsIgnoreCase(user.trim())) {
+                if (parts.length >= 8 && matchesUser(parts[0], user)) {
                     try {
                         ids.add(Integer.parseInt(parts[1]));
                     } catch (NumberFormatException ignored) {}
@@ -326,21 +368,24 @@ public class FileManager {
         File src = new File(watchlistFile);
         File temp = new File(dataFolder + File.separator + "watchlist_restore_temp.txt");
         MovieDatabase db = MovieDatabase.getInstance();
+        String canonicalUser = getUserDisplayName(user);
         try (BufferedReader reader = new BufferedReader(new FileReader(src));
              BufferedWriter writer = new BufferedWriter(new FileWriter(temp))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|", -1);
-                if (!parts[0].equalsIgnoreCase(user.trim())) {
+                if (!matchesUser(parts[0], user)) {
                     writer.write(line);
                     writer.newLine();
                 }
             }
-            for (Integer id : movieIds) {
-                Movie m = db.findMovieById(id);
-                if (m != null) {
-                    writer.write(user + "|" + m.toFileString());
-                    writer.newLine();
+            if (movieIds != null) {
+                for (Integer id : movieIds) {
+                    Movie m = db.findMovieById(id);
+                    if (m != null) {
+                        writer.write(canonicalUser + "|" + m.toFileString());
+                        writer.newLine();
+                    }
                 }
             }
         } catch (IOException ignored) {}

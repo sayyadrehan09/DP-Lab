@@ -57,3 +57,4 @@
 116|Peaky Blinders|Crime Drama|English|8.8|2013|Netflix
 117|Severance|Sci-Fi|English|8.7|2022|Apple TV+
 118|The Boys|Action|English|8.7|2019|Prime Video
+119|Black|Thriller|Korean|8.5|2020|Disney+

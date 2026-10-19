@@ -18,3 +18,6 @@ Admin|ADMIN|admin123|admin@gmail.com
 admin@gmail.com|ADMIN|admin123|admin@gmail.com
 John Doe|USER|userpass|john@example.com
 random|USER|random123|random123@gmail.com
+armin@gmail.com|USER|admin123|armin@gmail.com
+Kallu|USER|kallu123|kallu@gmail.com
+Kallu|USER|kallu123|kallu123@gmail.com

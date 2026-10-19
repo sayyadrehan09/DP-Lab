@@ -42,12 +42,17 @@ class WatchlistCaretaker {
     private static final Map<String, Stack<WatchlistMemento>> userHistories = new HashMap<>();
     private static int totalSnapshotsTaken = 0;
 
+    private static String normalizeUser(String username) {
+        if (username == null || username.trim().isEmpty()) return "user";
+        return FileManager.getUserDisplayName(username).trim().toLowerCase();
+    }
+
     /**
      * Saves a snapshot of the current state before a mutation occurs
      */
     public static synchronized void saveSnapshot(String username, List<Integer> currentMovieIds, String actionDescription) {
         if (username == null || username.trim().isEmpty()) return;
-        String user = username.trim().toLowerCase();
+        String user = normalizeUser(username);
         
         userHistories.putIfAbsent(user, new Stack<>());
         Stack<WatchlistMemento> stack = userHistories.get(user);
@@ -66,7 +71,7 @@ class WatchlistCaretaker {
      */
     public static synchronized WatchlistMemento undo(String username) {
         if (username == null) return null;
-        String user = username.trim().toLowerCase();
+        String user = normalizeUser(username);
         Stack<WatchlistMemento> stack = userHistories.get(user);
         
         if (stack != null && !stack.isEmpty()) {
@@ -80,7 +85,7 @@ class WatchlistCaretaker {
      */
     public static synchronized boolean canUndo(String username) {
         if (username == null) return false;
-        String user = username.trim().toLowerCase();
+        String user = normalizeUser(username);
         Stack<WatchlistMemento> stack = userHistories.get(user);
         return stack != null && !stack.isEmpty();
     }
@@ -90,7 +95,7 @@ class WatchlistCaretaker {
      */
     public static synchronized int getHistoryDepth(String username) {
         if (username == null) return 0;
-        String user = username.trim().toLowerCase();
+        String user = normalizeUser(username);
         Stack<WatchlistMemento> stack = userHistories.get(user);
         return (stack != null) ? stack.size() : 0;
     }

@@ -463,13 +463,32 @@ public class Server {
             } else if ("DELETE".equalsIgnoreCase(method)) {
                 Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
                 String user = params.getOrDefault("user", params.getOrDefault("username", "")).trim();
+                boolean clearAll = "true".equalsIgnoreCase(params.get("clearAll")) || "true".equalsIgnoreCase(params.get("clear"));
+
+                if (user.isEmpty()) {
+                    sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user parameter required\"}");
+                    return;
+                }
+
+                if (clearAll) {
+                    List<Integer> currentIdsBeforeClear = FileManager.getUserWatchlistIds(user);
+                    if (currentIdsBeforeClear.isEmpty()) {
+                        sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":false,\"message\":\"Watchlist is already empty.\"}");
+                        return;
+                    }
+                    WatchlistCaretaker.saveSnapshot(user, currentIdsBeforeClear, "Before clearing all " + currentIdsBeforeClear.size() + " movies");
+                    boolean cleared = FileManager.clearUserWatchlist(user);
+                    sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":true,\"message\":\"Watchlist cleared. You can restore it anytime via Undo (Memento)!\"}");
+                    return;
+                }
+
                 int movieId = -1;
                 try {
                     movieId = Integer.parseInt(params.getOrDefault("movieId", "-1"));
                 } catch (NumberFormatException ignored) {}
 
-                if (user.isEmpty() || movieId <= 0) {
-                    sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user and movieId required\"}");
+                if (movieId <= 0) {
+                    sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user and valid movieId required\"}");
                     return;
                 }
 

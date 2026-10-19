@@ -507,6 +507,7 @@ function initUserSession() {
   const topNavSignInBtn = document.getElementById('topNavSignInBtn');
   const topUserWrap = document.getElementById('topUserWrap');
   const topNavAddMovieBtn = document.getElementById('topNavAddMovieBtn');
+  const sidebarAddMovieItem = document.getElementById('navItemAddMovie');
 
   if (appState.isLoggedIn && appState.currentUser) {
     if (sidebarGuestBlock) sidebarGuestBlock.style.display = 'none';
@@ -521,12 +522,14 @@ function initUserSession() {
     if (roleEl) {
       if (appState.currentRole === 'ADMIN') {
         roleEl.style.color = 'var(--accent-gold)';
-        roleEl.textContent = 'ADMIN (Catalog)';
+        roleEl.textContent = 'ADMIN';
         if (topNavAddMovieBtn) topNavAddMovieBtn.style.display = 'inline-flex';
+        if (sidebarAddMovieItem) sidebarAddMovieItem.style.display = 'flex';
       } else {
         roleEl.style.color = 'var(--accent-cyan)';
         roleEl.textContent = 'USER';
         if (topNavAddMovieBtn) topNavAddMovieBtn.style.display = 'none';
+        if (sidebarAddMovieItem) sidebarAddMovieItem.style.display = 'none';
       }
     }
   } else {
@@ -536,6 +539,7 @@ function initUserSession() {
     if (topNavSignInBtn) topNavSignInBtn.style.display = 'inline-flex';
     if (topUserWrap) topUserWrap.style.display = 'none';
     if (topNavAddMovieBtn) topNavAddMovieBtn.style.display = 'none';
+    if (sidebarAddMovieItem) sidebarAddMovieItem.style.display = 'none';
 
     const badge = document.getElementById('sidebarWatchlistBadge');
     if (badge) badge.textContent = '0';
@@ -632,17 +636,20 @@ async function toggleWatchlistMovie(movie) {
     return;
   }
 
-  const isPresent = appState.watchlist.some(m => m.id === movie.id || m.title === movie.title);
+  const isPresent = appState.watchlist.some(m => Number(m.id) === Number(movie.id) || m.title === movie.title);
   try {
     if (isPresent) {
-      const res = await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${movie.id}`, {
+      const existing = appState.watchlist.find(m => Number(m.id) === Number(movie.id) || m.title === movie.title);
+      const targetId = existing ? existing.id : movie.id;
+      const res = await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${targetId}`, {
         method: 'DELETE'
       });
       if (res.ok) {
         showToast(`Removed "${movie.title}" from Watchlist (Memento snapshot recorded)`, 'undo');
-        loadWatchlistFromBackend();
+        await loadWatchlistFromBackend();
         loadNotificationsFromBackend();
         applyClientFilters();
+        renderWatchlistPageView();
       }
     } else {
       const res = await fetch(`${API_BASE}/api/watchlist`, {
@@ -655,9 +662,10 @@ async function toggleWatchlistMovie(movie) {
       });
       if (res.ok) {
         showToast(`✓ Added "${movie.title}" to your Watchlist!`);
-        loadWatchlistFromBackend();
+        await loadWatchlistFromBackend();
         loadNotificationsFromBackend();
         applyClientFilters();
+        renderWatchlistPageView();
       }
     }
   } catch (e) {
@@ -667,7 +675,11 @@ async function toggleWatchlistMovie(movie) {
 
 // 3. Memento Pattern: Undo Last Watchlist Action
 async function triggerMementoUndo() {
-  if (!appState.currentUser) return;
+  if (!appState.currentUser) {
+    showToast('Please sign in to access your Watchlist history.');
+    openAuthModal();
+    return;
+  }
   try {
     const res = await fetch(`${API_BASE}/api/watchlist/undo?username=${encodeURIComponent(appState.currentUser)}`, {
       method: 'POST',
@@ -677,8 +689,10 @@ async function triggerMementoUndo() {
     const data = await res.json();
     if (res.ok && data.success) {
       showToast('↩ Watchlist state restored via Memento Pattern!');
-      loadWatchlistFromBackend();
+      await loadWatchlistFromBackend();
       loadNotificationsFromBackend();
+      applyClientFilters();
+      renderWatchlistPageView();
     } else {
       showToast(data.message || 'No previous Memento snapshot found to restore.');
     }
@@ -1130,15 +1144,27 @@ async function removeFromWatchlistDirect(movie) {
     openAuthModal('Please sign in to manage your watchlist.');
     return;
   }
+  const targetMovie = (movie && movie.id) 
+    ? movie 
+    : (appState.watchlist.find(m => m.title === (movie && movie.title)) || movie);
+  const movieId = targetMovie ? targetMovie.id : null;
+  const movieTitle = targetMovie ? targetMovie.title : 'Movie';
+
+  if (!movieId) {
+    showToast('Invalid movie ID');
+    return;
+  }
+
   try {
-    const res = await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${movie.id}`, {
+    const res = await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${movieId}`, {
       method: 'DELETE'
     });
     if (res.ok) {
-      showToast(`Removed "${movie.title}" from Watchlist (Memento snapshot recorded)`, 'undo');
+      showToast(`Removed "${movieTitle}" from Watchlist (Memento snapshot recorded)`, 'undo');
       await loadWatchlistFromBackend();
       loadNotificationsFromBackend();
       applyClientFilters();
+      renderWatchlistPageView();
     } else {
       const data = await res.json().catch(() => ({}));
       showToast(data.message || 'Failed to remove from watchlist');
@@ -1148,24 +1174,30 @@ async function removeFromWatchlistDirect(movie) {
   }
 }
 
-// Clear Entire Watchlist with Memento snapshot
+// Clear Entire Watchlist with single Memento snapshot
 async function clearAllWatchlist() {
-  if (!appState.isLoggedIn || !appState.currentUser || appState.watchlist.length === 0) return;
+  if (!appState.isLoggedIn || !appState.currentUser || !appState.watchlist || appState.watchlist.length === 0) return;
   if (!confirm(`Are you sure you want to remove all ${appState.watchlist.length} titles from your Watchlist?\n\nYou can easily restore them anytime using the "Undo (Memento)" button!`)) {
     return;
   }
 
-  const items = [...appState.watchlist];
-  for (const movie of items) {
-    await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${movie.id}`, {
+  const count = appState.watchlist.length;
+  try {
+    const res = await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&clearAll=true`, {
       method: 'DELETE'
     });
+    if (res.ok) {
+      showToast(`Cleared Watchlist (${count} titles removed). You can restore anytime via Undo!`, 'undo');
+      await loadWatchlistFromBackend();
+      loadNotificationsFromBackend();
+      applyClientFilters();
+      renderWatchlistPageView();
+    } else {
+      showToast('Failed to clear watchlist');
+    }
+  } catch (e) {
+    showToast('Failed to clear watchlist: network error');
   }
-
-  showToast(`Cleared Watchlist (${items.length} titles removed). You can restore anytime via Undo!`, 'undo');
-  await loadWatchlistFromBackend();
-  loadNotificationsFromBackend();
-  applyClientFilters();
 }
 
 // Dedicated Watchlist Card with explicit "Remove from Watchlist" button
@@ -1413,65 +1445,71 @@ function switchView(viewName, pushHistory = true) {
 }
 
 function updateWatchlistUI() {
-  document.getElementById('sidebarWatchlistBadge').textContent = appState.watchlist.length;
+  const badge = document.getElementById('sidebarWatchlistBadge');
+  if (badge) badge.textContent = appState.watchlist ? appState.watchlist.length : 0;
   
   const container = document.getElementById('watchlistItemsContainer');
-  container.innerHTML = '';
+  if (container) {
+    container.innerHTML = '';
 
-  if (appState.watchlist.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center;padding:40px 10px;color:var(--text-muted);">
-        <p style="font-size:14px;margin-bottom:8px;">Your Watchlist is empty.</p>
-        <p style="font-size:12px;">Click the bookmark on any movie to save it here!</p>
-      </div>
-    `;
-    return;
+    if (!appState.watchlist || appState.watchlist.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:40px 10px;color:var(--text-muted);">
+          <p style="font-size:14px;margin-bottom:8px;">Your Watchlist is empty.</p>
+          <p style="font-size:12px;">Click the bookmark on any movie to save it here!</p>
+        </div>
+      `;
+    } else {
+      appState.watchlist.forEach(movie => {
+        const assets = getMovieAssets(movie.title);
+        const item = document.createElement('div');
+        item.style.cssText = `
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px;
+          background: var(--bg-surface-elevated);
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-md);
+          transition: var(--transition);
+          cursor: pointer;
+        `;
+        item.innerHTML = `
+          <img src="${assets.poster}" alt="${movie.title}" style="width:44px;height:58px;border-radius:6px;object-fit:cover;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${movie.title}</div>
+            <div style="font-size:11px;color:var(--text-muted);">${movie.genre} • ${movie.year} • ★ ${movie.rating}</div>
+          </div>
+          <button class="drawer-remove-item-btn" title="Remove from Watchlist">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </button>
+        `;
+
+        item.querySelector('.drawer-remove-item-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeFromWatchlistDirect(movie);
+        });
+
+        item.addEventListener('click', () => {
+          closeAllDrawers();
+          openMovieDetailModal(movie);
+        });
+
+        container.appendChild(item);
+      });
+    }
   }
 
-  appState.watchlist.forEach(movie => {
-    const assets = getMovieAssets(movie.title);
-    const item = document.createElement('div');
-    item.style.cssText = `
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px;
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      transition: var(--transition);
-      cursor: pointer;
-    `;
-    item.innerHTML = `
-      <img src="${assets.poster}" alt="${movie.title}" style="width:44px;height:58px;border-radius:6px;object-fit:cover;">
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${movie.title}</div>
-        <div style="font-size:11px;color:var(--text-muted);">${movie.genre} • ${movie.year} • ★ ${movie.rating}</div>
-      </div>
-      <button class="drawer-remove-item-btn" title="Remove from Watchlist">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
-          <polyline points="3 6 5 6 21 6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          <line x1="10" y1="11" x2="10" y2="17"></line>
-          <line x1="14" y1="11" x2="14" y2="17"></line>
-        </svg>
-      </button>
-    `;
+  // Update account count badge
+  const accCount = document.getElementById('accWatchlistCount');
+  if (accCount) accCount.textContent = appState.watchlist ? appState.watchlist.length : 0;
 
-    item.querySelector('.drawer-remove-item-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      removeFromWatchlistDirect(movie);
-    });
-
-    item.addEventListener('click', () => {
-      closeAllDrawers();
-      openMovieDetailModal(movie);
-    });
-
-    container.appendChild(item);
-  });
-
-  // Re-render catalog bookmark highlights & dedicated page view
+  // ALWAYS Re-render catalog bookmark highlights & dedicated page view
   renderCatalogGrid();
   renderWatchlistPageView();
 }
@@ -1824,6 +1862,18 @@ function setupEventListeners() {
       el.addEventListener('click', () => switchView(item.view));
     }
   });
+
+  // Admin Sidebar "+ Add Movie" Item
+  const navItemAddMovie = document.getElementById('navItemAddMovie');
+  if (navItemAddMovie) {
+    navItemAddMovie.addEventListener('click', () => {
+      if (appState.currentRole !== 'ADMIN') {
+        showToast('Access Denied: Only ADMIN can publish movies to catalog.');
+        return;
+      }
+      document.getElementById('adminAddMovieModal').classList.add('active');
+    });
+  }
 
   // Top Nav Search Input: Seamlessly transitions to Search Page
   const globalSearchInput = document.getElementById('globalSearchInput');
