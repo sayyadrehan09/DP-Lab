@@ -1130,6 +1130,113 @@ function renderWebSeries(typeFilter = 'all') {
   });
 }
 
+// Direct Remove from Watchlist helper with Memento snapshot
+async function removeFromWatchlistDirect(movie) {
+  if (!appState.isLoggedIn || !appState.currentUser) {
+    openAuthModal('Please sign in to manage your watchlist.');
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${movie.id}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      showToast(`Removed "${movie.title}" from Watchlist (Memento snapshot recorded)`, 'undo');
+      await loadWatchlistFromBackend();
+      loadNotificationsFromBackend();
+      applyClientFilters();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      showToast(data.message || 'Failed to remove from watchlist');
+    }
+  } catch (e) {
+    showToast('Failed to remove from watchlist');
+  }
+}
+
+// Clear Entire Watchlist with Memento snapshot
+async function clearAllWatchlist() {
+  if (!appState.isLoggedIn || !appState.currentUser || appState.watchlist.length === 0) return;
+  if (!confirm(`Are you sure you want to remove all ${appState.watchlist.length} titles from your Watchlist?\n\nYou can easily restore them anytime using the "Undo (Memento)" button!`)) {
+    return;
+  }
+
+  const items = [...appState.watchlist];
+  for (const movie of items) {
+    await fetch(`${API_BASE}/api/watchlist?username=${encodeURIComponent(appState.currentUser)}&movieId=${movie.id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  showToast(`Cleared Watchlist (${items.length} titles removed). You can restore anytime via Undo!`, 'undo');
+  await loadWatchlistFromBackend();
+  loadNotificationsFromBackend();
+  applyClientFilters();
+}
+
+// Dedicated Watchlist Card with explicit "Remove from Watchlist" button
+function createWatchlistMovieCardElement(movie) {
+  const assets = getMovieAssets(movie.title);
+  const card = document.createElement('div');
+  card.className = 'movie-card watchlist-movie-card';
+  card.innerHTML = `
+    <div class="movie-poster-wrap">
+      <img src="${assets.poster}" alt="${movie.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&fit=crop'">
+      <div class="movie-rating-badge">
+        <span>★</span> ${Number(movie.rating).toFixed(1)}
+      </div>
+      <button class="watchlist-card-delete-icon-btn" title="Remove from Watchlist" data-title="${movie.title}">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="movie-info-wrap">
+      <div class="movie-title" title="${movie.title}">${movie.title}</div>
+      <div class="movie-genre-row">
+        <span>${movie.genre || 'Drama'}</span>
+        <span class="movie-year">${movie.year || '2024'}</span>
+      </div>
+      <button class="btn-card-remove-watchlist" title="Remove from Watchlist">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        <span>Remove from Watchlist</span>
+      </button>
+    </div>
+  `;
+
+  // Click card to open Movie Detail Modal (unless remove button was clicked)
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('.watchlist-card-delete-icon-btn') || e.target.closest('.btn-card-remove-watchlist')) return;
+    openMovieDetailModal(movie);
+  });
+
+  // Top-right trash icon click
+  const topTrashBtn = card.querySelector('.watchlist-card-delete-icon-btn');
+  if (topTrashBtn) {
+    topTrashBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeFromWatchlistDirect(movie);
+    });
+  }
+
+  // Bottom "Remove from Watchlist" button click
+  const bottomRemoveBtn = card.querySelector('.btn-card-remove-watchlist');
+  if (bottomRemoveBtn) {
+    bottomRemoveBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeFromWatchlistDirect(movie);
+    });
+  }
+
+  return card;
+}
+
 // Watchlist Dedicated Page View
 function renderWatchlistPageView() {
   const guestCallout = document.getElementById('watchlistGuestCallout');
@@ -1137,10 +1244,12 @@ function renderWatchlistPageView() {
   const grid = document.getElementById('watchlistPageViewGrid');
   const heading = document.getElementById('watchlistPageHeading');
   const sub = document.getElementById('watchlistPageSub');
+  const clearBtn = document.getElementById('pageClearAllWatchlistBtn');
 
   if (!appState.isLoggedIn) {
     if (guestCallout) guestCallout.style.display = 'block';
     if (userView) userView.style.display = 'none';
+    if (clearBtn) clearBtn.style.display = 'none';
     return;
   }
 
@@ -1154,6 +1263,7 @@ function renderWatchlistPageView() {
   grid.innerHTML = '';
 
   if (appState.watchlist.length === 0) {
+    if (clearBtn) clearBtn.style.display = 'none';
     grid.innerHTML = `
       <div style="grid-column: 1/-1; text-align:center; padding: 50px 20px; color:var(--text-muted);">
         <div style="font-size:36px;margin-bottom:10px;">📋</div>
@@ -1165,8 +1275,10 @@ function renderWatchlistPageView() {
     return;
   }
 
+  if (clearBtn) clearBtn.style.display = 'inline-flex';
+
   appState.watchlist.forEach(movie => {
-    grid.appendChild(createMovieCardElement(movie));
+    grid.appendChild(createWatchlistMovieCardElement(movie));
   });
 }
 
@@ -1338,12 +1450,19 @@ function updateWatchlistUI() {
         <div style="font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${movie.title}</div>
         <div style="font-size:11px;color:var(--text-muted);">${movie.genre} • ${movie.year} • ★ ${movie.rating}</div>
       </div>
-      <button class="modal-close-btn" style="color:#ef4444;" title="Remove">&times;</button>
+      <button class="drawer-remove-item-btn" title="Remove from Watchlist">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </button>
     `;
 
-    item.querySelector('.modal-close-btn').addEventListener('click', (e) => {
+    item.querySelector('.drawer-remove-item-btn').addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleWatchlistMovie(movie);
+      removeFromWatchlistDirect(movie);
     });
 
     item.addEventListener('click', () => {
@@ -1415,7 +1534,15 @@ function openMovieDetailModal(movie) {
 
   const isSaved = appState.isLoggedIn && appState.watchlist.some(w => w.id === movie.id || w.title === movie.title);
   const toggleBtn = document.getElementById('modalWatchlistToggleBtn');
-  toggleBtn.querySelector('span').textContent = isSaved ? '✓ In Watchlist' : '+ Add to Watchlist';
+  if (isSaved) {
+    toggleBtn.classList.add('in-watchlist-state');
+    toggleBtn.querySelector('span').textContent = '✕ Remove from Watchlist';
+    toggleBtn.setAttribute('title', 'Remove this title from your Watchlist');
+  } else {
+    toggleBtn.classList.remove('in-watchlist-state');
+    toggleBtn.querySelector('span').textContent = '+ Add to Watchlist';
+    toggleBtn.setAttribute('title', 'Add this title to your Watchlist');
+  }
 
   document.getElementById('movieDetailModal').classList.add('active');
 }
@@ -1808,6 +1935,11 @@ function setupEventListeners() {
   const pageMementoUndoBtn = document.getElementById('pageMementoUndoBtn');
   if (pageMementoUndoBtn) {
     pageMementoUndoBtn.addEventListener('click', triggerMementoUndo);
+  }
+
+  const pageClearAllWatchlistBtn = document.getElementById('pageClearAllWatchlistBtn');
+  if (pageClearAllWatchlistBtn) {
+    pageClearAllWatchlistBtn.addEventListener('click', clearAllWatchlist);
   }
 
   const pageExportJsonBtn = document.getElementById('pageExportJsonBtn');
@@ -2365,8 +2497,17 @@ function setupEventListeners() {
     if (!appState.selectedMovieForModal) return;
     await toggleWatchlistMovie(appState.selectedMovieForModal);
     const isSaved = appState.isLoggedIn && appState.watchlist.some(w => w.id === appState.selectedMovieForModal.id || w.title === appState.selectedMovieForModal.title);
-    const span = document.getElementById('modalWatchlistToggleBtn').querySelector('span');
-    if (span) span.textContent = isSaved ? '✓ In Watchlist' : '+ Add to Watchlist';
+    const toggleBtn = document.getElementById('modalWatchlistToggleBtn');
+    const span = toggleBtn.querySelector('span');
+    if (isSaved) {
+      toggleBtn.classList.add('in-watchlist-state');
+      if (span) span.textContent = '✕ Remove from Watchlist';
+      toggleBtn.setAttribute('title', 'Remove this title from your Watchlist');
+    } else {
+      toggleBtn.classList.remove('in-watchlist-state');
+      if (span) span.textContent = '+ Add to Watchlist';
+      toggleBtn.setAttribute('title', 'Add this title to your Watchlist');
+    }
   });
 
   // Supabase Cloud Management Actions
