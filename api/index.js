@@ -51,7 +51,25 @@ const INITIAL_MOVIES = [
   { id: 38, title: "Interstellar 2", genre: "Action", language: "English", rating: 8.5, year: 2024, platform: "Netflix" },
   { id: 39, title: "Avatar: The Way of Water", genre: "Action", language: "English", rating: 8.5, year: 2024, platform: "Netflix" },
   { id: 40, title: "Dune: Part Two", genre: "Sci-Fi", language: "English", rating: 8.8, year: 2024, platform: "Prime Video" },
-  { id: 41, title: "Oppenheimer", genre: "Drama", language: "English", rating: 8.9, year: 2023, platform: "Netflix" }
+  { id: 41, title: "Oppenheimer", genre: "Drama", language: "English", rating: 8.9, year: 2023, platform: "Netflix" },
+  { id: 101, title: "Breaking Bad", genre: "Thriller", language: "English", rating: 9.5, year: 2008, platform: "Netflix" },
+  { id: 102, title: "Stranger Things", genre: "Sci-Fi", language: "English", rating: 8.7, year: 2016, platform: "Netflix" },
+  { id: 103, title: "Dark", genre: "Thriller", language: "German", rating: 8.7, year: 2017, platform: "Netflix" },
+  { id: 104, title: "Attack on Titan", genre: "Anime", language: "Japanese", rating: 9.1, year: 2013, platform: "Crunchyroll" },
+  { id: 105, title: "Death Note", genre: "Anime", language: "Japanese", rating: 9.0, year: 2006, platform: "Netflix" },
+  { id: 106, title: "Jujutsu Kaisen", genre: "Anime", language: "Japanese", rating: 8.6, year: 2020, platform: "Crunchyroll" },
+  { id: 107, title: "Demon Slayer", genre: "Anime", language: "Japanese", rating: 8.6, year: 2019, platform: "Netflix" },
+  { id: 108, title: "Cyberpunk: Edgerunners", genre: "Anime", language: "English", rating: 8.3, year: 2022, platform: "Netflix" },
+  { id: 109, title: "Panchayat", genre: "Comedy", language: "Hindi", rating: 9.0, year: 2020, platform: "Prime Video" },
+  { id: 110, title: "The Office", genre: "Comedy", language: "English", rating: 9.0, year: 2005, platform: "Netflix" },
+  { id: 111, title: "Brooklyn Nine-Nine", genre: "Comedy", language: "English", rating: 8.4, year: 2013, platform: "Netflix" },
+  { id: 112, title: "Money Heist", genre: "Thriller", language: "Spanish", rating: 8.2, year: 2017, platform: "Netflix" },
+  { id: 113, title: "Squid Game", genre: "Thriller", language: "Korean", rating: 8.0, year: 2021, platform: "Netflix" },
+  { id: 114, title: "Mirzapur", genre: "Crime Drama", language: "Hindi", rating: 8.5, year: 2018, platform: "Prime Video" },
+  { id: 115, title: "Sacred Games", genre: "Crime Drama", language: "Hindi", rating: 8.5, year: 2018, platform: "Netflix" },
+  { id: 116, title: "Peaky Blinders", genre: "Crime Drama", language: "English", rating: 8.8, year: 2013, platform: "Netflix" },
+  { id: 117, title: "Severance", genre: "Sci-Fi", language: "English", rating: 8.7, year: 2022, platform: "Apple TV+" },
+  { id: 118, title: "The Boys", genre: "Action", language: "English", rating: 8.7, year: 2019, platform: "Prime Video" }
 ];
 
 // In-Memory Database (Singleton Pattern)
@@ -329,13 +347,14 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       count: current.length,
       trace,
-      movies: current
+      movies: current,
+      recommendedMovies: current
     });
   }
 
   // 4. /api/sort (Strategy Pattern)
   if (pathname === '/sort') {
-    const strategy = (query.strategy || 'rating').toLowerCase();
+    const strategy = (query.strategy || query.by || 'rating').toLowerCase();
     const sorted = [...db.movies];
 
     if (strategy === 'rating') {
@@ -348,7 +367,11 @@ module.exports = async (req, res) => {
       sorted.sort((a, b) => (b.rating * b.year) - (a.rating * a.year));
     }
 
-    return res.status(200).json(sorted);
+    return res.status(200).json({
+      strategy,
+      description: `Sorted by ${strategy}`,
+      movies: sorted
+    });
   }
 
   // 5. /api/watchlist
@@ -432,7 +455,7 @@ module.exports = async (req, res) => {
   // 6. /api/watchlist/undo (Memento Pattern)
   if (pathname === '/watchlist/undo') {
     const body = await getBody(req);
-    const user = body.user || body.username || query.user || 'User';
+    const user = body.user || body.username || query.user || query.username || 'User';
 
     const history = db.mementoHistory.get(user);
     if (!history || history.length === 0) {

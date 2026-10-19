@@ -354,16 +354,30 @@ public class Server {
         public void handle(HttpExchange exchange) throws IOException {
             if (handlePreflight(exchange)) return;
 
-            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            String method = exchange.getRequestMethod();
+            String genre = "Any";
+            String language = "Any";
+            double rating = 0.0;
+            String platform = "Any";
+
+            if ("POST".equalsIgnoreCase(method)) {
+                String body = readBody(exchange);
+                genre = getJsonString(body, "genre", "Any");
+                language = getJsonString(body, "language", "Any");
+                rating = getJsonDouble(body, "rating", 0.0);
+                platform = getJsonString(body, "platform", "Any");
+            } else if ("GET".equalsIgnoreCase(method)) {
+                Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
+                genre = params.getOrDefault("genre", "Any");
+                language = params.getOrDefault("language", "Any");
+                try {
+                    rating = Double.parseDouble(params.getOrDefault("rating", params.getOrDefault("minRating", "0.0")));
+                } catch (NumberFormatException ignored) {}
+                platform = params.getOrDefault("platform", "Any");
+            } else {
                 sendJsonResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
                 return;
             }
-
-            String body = readBody(exchange);
-            String genre = getJsonString(body, "genre", "Any");
-            String language = getJsonString(body, "language", "Any");
-            double rating = getJsonDouble(body, "rating", 0.0);
-            String platform = getJsonString(body, "platform", "Any");
 
             // Execute Chain of Responsibility with trace breakdown
             RecommendationChain chain = new RecommendationChain();
@@ -381,6 +395,13 @@ public class Server {
             json.append("],");
 
             json.append("\"movies\":[");
+            for (int i = 0; i < results.size(); i++) {
+                json.append(results.get(i).toJson());
+                if (i < results.size() - 1) json.append(",");
+            }
+            json.append("],");
+
+            json.append("\"recommendedMovies\":[");
             for (int i = 0; i < results.size(); i++) {
                 json.append(results.get(i).toJson());
                 if (i < results.size() - 1) json.append(",");
@@ -479,7 +500,7 @@ public class Server {
             if (handlePreflight(exchange)) return;
 
             Map<String, String> params = parseQueryParams(exchange.getRequestURI().getQuery());
-            String by = params.getOrDefault("by", "rating").trim();
+            String by = params.getOrDefault("strategy", params.getOrDefault("by", "rating")).trim();
 
             CatalogSorterContext sorter = new CatalogSorterContext(CatalogSorterContext.getStrategyByName(by));
             List<Movie> sorted = sorter.executeSort(database.getMovies());
@@ -542,8 +563,9 @@ public class Server {
                 return;
             }
 
+            Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
             String body = readBody(exchange);
-            String user = getJsonString(body, "user", getJsonString(body, "username", "")).trim();
+            String user = getJsonString(body, "user", getJsonString(body, "username", queryParams.getOrDefault("username", queryParams.getOrDefault("user", "")))).trim();
 
             if (user.isEmpty()) {
                 sendJsonResponse(exchange, 400, "{\"success\":false,\"message\":\"user is required\"}");
@@ -647,7 +669,12 @@ public class Server {
                     return;
                 }
 
-                if (!password.isEmpty() && !FileManager.verifyPassword(identifier, password)) {
+                if (FileManager.hasPassword(identifier)) {
+                    if (password.isEmpty() || !FileManager.verifyPassword(identifier, password)) {
+                        sendJsonResponse(exchange, 401, "{\"success\":false,\"message\":\"Invalid password. Please check your credentials and try again.\"}");
+                        return;
+                    }
+                } else if (!password.isEmpty() && !FileManager.verifyPassword(identifier, password)) {
                     sendJsonResponse(exchange, 401, "{\"success\":false,\"message\":\"Invalid password. Please check your credentials and try again.\"}");
                     return;
                 }
