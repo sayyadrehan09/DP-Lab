@@ -6,8 +6,10 @@ Aryan|5|Inception|Sci-Fi|English|9.0|2010|Netflix
 
 armin@gmail.com|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
 armin@gmail.com|29|Elio|Sci-Fi|English|7.9|2025|Disney+
-Kallu|104|Attack on Titan|Anime|Japanese|9.1|2013|Crunchyroll
 Admin|101|Breaking Bad|Thriller|English|9.5|2008|Netflix
 Admin|2|The Godfather|Drama|English|9.2|1972|Prime Video
 Admin|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix
 John Doe|3|The Dark Knight|Action|English|9.1|2008|Netflix
+John Doe|5|Inception|Sci-Fi|English|9.0|2010|Netflix
+Kallu|104|Attack on Titan|Anime|Japanese|9.1|2013|Crunchyroll
+anas|1|The Shawshank Redemption|Drama|English|9.3|1994|Netflix

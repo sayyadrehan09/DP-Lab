@@ -58,3 +58,4 @@
 117|Severance|Sci-Fi|English|8.7|2022|Apple TV+
 118|The Boys|Action|English|8.7|2019|Prime Video
 119|Black|Thriller|Korean|8.5|2020|Disney+
+120|KGF Chapter 2|Action|English|8.5|2024|Prime Video

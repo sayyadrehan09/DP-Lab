@@ -661,9 +661,9 @@ async function toggleWatchlistMovie(movie) {
         })
       });
       if (res.ok) {
-        showToast(`✓ Added "${movie.title}" to your Watchlist!`);
+        showToast(`✓ Added "${movie.title}" to your Watchlist! (Observer Pattern Notified)`);
         await loadWatchlistFromBackend();
-        loadNotificationsFromBackend();
+        await loadNotificationsFromBackend();
         applyClientFilters();
         renderWatchlistPageView();
       }
@@ -737,11 +737,21 @@ async function exportWatchlistReport(format = 'html') {
 // 5. Observer Pattern: Notifications Feed
 async function loadNotificationsFromBackend() {
   try {
-    const res = await fetch(`${API_BASE}/api/notifications?username=${encodeURIComponent(appState.currentUser)}`);
+    const userParam = appState.currentUser ? `?username=${encodeURIComponent(appState.currentUser)}` : '';
+    const res = await fetch(`${API_BASE}/api/notifications${userParam}`);
     if (!res.ok) return;
     const data = await res.json();
-    appState.notifications = data.notifications || [];
+    const oldLength = appState.notifications ? appState.notifications.length : 0;
+    appState.notifications = Array.isArray(data) ? data : (data.notifications || []);
     renderNotifications();
+
+    if (oldLength > 0 && appState.notifications.length > oldLength) {
+      const bell = document.getElementById('topNotifBellBtn');
+      if (bell) {
+        bell.style.transform = 'scale(1.15)';
+        setTimeout(() => bell.style.transform = 'scale(1)', 400);
+      }
+    }
   } catch (e) {
     // silently catch polling errors
   }
@@ -1517,11 +1527,13 @@ function updateWatchlistUI() {
 function renderNotifications() {
   const container = document.getElementById('notifListContainer');
   const dot = document.getElementById('topNotifDot');
+  if (!container) return;
   
-  dot.style.display = appState.notifications.length > 0 ? 'block' : 'none';
+  const count = appState.notifications ? appState.notifications.length : 0;
+  if (dot) dot.style.display = count > 0 ? 'block' : 'none';
   container.innerHTML = '';
 
-  if (appState.notifications.length === 0) {
+  if (count === 0) {
     container.innerHTML = `
       <div style="text-align:center;padding:40px 10px;color:var(--text-muted);">
         <p style="font-size:13px;">No new notifications from ObserverService.</p>
@@ -1530,9 +1542,7 @@ function renderNotifications() {
     return;
   }
 
-  // Display newest first
-  const reversed = [...appState.notifications].reverse();
-  reversed.forEach(n => {
+  appState.notifications.forEach(n => {
     const card = document.createElement('div');
     card.style.cssText = `
       background: var(--bg-surface-elevated);
@@ -1540,11 +1550,21 @@ function renderNotifications() {
       border-left: 3px solid var(--primary);
       border-radius: var(--radius-sm);
       padding: 12px;
+      margin-bottom: 10px;
       font-size: 12.5px;
       line-height: 1.45;
       color: rgba(255,255,255,0.9);
+      transition: var(--transition);
     `;
-    card.textContent = n;
+    const message = (typeof n === 'string') ? n : (n.message || JSON.stringify(n));
+    const timestamp = (n && n.timestamp) ? n.timestamp : '';
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:0.5px;color:var(--accent-cyan);text-transform:uppercase;">Observer Alert</span>
+        <span style="font-size:10px;color:var(--text-muted);">${timestamp}</span>
+      </div>
+      <div style="color:#fff;font-weight:500;">${message}</div>
+    `;
     container.appendChild(card);
   });
 }

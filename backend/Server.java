@@ -458,6 +458,12 @@ public class Server {
                 WatchlistCaretaker.saveSnapshot(user, currentIdsBeforeAdd, "Before adding '" + movie.getTitle() + "'");
 
                 FileManager.saveWatchlist(user, movie);
+
+                // Observer Pattern: Broadcast to all active observers
+                String displayName = FileManager.getUserDisplayName(user);
+                notificationService.addObserver(new UserObserver(displayName));
+                notificationService.notifyObservers("🔔 User [" + displayName + "] added '" + movie.getTitle() + "' (" + movie.getGenre() + " | " + movie.getPlatform() + ") to their Watchlist.");
+
                 sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":true,\"message\":\"" + movie.getTitle() + " added to your watchlist.\"}");
 
             } else if ("DELETE".equalsIgnoreCase(method)) {
@@ -478,6 +484,11 @@ public class Server {
                     }
                     WatchlistCaretaker.saveSnapshot(user, currentIdsBeforeClear, "Before clearing all " + currentIdsBeforeClear.size() + " movies");
                     boolean cleared = FileManager.clearUserWatchlist(user);
+
+                    // Observer Pattern
+                    String displayName = FileManager.getUserDisplayName(user);
+                    notificationService.notifyObservers("🗑️ User [" + displayName + "] cleared their entire Watchlist (" + currentIdsBeforeClear.size() + " titles).");
+
                     sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":true,\"message\":\"Watchlist cleared. You can restore it anytime via Undo (Memento)!\"}");
                     return;
                 }
@@ -500,6 +511,10 @@ public class Server {
 
                 boolean removed = FileManager.removeFromWatchlist(user, movieId);
                 if (removed) {
+                    // Observer Pattern
+                    String displayName = FileManager.getUserDisplayName(user);
+                    notificationService.notifyObservers("🗑️ User [" + displayName + "] removed '" + title + "' from their Watchlist.");
+
                     sendJsonResponse(exchange, 200, "{\"success\":true,\"canUndo\":true,\"message\":\"Movie removed from your watchlist.\"}");
                 } else {
                     sendJsonResponse(exchange, 404, "{\"success\":false,\"message\":\"Movie not found in watchlist.\"}");
@@ -604,6 +619,10 @@ public class Server {
 
             FileManager.restoreUserWatchlist(user, previousState.getSavedState());
             List<Movie> restored = FileManager.loadUserWatchlistMovies(user);
+
+            // Observer Pattern
+            String displayName = FileManager.getUserDisplayName(user);
+            notificationService.notifyObservers("↩️ User [" + displayName + "] restored Watchlist state via Memento Pattern (" + previousState.getDescription() + ").");
 
             StringBuilder json = new StringBuilder("{");
             json.append("\"success\":true,");

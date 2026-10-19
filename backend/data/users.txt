@@ -21,3 +21,4 @@ random|USER|random123|random123@gmail.com
 armin@gmail.com|USER|admin123|armin@gmail.com
 Kallu|USER|kallu123|kallu@gmail.com
 Kallu|USER|kallu123|kallu123@gmail.com
+anas|USER|123456|anas@gmail.com
