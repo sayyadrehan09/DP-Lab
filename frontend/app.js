@@ -11,9 +11,16 @@
  * 8. Memento (WatchlistMemento)
  */
 
+<<<<<<< HEAD
 const API_BASE = (window.location.hostname === 'localhost' && window.location.port && window.location.port !== '8080')
   ? 'http://localhost:8080' 
   : '';
+=======
+const API_BASE = (window.location.protocol.startsWith('http') && (
+  (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ||
+  window.location.port === '8080'
+)) ? '' : 'http://localhost:8080';
+>>>>>>> 8e70fefccc43b5fb57559f6ea852de60193788a7
 
 // Supabase Cloud Configuration
 const SUPABASE_URL = "https://mhxkftnldxziqhydyfbf.supabase.co";
@@ -256,7 +263,7 @@ const appState = {
 // Rich Web Series & Anime Catalog with Genre Types, Seasons, Ratings & OTT Badges
 const WEB_SERIES_CATALOG = [
   {
-    id: 'ws-1',
+    id: 101,
     title: 'Breaking Bad',
     type: 'Thriller',
     platform: 'Netflix',
@@ -267,7 +274,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/matrix_poster.jpg'
   },
   {
-    id: 'ws-2',
+    id: 102,
     title: 'Stranger Things',
     type: 'Sci-Fi & Mystery',
     platform: 'Netflix',
@@ -278,7 +285,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/spiderman_poster.jpg'
   },
   {
-    id: 'ws-3',
+    id: 103,
     title: 'Dark',
     type: 'Thriller',
     platform: 'Netflix',
@@ -289,7 +296,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/shutterisland_poster.jpg'
   },
   {
-    id: 'ws-4',
+    id: 104,
     title: 'Attack on Titan',
     type: 'Anime',
     platform: 'Crunchyroll',
@@ -300,7 +307,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/avatar_poster.jpg'
   },
   {
-    id: 'ws-5',
+    id: 105,
     title: 'Death Note',
     type: 'Anime',
     platform: 'Netflix',
@@ -311,7 +318,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/joker_poster.jpg'
   },
   {
-    id: 'ws-6',
+    id: 106,
     title: 'Jujutsu Kaisen',
     type: 'Anime',
     platform: 'Crunchyroll',
@@ -322,7 +329,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/rampage_poster.jpg'
   },
   {
-    id: 'ws-7',
+    id: 107,
     title: 'Demon Slayer',
     type: 'Anime',
     platform: 'Netflix',
@@ -333,7 +340,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/guardians_poster.jpg'
   },
   {
-    id: 'ws-8',
+    id: 108,
     title: 'Cyberpunk: Edgerunners',
     type: 'Anime',
     platform: 'Netflix',
@@ -344,7 +351,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/alita_poster.jpg'
   },
   {
-    id: 'ws-9',
+    id: 109,
     title: 'Panchayat',
     type: 'Comedy',
     platform: 'Prime Video',
@@ -355,7 +362,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/3idiots_poster.jpg'
   },
   {
-    id: 'ws-10',
+    id: 110,
     title: 'The Office',
     type: 'Comedy',
     platform: 'Netflix',
@@ -366,7 +373,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/hangover_poster.jpg'
   },
   {
-    id: 'ws-11',
+    id: 111,
     title: 'Brooklyn Nine-Nine',
     type: 'Comedy',
     platform: 'Netflix',
@@ -377,7 +384,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/znmd_poster.jpg'
   },
   {
-    id: 'ws-12',
+    id: 112,
     title: 'Money Heist',
     type: 'Thriller',
     platform: 'Netflix',
@@ -388,7 +395,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/drishyam_poster.jpg'
   },
   {
-    id: 'ws-13',
+    id: 113,
     title: 'Squid Game',
     type: 'Thriller',
     platform: 'Netflix',
@@ -399,7 +406,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/mortalengines_poster.jpg'
   },
   {
-    id: 'ws-14',
+    id: 114,
     title: 'Mirzapur',
     type: 'Crime Drama',
     platform: 'Prime Video',
@@ -410,7 +417,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/kgf_poster.jpg'
   },
   {
-    id: 'ws-15',
+    id: 115,
     title: 'Sacred Games',
     type: 'Crime Drama',
     platform: 'Netflix',
@@ -421,7 +428,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/andhadhun_poster.jpg'
   },
   {
-    id: 'ws-16',
+    id: 116,
     title: 'Peaky Blinders',
     type: 'Crime Drama',
     platform: 'Netflix',
@@ -432,7 +439,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/godfather_poster.jpg'
   },
   {
-    id: 'ws-17',
+    id: 117,
     title: 'Severance',
     type: 'Sci-Fi & Mystery',
     platform: 'Apple TV+',
@@ -443,7 +450,7 @@ const WEB_SERIES_CATALOG = [
     posterUrl: 'images/inception_poster.jpg'
   },
   {
-    id: 'ws-18',
+    id: 118,
     title: 'The Boys',
     type: 'Action',
     platform: 'Prime Video',
@@ -464,6 +471,16 @@ function getMovieAssets(title) {
     if (title.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(title.toLowerCase())) {
       return val;
     }
+  }
+
+  // Check Web Series Catalog
+  const series = WEB_SERIES_CATALOG.find(s => s.title.toLowerCase() === title.toLowerCase());
+  if (series) {
+    return {
+      poster: series.posterUrl,
+      backdrop: series.posterUrl,
+      synopsis: series.synopsis || 'An acclaimed web series streaming on premium OTT channels.'
+    };
   }
 
   // Local Fallback
@@ -562,7 +579,7 @@ async function loadMoviesFromBackend() {
     const res = await fetch(`${API_BASE}/api/sort?strategy=${appState.activeSortStrategy}`);
     if (!res.ok) throw new Error('API fetch failed');
     const data = await res.json();
-    appState.movies = data.movies || [];
+    appState.movies = Array.isArray(data) ? data : (data.movies || []);
     applyClientFilters();
     renderLatestMovies();
     renderTop10Movies();
@@ -656,9 +673,12 @@ async function toggleWatchlistMovie(movie) {
 
 // 3. Memento Pattern: Undo Last Watchlist Action
 async function triggerMementoUndo() {
+  if (!appState.currentUser) return;
   try {
     const res = await fetch(`${API_BASE}/api/watchlist/undo?username=${encodeURIComponent(appState.currentUser)}`, {
-      method: 'POST'
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: appState.currentUser })
     });
     const data = await res.json();
     if (res.ok && data.success) {
@@ -807,7 +827,7 @@ async function runChainFilterPipeline() {
     if (!res.ok) throw new Error('Filter failed');
     const data = await res.json();
 
-    appState.filteredMovies = data.recommendedMovies || [];
+    appState.filteredMovies = data.recommendedMovies || data.movies || (Array.isArray(data) ? data : []);
     renderCatalogGrid();
     closeAllModals();
     showToast(`Chain of Responsibility found ${appState.filteredMovies.length} matching movies!`);
@@ -1224,7 +1244,8 @@ function switchView(viewName, pushHistory = true) {
     movies: 'navItemMovies',
     webseries: 'navItemWebSeries',
     watchlist: 'navItemWatchlist',
-    account: 'navItemAccount'
+    account: 'navItemAccount',
+    patterns: 'navItemPatterns'
   };
 
   document.querySelectorAll('.nav-menu .nav-item').forEach(el => el.classList.remove('active'));
@@ -1238,7 +1259,8 @@ function switchView(viewName, pushHistory = true) {
     movies: 'viewMovies',
     webseries: 'viewWebSeries',
     watchlist: 'viewWatchlist',
-    account: 'viewAccount'
+    account: 'viewAccount',
+    patterns: 'viewPatterns'
   };
 
   Object.values(panels).forEach(panelId => {
@@ -1332,8 +1354,9 @@ function updateWatchlistUI() {
     container.appendChild(item);
   });
 
-  // Re-render catalog bookmark highlights
+  // Re-render catalog bookmark highlights & dedicated page view
   renderCatalogGrid();
+  renderWatchlistPageView();
 }
 
 function renderNotifications() {
@@ -1659,14 +1682,15 @@ function setupEventListeners() {
     switchView('home');
   });
 
-  // 6 Primary Left Navbar Items
+  // Primary Left Navbar Items
   const navMap = [
     { id: 'navItemHome', view: 'home' },
     { id: 'navItemSearch', view: 'search' },
     { id: 'navItemMovies', view: 'movies' },
     { id: 'navItemWebSeries', view: 'webseries' },
     { id: 'navItemWatchlist', view: 'watchlist' },
-    { id: 'navItemAccount', view: 'account' }
+    { id: 'navItemAccount', view: 'account' },
+    { id: 'navItemPatterns', view: 'patterns' }
   ];
 
   navMap.forEach(item => {
@@ -1811,23 +1835,6 @@ function setupEventListeners() {
     });
   }
 
-  const accDemoAdminBtn = document.getElementById('accDemoAdminBtn');
-  if (accDemoAdminBtn) {
-    accDemoAdminBtn.addEventListener('click', () => {
-      handleSuccessfulLogin({ name: 'Admin', role: 'ADMIN' });
-      showToast('✓ Logged in as Administrator (admin@gmail.com)');
-      switchView('account');
-    });
-  }
-
-  const accDemoUserBtn = document.getElementById('accDemoUserBtn');
-  if (accDemoUserBtn) {
-    accDemoUserBtn.addEventListener('click', () => {
-      handleSuccessfulLogin({ name: 'Aryan', role: 'USER' });
-      showToast('✓ Logged in as User (Aryan)');
-      switchView('account');
-    });
-  }
 
   const accountPageLogoutBtn = document.getElementById('accountPageLogoutBtn');
   if (accountPageLogoutBtn) {
@@ -1945,17 +1952,77 @@ function setupEventListeners() {
     gofMementoBtn.addEventListener('click', triggerMementoUndo);
   }
 
-  // Secondary Sidebar Links
-  document.getElementById('navPartiesLink').addEventListener('click', () => {
-    switchView('home');
-    setTimeout(() => {
-      document.getElementById('partiesSection').scrollIntoView({ behavior: 'smooth' });
-    }, 200);
-  });
+  // Secondary / Design Patterns Sidebar Links
+  const navPartiesLink = document.getElementById('navPartiesLink');
+  if (navPartiesLink) {
+    navPartiesLink.addEventListener('click', () => {
+      switchView('home');
+      setTimeout(() => {
+        const el = document.getElementById('partiesSection');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    });
+  }
 
-  document.getElementById('navPatternsBtn').addEventListener('click', () => {
-    document.getElementById('patternsModal').classList.add('active');
-  });
+  const navPatternsBtn = document.getElementById('navPatternsBtn');
+  if (navPatternsBtn) {
+    navPatternsBtn.addEventListener('click', () => {
+      switchView('patterns');
+    });
+  }
+
+  // Neo-Card Design Pattern Details Action Buttons
+  const neoGofObserverBtn = document.getElementById('neoGofObserverBtn');
+  if (neoGofObserverBtn) {
+    neoGofObserverBtn.addEventListener('click', () => {
+      const modal = document.getElementById('patternsModal');
+      if (modal) modal.classList.add('active');
+      else showToast('Observer Pattern: NotificationService manages registered UserObservers.');
+    });
+  }
+
+  const neoGofProxyBtn = document.getElementById('neoGofProxyBtn');
+  if (neoGofProxyBtn) {
+    neoGofProxyBtn.addEventListener('click', () => {
+      const isAdm = (appState.currentRole === 'ADMIN');
+      showToast(isAdm
+        ? 'Protection Proxy: You are ADMIN (Full Access granted to create/delete movies).'
+        : 'Protection Proxy: Active user is standard USER. Protected admin routes return HTTP 403.'
+      );
+    });
+  }
+
+  const neoGofChainBtn = document.getElementById('neoGofChainBtn');
+  if (neoGofChainBtn) {
+    neoGofChainBtn.addEventListener('click', () => {
+      const modal = document.getElementById('filterModal');
+      if (modal) modal.classList.add('active');
+    });
+  }
+
+  const neoGofStrategyBtn = document.getElementById('neoGofStrategyBtn');
+  if (neoGofStrategyBtn) {
+    neoGofStrategyBtn.addEventListener('click', () => {
+      switchView('movies');
+      setTimeout(() => {
+        const select = document.getElementById('sortStrategySelect');
+        if (select) {
+          select.focus();
+          showToast('Strategy Pattern: Select dynamic sorting algorithm below.');
+        }
+      }, 300);
+    });
+  }
+
+  const neoGofTemplateBtn = document.getElementById('neoGofTemplateBtn');
+  if (neoGofTemplateBtn) {
+    neoGofTemplateBtn.addEventListener('click', () => exportWatchlistReport('json'));
+  }
+
+  const neoGofMementoBtn = document.getElementById('neoGofMementoBtn');
+  if (neoGofMementoBtn) {
+    neoGofMementoBtn.addEventListener('click', triggerMementoUndo);
+  }
 
   // Top Nav Back / Forward History Controls
   const histBackBtn = document.getElementById('histBackBtn');
@@ -2039,7 +2106,7 @@ function setupEventListeners() {
       tabRegisterBtn.classList.remove('active');
       if (signInForm) signInForm.style.display = 'flex';
       if (registerForm) registerForm.style.display = 'none';
-      if (authModalTitle) authModalTitle.textContent = 'Sign In to TiMN';
+      if (authModalTitle) authModalTitle.textContent = 'Login to TiMN';
     });
 
     tabRegisterBtn.addEventListener('click', () => {
@@ -2047,30 +2114,10 @@ function setupEventListeners() {
       tabSignInBtn.classList.remove('active');
       if (signInForm) signInForm.style.display = 'none';
       if (registerForm) registerForm.style.display = 'flex';
-      if (authModalTitle) authModalTitle.textContent = 'Create TiMN Account';
+      if (authModalTitle) authModalTitle.textContent = 'Register to TiMN';
     });
   }
 
-  // Quick 1-click Demo Fill buttons
-  const quickFillAdminBtn = document.getElementById('quickFillAdminBtn');
-  if (quickFillAdminBtn) {
-    quickFillAdminBtn.addEventListener('click', () => {
-      if (tabSignInBtn) tabSignInBtn.click();
-      document.getElementById('loginEmailInput').value = 'admin@gmail.com';
-      document.getElementById('loginPasswordInput').value = 'admin123';
-      showToast('Pre-filled Admin credentials: admin@gmail.com / admin123');
-    });
-  }
-
-  const quickFillUserBtn = document.getElementById('quickFillUserBtn');
-  if (quickFillUserBtn) {
-    quickFillUserBtn.addEventListener('click', () => {
-      if (tabSignInBtn) tabSignInBtn.click();
-      document.getElementById('loginEmailInput').value = 'Aryan';
-      document.getElementById('loginPasswordInput').value = 'user123';
-      showToast('Pre-filled User credentials: Aryan / user123');
-    });
-  }
 
   // Sign In / Register Form submissions
   if (signInForm) {
@@ -2314,11 +2361,12 @@ function setupEventListeners() {
     showToast(`Streaming "${appState.selectedMovieForModal.title}" in 4K HDR...`);
   });
 
-  document.getElementById('modalWatchlistToggleBtn').addEventListener('click', () => {
+  document.getElementById('modalWatchlistToggleBtn').addEventListener('click', async () => {
     if (!appState.selectedMovieForModal) return;
-    toggleWatchlistMovie(appState.selectedMovieForModal);
-    const isSaved = appState.watchlist.some(w => w.id === appState.selectedMovieForModal.id);
-    document.getElementById('modalWatchlistToggleBtn').querySelector('span').textContent = isSaved ? '+ Add to Watchlist' : '✓ In Watchlist';
+    await toggleWatchlistMovie(appState.selectedMovieForModal);
+    const isSaved = appState.isLoggedIn && appState.watchlist.some(w => w.id === appState.selectedMovieForModal.id || w.title === appState.selectedMovieForModal.title);
+    const span = document.getElementById('modalWatchlistToggleBtn').querySelector('span');
+    if (span) span.textContent = isSaved ? '✓ In Watchlist' : '+ Add to Watchlist';
   });
 
   // Supabase Cloud Management Actions

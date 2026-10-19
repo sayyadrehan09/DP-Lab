@@ -149,6 +149,24 @@ public class FileManager {
         return false;
     }
 
+    public static boolean hasPassword(String identifier) {
+        if (identifier == null) return false;
+        if ("admin@gmail.com".equalsIgnoreCase(identifier.trim()) || "admin".equalsIgnoreCase(identifier.trim())) return true;
+        initializeFiles();
+        try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1);
+                boolean match = (parts.length >= 1 && parts[0].equalsIgnoreCase(identifier.trim())) ||
+                                (parts.length >= 4 && parts[3].equalsIgnoreCase(identifier.trim()));
+                if (match) {
+                    return parts.length >= 3 && !parts[2].trim().isEmpty();
+                }
+            }
+        } catch (IOException ignored) {}
+        return false;
+    }
+
     public static String getUserDisplayName(String identifier) {
         if (identifier == null) return "User";
         if ("admin@gmail.com".equalsIgnoreCase(identifier.trim()) || "admin".equalsIgnoreCase(identifier.trim())) return "Admin";
@@ -278,8 +296,10 @@ public class FileManager {
             return false;
         }
 
-        if (src.delete()) {
-            temp.renameTo(src);
+        try {
+            java.nio.file.Files.move(temp.toPath(), src.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            return false;
         }
         return removed;
     }
@@ -325,8 +345,8 @@ public class FileManager {
             }
         } catch (IOException ignored) {}
 
-        if (src.delete()) {
-            temp.renameTo(src);
-        }
+        try {
+            java.nio.file.Files.move(temp.toPath(), src.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ignored) {}
     }
 }

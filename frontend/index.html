@@ -123,22 +123,11 @@
         </ul>
       </div>
 
-      <!-- Secondary Links: Parties & Design Patterns -->
+      <!-- Secondary Links: Design Pattern Details -->
       <div class="sidebar-section">
-        <div class="section-label">Architecture & Social</div>
+        <div class="section-label">Architecture</div>
         <ul class="nav-menu">
-          <li class="nav-item" id="navPartiesLink">
-            <span class="nav-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            </span>
-            <span>Parties</span>
-          </li>
-          <li class="nav-item" id="navPatternsBtn">
+          <li class="nav-item" id="navItemPatterns">
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -146,8 +135,8 @@
                 <line x1="12" y1="17" x2="12" y2="21"></line>
               </svg>
             </span>
-            <span>GoF Patterns</span>
-            <span class="nav-badge" style="background:var(--accent-cyan);">8</span>
+            <span>Design Pattern Details</span>
+            <span class="nav-badge" style="background:#bef264;color:#000;font-weight:800;">8</span>
           </li>
         </ul>
       </div>
@@ -563,112 +552,6 @@
               </div>
             </div>
           </section>
-
-          <!-- Section: Design Patterns Architecture (GoF Patterns Implementation at End of Page) -->
-          <section class="patterns-section-container" id="designPatternsSection">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-              <div>
-                <span class="pattern-badge-gof">Software Architecture & Engineering</span>
-                <h2 style="font-size:24px;font-weight:800;color:#fff;margin:6px 0 4px 0;">🏛️ Gang of Four (GoF) Design Patterns Implementation</h2>
-                <p style="font-size:13.5px;color:var(--text-secondary);max-width:760px;line-height:1.6;">
-                  TiMN is built from the ground up using 8 Gang of Four (GoF) design patterns to ensure robust modularity, loose coupling, enterprise security, and algorithmic extensibility across our Java backend and frontend.
-                </p>
-              </div>
-              <button class="btn-primary" id="openFullPatternsModalBtn" style="padding:8px 18px;font-size:12.5px;">
-                <span>View UML & Details</span>
-              </button>
-            </div>
-
-            <div class="gof-cards-grid">
-              <!-- Pattern 1: Singleton -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">1. Singleton Pattern</span>
-                  <span class="gof-card-tag">Creational</span>
-                </div>
-                <div class="gof-card-file">MovieDatabase.java</div>
-                <p class="gof-card-desc">Guarantees a single in-memory database instance managing all loaded movies, catalog lookups, and state synchronization across concurrent user requests.</p>
-                <button class="btn-secondary" onclick="showToast('Singleton Pattern: Single MovieDatabase instance is active across server.')" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Inspect Singleton</button>
-              </div>
-
-              <!-- Pattern 2: Factory Method -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">2. Factory Method</span>
-                  <span class="gof-card-tag">Creational</span>
-                </div>
-                <div class="gof-card-file">MovieFactory.java</div>
-                <p class="gof-card-desc">Encapsulates object instantiation logic from formatted text storage and admin payloads, parsing attributes into polymorphic Movie instances cleanly.</p>
-                <button class="btn-secondary" onclick="showToast('Factory Method: MovieFactory instantiated 37+ polymorphic movie records.')" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Test Factory</button>
-              </div>
-
-              <!-- Pattern 3: Observer -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">3. Observer Pattern</span>
-                  <span class="gof-card-tag">Behavioral</span>
-                </div>
-                <div class="gof-card-file">NotificationService.java</div>
-                <p class="gof-card-desc">Implements a one-to-many publish-subscribe communication engine. When movies are added or broadcasts sent, all registered UserObservers are notified.</p>
-                <button class="btn-secondary" id="gofObserverBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">View Observers</button>
-              </div>
-
-              <!-- Pattern 4: Protection Proxy -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">4. Protection Proxy</span>
-                  <span class="gof-card-tag">Structural</span>
-                </div>
-                <div class="gof-card-file">MovieServiceProxy.java</div>
-                <p class="gof-card-desc">Enforces strict role-based access control. Only authenticated admins (admin@gmail.com) can publish movies; standard users receive HTTP 403 Forbidden.</p>
-                <button class="btn-secondary" id="gofProxyBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Verify Proxy</button>
-              </div>
-
-              <!-- Pattern 5: Chain of Responsibility -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">5. Chain of Responsibility</span>
-                  <span class="gof-card-tag">Behavioral</span>
-                </div>
-                <div class="gof-card-file">RecommendationChain.java</div>
-                <p class="gof-card-desc">Processes search queries sequentially along a decoupled handler pipeline: GenreHandler → LanguageHandler → RatingHandler → PlatformHandler.</p>
-                <button class="btn-secondary" id="gofChainBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Run Pipeline</button>
-              </div>
-
-              <!-- Pattern 6: Strategy -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">6. Strategy Pattern</span>
-                  <span class="gof-card-tag">Behavioral</span>
-                </div>
-                <div class="gof-card-file">SortingStrategy.java</div>
-                <p class="gof-card-desc">Encapsulates sorting algorithms (RatingStrategy, YearStrategy, TitleStrategy, CompositeStrategy) into interchangeable strategies selectable at runtime.</p>
-                <button class="btn-secondary" id="gofStrategyBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Change Strategy</button>
-              </div>
-
-              <!-- Pattern 7: Template Method -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">7. Template Method</span>
-                  <span class="gof-card-tag">Behavioral</span>
-                </div>
-                <div class="gof-card-file">WatchlistReportTemplate.java</div>
-                <p class="gof-card-desc">Defines invariant report export skeleton algorithm, deferring header, movie rows, and summary footer rendering to JsonWatchlistReport and TextWatchlistReport.</p>
-                <button class="btn-secondary" id="gofTemplateBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Export Report</button>
-              </div>
-
-              <!-- Pattern 8: Memento -->
-              <div class="gof-card">
-                <div class="gof-card-header">
-                  <span class="gof-card-title">8. Memento Pattern</span>
-                  <span class="gof-card-tag">Behavioral</span>
-                </div>
-                <div class="gof-card-file">WatchlistMemento.java</div>
-                <p class="gof-card-desc">Captures and restores user watchlist snapshots inside WatchlistCaretaker, allowing instantaneous Undo operations without exposing internal state.</p>
-                <button class="btn-secondary" id="gofMementoBtn" style="margin-top:12px;font-size:11.5px;padding:5px 10px;">Undo (Memento)</button>
-              </div>
-            </div>
-          </section>
         </div>
 
         <!-- ==================================================================
@@ -873,32 +756,93 @@
              VIEW 6: ACCOUNT PAGE
              ================================================================== -->
         <div class="view-panel" id="viewAccount" style="display:none;">
-          <!-- Guest Account State -->
-          <div id="accountGuestView" class="guest-banner-card" style="padding:32px;margin-bottom:24px;text-align:center;">
-            <div style="font-size:42px;margin-bottom:12px;">👤</div>
-            <h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">Welcome to TiMN OTT</h2>
-            <p style="font-size:14px;color:var(--text-secondary);max-width:540px;margin:0 auto 20px auto;">
-              You are currently exploring as a <strong>Guest</strong>. Sign in to unlock your personal watchlist, join real-time watch parties, or log in with the administrator portal.
-            </p>
+          <!-- Guest Account State (JioHotstar Style Login / Register Page) -->
+          <div id="accountGuestView" class="jio-auth-container">
+            <!-- 3D Device Orbit Graphic (TV + Tablet + Phone) -->
+            <svg class="jio-auth-devices" viewBox="0 0 460 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="jioGlowAcc" cx="50%" cy="40%" r="55%">
+                  <stop offset="0%" stop-color="#9333ea" stop-opacity="0.35"/>
+                  <stop offset="50%" stop-color="#ec4899" stop-opacity="0.12"/>
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="jioOrbitAcc" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#38bdf8"/>
+                  <stop offset="35%" stop-color="#818cf8"/>
+                  <stop offset="70%" stop-color="#c084fc"/>
+                  <stop offset="100%" stop-color="#f43f5e"/>
+                </linearGradient>
+                <linearGradient id="jioScreenAcc" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#242c3d"/>
+                  <stop offset="50%" stop-color="#18202d"/>
+                  <stop offset="100%" stop-color="#101520"/>
+                </linearGradient>
+                <linearGradient id="jioDeviceBodyAcc" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#334155"/>
+                  <stop offset="100%" stop-color="#1e293b"/>
+                </linearGradient>
+                <linearGradient id="jioGlossAcc" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+                  <stop offset="50%" stop-color="#ffffff" stop-opacity="0.04"/>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
 
-            <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
-              <button class="btn-primary" id="accountPageSignInBtn" style="padding:10px 24px;font-size:14px;">
-                <span>Sign In / Register</span>
+              <!-- Ambient Glow -->
+              <circle cx="230" cy="115" r="115" fill="url(#jioGlowAcc)"/>
+
+              <!-- Stars -->
+              <path d="M 140 38 Q 140 46 148 46 Q 140 46 140 54 Q 140 46 132 46 Q 140 46 140 38 Z" fill="#38bdf8"/>
+              <path d="M 220 28 Q 220 34 226 34 Q 220 34 220 40 Q 220 34 214 34 Q 220 34 220 28 Z" fill="#60a5fa" opacity="0.9"/>
+              <path d="M 325 34 Q 325 40 331 40 Q 325 40 325 46 Q 325 40 319 40 Q 325 40 325 34 Z" fill="#818cf8"/>
+              <path d="M 320 152 Q 320 157 325 157 Q 320 157 320 162 Q 320 157 315 157 Q 320 157 320 152 Z" fill="#38bdf8"/>
+              <path d="M 258 148 Q 258 152 262 152 Q 258 152 258 156 Q 258 152 254 152 Q 258 152 258 148 Z" fill="#c084fc" opacity="0.8"/>
+
+              <!-- Orbital Ring -->
+              <ellipse cx="230" cy="128" rx="195" ry="32" stroke="url(#jioOrbitAcc)" stroke-width="2.5" fill="none" opacity="0.9"/>
+
+              <!-- TV Stand -->
+              <polygon points="190,178 178,198 196,198 202,178" fill="#151b27"/>
+              <polygon points="270,178 264,178 270,198 288,198" fill="#151b27"/>
+              <rect x="185" y="174" width="90" height="6" rx="3" fill="#20293a"/>
+
+              <!-- TV Body -->
+              <rect x="160" y="24" width="220" height="150" rx="10" fill="#0f141f" stroke="#2b364c" stroke-width="3"/>
+              <!-- TV Screen -->
+              <rect x="166" y="30" width="208" height="138" rx="7" fill="url(#jioScreenAcc)"/>
+              <path d="M 240 30 L 295 30 L 255 168 L 205 168 Z" fill="url(#jioGlossAcc)"/>
+              <path d="M 305 30 L 335 30 L 315 168 L 285 168 Z" fill="url(#jioGlossAcc)" opacity="0.6"/>
+
+              <!-- Tablet (Left) -->
+              <g transform="translate(180, 118) rotate(-22) translate(-180, -118)">
+                <rect x="125" y="55" width="130" height="88" rx="9" fill="url(#jioDeviceBodyAcc)" stroke="#475569" stroke-width="2.5" filter="drop-shadow(0 14px 20px rgba(0,0,0,0.75))"/>
+                <rect x="130" y="60" width="120" height="78" rx="6" fill="#0b101b"/>
+                <path d="M 165 60 L 205 60 L 180 138 L 145 138 Z" fill="url(#jioGlossAcc)" opacity="0.7"/>
+                <circle cx="242" cy="99" r="3" fill="#334155"/>
+              </g>
+
+              <!-- Phone (Right) -->
+              <g transform="translate(305, 112) rotate(18) translate(-305, -112)">
+                <rect x="288" y="70" width="48" height="85" rx="8" fill="url(#jioDeviceBodyAcc)" stroke="#475569" stroke-width="2.5" filter="drop-shadow(0 12px 18px rgba(0,0,0,0.75))"/>
+                <rect x="291" y="73" width="42" height="79" rx="6" fill="#0b101b"/>
+                <path d="M 305 73 L 325 73 L 315 152 L 295 152 Z" fill="url(#jioGlossAcc)" opacity="0.7"/>
+                <rect x="306" y="76" width="12" height="2" rx="1" fill="#475569"/>
+                <circle cx="312" cy="146" r="3" fill="#334155"/>
+              </g>
+            </svg>
+
+            <!-- Title & Subtitle Matching Screenshot -->
+            <h2 class="jio-auth-title">Login to TiMN</h2>
+            <p class="jio-auth-subtitle">Start watching from where you left off, personalise for kids and more</p>
+
+            <!-- Signature Gradient Log In Button -->
+            <div style="margin-bottom: 26px;">
+              <button class="jio-gradient-btn" id="accountPageSignInBtn">
+                <span>Log In</span>
               </button>
             </div>
 
-            <!-- Demo Quick Sign In Options -->
-            <div style="background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;max-width:500px;margin:0 auto;text-align:left;">
-              <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Quick Demo Accounts:</div>
-              <div style="display:flex;gap:10px;">
-                <button class="btn-secondary" id="accDemoAdminBtn" style="flex:1;font-size:12px;padding:8px 10px;">
-                  🛡️ Admin (admin@gmail.com / admin123)
-                </button>
-                <button class="btn-secondary" id="accDemoUserBtn" style="flex:1;font-size:12px;padding:8px 10px;">
-                  👤 User (Aryan / user123)
-                </button>
-              </div>
-            </div>
+
           </div>
 
           <!-- Logged In Account Dashboard -->
@@ -993,6 +937,257 @@
               <button class="btn-secondary" id="accOpenSupabaseModalBtn">
                 <span>☁️ Supabase Cloud Storage</span>
               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             VIEW 7: DESIGN PATTERN DETAILS (NEO-CARD AESTHETIC MATCHING USER SPECIFICATION)
+             ================================================================== -->
+        <div class="view-panel" id="viewPatterns" style="display:none;">
+          <div class="dp-details-view">
+            <!-- Header Title -->
+            <div class="dp-view-hero">
+              <div class="dp-view-title">
+                <span>🏛️</span>
+                <span>Design Pattern Details</span>
+                <span class="gof-card-tag" style="background:#bef264;color:#000;border:1.2px solid #000;font-weight:800;font-size:12px;padding:3px 10px;">8 Patterns Implemented</span>
+              </div>
+              <p class="dp-view-subtitle">
+                Complete architectural breakdown of software design patterns powering the TiMN OTT Platform. Explore the theoretical meaning of each pattern and how it is practically engineered into our project.
+              </p>
+            </div>
+
+            <!-- Hero Intro Card: What is a Design Pattern? -->
+            <div class="neo-dp-hero-card">
+              <div class="neo-dp-badge-circle">!</div>
+              <div class="neo-dp-header">
+                <div>
+                  <h2 class="neo-dp-title" style="font-size:22px;">What is a Design Pattern?</h2>
+                  <div style="font-size:12px;color:#64748b;font-weight:600;margin-top:2px;">Software Engineering &amp; Architectural Foundation</div>
+                </div>
+                <span class="neo-dp-tag" style="background:#bef264;">Overview</span>
+              </div>
+              
+              <div class="neo-dp-section">
+                <div class="neo-dp-label">💡 Meaning &amp; Definition:</div>
+                <p class="neo-dp-text">
+                  A <strong>Design Pattern</strong> is a formalized, reusable architectural template and proven best-practice solution to commonly occurring software engineering problems. Rather than writing ad-hoc, tightly coupled code, design patterns introduce clean object-oriented structures (separation of concerns, loose coupling, single responsibility, open-closed principle) that make enterprise applications robust, modular, testable, and easily extensible.
+                </p>
+              </div>
+
+              <div class="neo-dp-section" style="margin-bottom:0;">
+                <div class="neo-dp-label">🎯 How it is Implemented in TiMN (Features):</div>
+                <p class="neo-dp-text">
+                  TiMN is built from the ground up using <strong>8 classic Gang of Four (GoF)</strong> design patterns across all 3 software design categories:
+                  <strong>Creational</strong> (Singleton, Factory Method), <strong>Structural</strong> (Protection Proxy), and <strong>Behavioral</strong> (Observer, Chain of Responsibility, Strategy, Template Method, Memento). Every core interaction—from dynamic movie recommendation filters and user watchlist undo states to role-based access security and report exports—is backed by a concrete design pattern.
+                </p>
+              </div>
+            </div>
+
+            <!-- Grid of 8 Design Patterns (Image 2 Signature Neo-Card Style) -->
+            <div class="dp-cards-grid">
+
+              <!-- Pattern 1: Singleton -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">1. Singleton Pattern</h3>
+                  <span class="neo-dp-tag creational">Creational</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Ensures that a class has only <strong>one single global instance</strong> throughout the entire lifetime of the application, and provides a centralized global access point to it. This guarantees shared state consistency and prevents duplicate resource allocations.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>MovieDatabase.java &amp; api/index.js:</strong> Central in-memory repository managing all 41 movies, user accounts, watchlists, and active observers. All HTTP API requests across users query and synchronize with this single shared database instance.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">MovieDatabase.java</span>
+                  <button class="neo-dp-action-btn" onclick="showToast('Singleton Pattern: Single MovieDatabase instance is active across server.')">Inspect Singleton</button>
+                </div>
+              </div>
+
+              <!-- Pattern 2: Factory Method -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">2. Factory Method</h3>
+                  <span class="neo-dp-tag creational">Creational</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Defines an interface for creating objects, but encapsulates the concrete instantiation logic inside a dedicated factory method. This decouples object creation from business logic, making adding new movie types seamless without modifying existing client code.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>MovieFactory.java:</strong> Encapsulates movie object instantiation from both persistent flat files (<code>createMovieFromFile</code>) and admin creation requests (<code>createMovie</code>), safely parsing genres, IMDb ratings, and streaming platform metadata.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">MovieFactory.java</span>
+                  <button class="neo-dp-action-btn" onclick="showToast('Factory Method: MovieFactory instantiated 41 polymorphic movie records.')">Test Factory</button>
+                </div>
+              </div>
+
+              <!-- Pattern 3: Observer Pattern -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">3. Observer Pattern</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Defines a one-to-many publish-subscribe communication dependency. When a subject (publisher) changes state or publishes a message, all registered observers (subscribers) are automatically notified and updated in real-time without tight coupling.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>NotificationService.java &amp; UserObserver.java:</strong> Whenever an admin uploads a new title, deletes content, or sends a platform announcement broadcast, all active user observers automatically receive live push alerts inside the notification bell feed.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">NotificationService.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofObserverBtn">View Observers</button>
+                </div>
+              </div>
+
+              <!-- Pattern 4: Protection Proxy -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">4. Protection Proxy</h3>
+                  <span class="neo-dp-tag structural">Structural</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Acts as an intermediary security guard that controls access to a sensitive service. It intercepts client requests, verifies identity and authorization credentials, and blocks unauthorized actions before delegating legitimate requests to the real underlying service.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>MovieServiceProxy.java:</strong> Enforces role-based security. Only users authenticated with the <code>ADMIN</code> role (e.g. <code>admin@gmail.com</code>) are allowed to add or delete movies. Regular user accounts are intercepted and blocked with HTTP 403 Forbidden.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">MovieServiceProxy.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofProxyBtn">Verify Proxy</button>
+                </div>
+              </div>
+
+              <!-- Pattern 5: Chain of Responsibility -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">5. Chain of Responsibility</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Decouples request senders from processing receivers by passing data sequentially through an ordered chain of independent filtering handlers. Each handler performs its specific check and passes the filtered candidate list to the next handler in line.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>RecommendationChain.java:</strong> Powers movie recommendations by executing an extensible 4-stage pipeline: <code>GenreHandler</code> ➔ <code>LanguageHandler</code> ➔ <code>RatingHandler</code> ➔ <code>PlatformHandler</code>. Each handler isolates filtering criteria cleanly.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">RecommendationChain.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofChainBtn">Run Pipeline</button>
+                </div>
+              </div>
+
+              <!-- Pattern 6: Strategy Pattern -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">6. Strategy Pattern</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Encapsulates a family of algorithms into separate, interchangeable strategy classes and makes them swappable at runtime. The client context delegates execution to the chosen strategy without needing messy <code>if-else</code> or <code>switch</code> logic.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>SortingStrategy.java &amp; CatalogSorterContext.java:</strong> Enables real-time catalog sorting. Users dynamically switch between <code>RatingSortStrategy</code>, <code>YearSortStrategy</code>, <code>TitleSortStrategy</code>, and <code>PopularitySortStrategy</code> on the Movies page.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">SortingStrategy.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofStrategyBtn">Change Strategy</button>
+                </div>
+              </div>
+
+              <!-- Pattern 7: Template Method -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">7. Template Method</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Defines the skeleton of an algorithm in an abstract base class template, deferring concrete rendering and formatting steps to specialized subclasses without altering the invariant structure and sequence of execution.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>WatchlistReportTemplate.java:</strong> Outlines the standard 3-phase algorithm (Header ➔ Movie Rows ➔ Summary Footer) for exporting user watchlists into diverse formats: <code>JsonWatchlistReport</code>, <code>MarkdownWatchlistReport</code>, <code>HtmlWatchlistReport</code>, and <code>PlainTextWatchlistReport</code>.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">WatchlistReportTemplate.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofTemplateBtn">Export Report</button>
+                </div>
+              </div>
+
+              <!-- Pattern 8: Memento Pattern -->
+              <div class="neo-dp-card">
+                <div class="neo-dp-badge-circle">!</div>
+                <div class="neo-dp-header">
+                  <h3 class="neo-dp-title">8. Memento Pattern</h3>
+                  <span class="neo-dp-tag behavioral">Behavioral</span>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">💡 What it means:</div>
+                  <p class="neo-dp-text">
+                    Captures and externalizes an object's internal state into an immutable memento snapshot without violating encapsulation rules. The object can be restored to this exact previous state at any time, implementing clean Undo and Rollback capabilities.
+                  </p>
+                </div>
+                <div class="neo-dp-section">
+                  <div class="neo-dp-label">🎯 Where it is Implemented (Features in TiMN):</div>
+                  <p class="neo-dp-text">
+                    <strong>WatchlistMemento.java &amp; WatchlistCaretaker.java:</strong> Whenever a movie is added or removed from a user's watchlist, a snapshot memento is saved to the caretaker stack. Clicking "Undo (Memento)" instantly restores the previous watchlist state.
+                  </p>
+                </div>
+                <div class="neo-dp-footer">
+                  <span class="neo-dp-file">WatchlistMemento.java</span>
+                  <button class="neo-dp-action-btn" id="neoGofMementoBtn">Undo (Memento)</button>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -1353,46 +1548,103 @@
   </div>
 
   <!-- ======================================================================
-       MODAL 6: LOGIN / SIGNUP PORTAL (Required for Watchlist & Admin)
+       MODAL 6: LOGIN / SIGNUP PORTAL (JioHotstar Style)
        ====================================================================== -->
   <div class="modal-overlay" id="authModal">
-    <div class="modal-card" style="max-width: 480px;">
-      <div class="modal-header">
-        <div class="modal-title">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          <span id="authModalTitle">Sign In to TiMN</span>
-        </div>
+    <div class="modal-card" style="max-width: 500px; background: radial-gradient(ellipse 90% 50% at 50% 0%, rgba(147, 51, 234, 0.22) 0%, rgba(225, 29, 72, 0.10) 40%, rgba(11, 15, 25, 0.98) 80%); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 20px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(147, 51, 234, 0.15);">
+      <div class="modal-header" style="border-bottom:none; padding: 16px 20px 0 20px;">
+        <div></div>
         <button class="modal-close-btn" id="closeAuthModalBtn" onclick="document.getElementById('authModal').classList.remove('active');" title="Close Modal">&times;</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="padding: 0 28px 28px 28px;">
+        <!-- Compact 3D Device Orbit Graphic -->
+        <svg class="jio-auth-devices" viewBox="0 0 460 210" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:320px;margin:0 auto 8px auto;">
+          <defs>
+            <radialGradient id="jioGlowMod" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stop-color="#9333ea" stop-opacity="0.35"/>
+              <stop offset="50%" stop-color="#ec4899" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="jioOrbitMod" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="35%" stop-color="#818cf8"/>
+              <stop offset="70%" stop-color="#c084fc"/>
+              <stop offset="100%" stop-color="#f43f5e"/>
+            </linearGradient>
+            <linearGradient id="jioScreenMod" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#242c3d"/>
+              <stop offset="50%" stop-color="#18202d"/>
+              <stop offset="100%" stop-color="#101520"/>
+            </linearGradient>
+            <linearGradient id="jioDeviceBodyMod" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#334155"/>
+              <stop offset="100%" stop-color="#1e293b"/>
+            </linearGradient>
+            <linearGradient id="jioGlossMod" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.04"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Ambient Glow -->
+          <circle cx="230" cy="105" r="105" fill="url(#jioGlowMod)"/>
+
+          <!-- Stars -->
+          <path d="M 140 38 Q 140 46 148 46 Q 140 46 140 54 Q 140 46 132 46 Q 140 46 140 38 Z" fill="#38bdf8"/>
+          <path d="M 220 28 Q 220 34 226 34 Q 220 34 220 40 Q 220 34 214 34 Q 220 34 220 28 Z" fill="#60a5fa" opacity="0.9"/>
+          <path d="M 325 34 Q 325 40 331 40 Q 325 40 325 46 Q 325 40 319 40 Q 325 40 325 34 Z" fill="#818cf8"/>
+          <path d="M 320 148 Q 320 153 325 153 Q 320 153 320 158 Q 320 153 315 153 Q 320 153 320 148 Z" fill="#38bdf8"/>
+
+          <!-- Orbital Ring -->
+          <ellipse cx="230" cy="120" rx="195" ry="30" stroke="url(#jioOrbitMod)" stroke-width="2.5" fill="none" opacity="0.9"/>
+
+          <!-- TV Stand -->
+          <polygon points="190,168 178,186 196,186 202,168" fill="#151b27"/>
+          <polygon points="270,168 264,168 270,186 288,186" fill="#151b27"/>
+          <rect x="185" y="164" width="90" height="6" rx="3" fill="#20293a"/>
+
+          <!-- TV Body -->
+          <rect x="160" y="24" width="220" height="142" rx="10" fill="#0f141f" stroke="#2b364c" stroke-width="3"/>
+          <rect x="166" y="30" width="208" height="130" rx="7" fill="url(#jioScreenMod)"/>
+          <path d="M 240 30 L 295 30 L 255 160 L 205 160 Z" fill="url(#jioGlossMod)"/>
+          <path d="M 305 30 L 335 30 L 315 160 L 285 160 Z" fill="url(#jioGlossMod)" opacity="0.6"/>
+
+          <!-- Tablet (Left) -->
+          <g transform="translate(180, 110) rotate(-22) translate(-180, -110)">
+            <rect x="125" y="55" width="130" height="84" rx="9" fill="url(#jioDeviceBodyMod)" stroke="#475569" stroke-width="2.5" filter="drop-shadow(0 14px 20px rgba(0,0,0,0.75))"/>
+            <rect x="130" y="60" width="120" height="74" rx="6" fill="#0b101b"/>
+            <path d="M 165 60 L 205 60 L 180 134 L 145 134 Z" fill="url(#jioGlossMod)" opacity="0.7"/>
+            <circle cx="242" cy="97" r="3" fill="#334155"/>
+          </g>
+
+          <!-- Phone (Right) -->
+          <g transform="translate(305, 105) rotate(18) translate(-305, -105)">
+            <rect x="288" y="65" width="48" height="80" rx="8" fill="url(#jioDeviceBodyMod)" stroke="#475569" stroke-width="2.5" filter="drop-shadow(0 12px 18px rgba(0,0,0,0.75))"/>
+            <rect x="291" y="68" width="42" height="74" rx="6" fill="#0b101b"/>
+            <path d="M 305 68 L 325 68 L 315 142 L 295 142 Z" fill="url(#jioGlossMod)" opacity="0.7"/>
+            <rect x="306" y="71" width="12" height="2" rx="1" fill="#475569"/>
+            <circle cx="312" cy="137" r="3" fill="#334155"/>
+          </g>
+        </svg>
+
+        <!-- Title & Subtitle Matching Screenshot -->
+        <h2 class="jio-auth-title" id="authModalTitle" style="font-size:24px;text-align:center;margin:0 0 6px 0;">Login to TiMN</h2>
+        <p class="jio-auth-subtitle" style="font-size:13px;text-align:center;margin:0 auto 16px auto;">Start watching from where you left off, personalise for kids and more</p>
+
         <!-- Watchlist Protection Alert Notice -->
-        <div id="authNoticeBanner" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;">
-          <span style="font-size:18px;">🔒</span>
-          <div style="font-size:12.5px;color:var(--text-main);line-height:1.45;">
+        <div id="authNoticeBanner" style="background:rgba(147,51,234,0.12);border:1px solid rgba(147,51,234,0.3);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:16px;">🔒</span>
+          <div style="font-size:12px;color:var(--text-main);line-height:1.45;">
             <strong>Login Required:</strong> Please sign in to save movies to your personal Watchlist and track your watchlist history with Memento rollback.
           </div>
         </div>
 
-        <!-- Quick 1-Click Evaluation Credentials -->
-        <div style="background:var(--bg-surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px;margin-bottom:18px;">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:8px;">
-            Quick Evaluation Credentials (1-Click Fill):
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button type="button" class="quick-cred-btn" id="quickFillAdminBtn" style="flex:1;">
-              <span style="color:var(--accent-gold);font-weight:700;">🛡️ Admin Demo</span>
-              <small style="color:var(--text-secondary);display:block;font-size:10.5px;">admin@gmail.com / admin123</small>
-            </button>
-            <button type="button" class="quick-cred-btn" id="quickFillUserBtn" style="flex:1;">
-              <span style="color:var(--accent-cyan);font-weight:700;">👤 User Demo</span>
-              <small style="color:var(--text-secondary);display:block;font-size:10.5px;">Aryan / user123</small>
-            </button>
-          </div>
-        </div>
+
 
         <!-- Tabs: Sign In / Create Account -->
-        <div class="auth-tabs" style="display:flex;border-bottom:1px solid var(--border-subtle);margin-bottom:18px;">
-          <button type="button" class="auth-tab-btn active" id="tabSignInBtn" style="flex:1;padding:10px;background:none;border:none;border-bottom:2px solid var(--primary);color:#fff;font-weight:700;font-size:13.5px;cursor:pointer;">Sign In</button>
+        <div class="auth-tabs" style="display:flex;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:16px;">
+          <button type="button" class="auth-tab-btn active" id="tabSignInBtn" style="flex:1;padding:10px;background:none;border:none;border-bottom:2px solid #8720e0;color:#fff;font-weight:700;font-size:13.5px;cursor:pointer;">Sign In</button>
           <button type="button" class="auth-tab-btn" id="tabRegisterBtn" style="flex:1;padding:10px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-secondary);font-weight:600;font-size:13.5px;cursor:pointer;">Create Account</button>
         </div>
 
@@ -1400,14 +1652,14 @@
         <form id="signInForm" style="display:flex;flex-direction:column;gap:14px;">
           <div>
             <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Email or Username</label>
-            <input type="text" id="loginEmailInput" placeholder="admin@gmail.com or username" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+            <input type="text" id="loginEmailInput" placeholder="admin@gmail.com or username" class="search-input" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Password</label>
-            <input type="password" id="loginPasswordInput" placeholder="Password (admin123 for Admin)" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+            <input type="password" id="loginPasswordInput" placeholder="Password (admin123 for Admin)" class="search-input" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
           </div>
-          <button type="submit" class="btn-primary" style="justify-content:center;padding:11px;font-size:14px;margin-top:6px;">
-            <span>Sign In to TiMN</span>
+          <button type="submit" class="jio-gradient-btn" style="width:100%;margin-top:6px;">
+            <span>Log In</span>
           </button>
         </form>
 
@@ -1415,21 +1667,21 @@
         <form id="registerForm" style="display:none;flex-direction:column;gap:14px;">
           <div>
             <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Full Name</label>
-            <input type="text" id="regNameInput" placeholder="Your Name (e.g. John Doe)" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+            <input type="text" id="regNameInput" placeholder="Your Name (e.g. John Doe)" class="search-input" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Email Address</label>
-            <input type="email" id="regEmailInput" placeholder="you@example.com" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+            <input type="email" id="regEmailInput" placeholder="you@example.com" class="search-input" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;">Create Password</label>
-            <input type="password" id="regPasswordInput" placeholder="Choose a password" class="search-input" style="width:100%;background:var(--bg-search);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
+            <input type="password" id="regPasswordInput" placeholder="Choose a password" class="search-input" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;" required>
           </div>
           <div style="font-size:11.5px;color:var(--text-muted);background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:var(--radius-sm);">
             🛡️ <strong>Note:</strong> Standard accounts are granted the <code>USER</code> role. Users can curate personal watchlists, export reports, and receive notifications. Admin movie publishing permissions are reserved for verified admin credentials (<code>admin@gmail.com</code> / <code>admin123</code>).
           </div>
-          <button type="submit" class="btn-primary" style="justify-content:center;padding:11px;font-size:14px;margin-top:4px;">
-            <span>Create TiMN Account</span>
+          <button type="submit" class="jio-gradient-btn" style="width:100%;margin-top:4px;">
+            <span>Create Account</span>
           </button>
         </form>
 

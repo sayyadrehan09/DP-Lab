@@ -39,3 +39,21 @@
 39|Avatar: The Way of Water|Action|English|8.5|2024|Netflix
 40|Dune: Part Two|Sci-Fi|English|8.8|2024|Prime Video
 41|Oppenheimer|Drama|English|8.9|2023|Netflix
+101|Breaking Bad|Thriller|English|9.5|2008|Netflix
+102|Stranger Things|Sci-Fi|English|8.7|2016|Netflix
+103|Dark|Thriller|German|8.7|2017|Netflix
+104|Attack on Titan|Anime|Japanese|9.1|2013|Crunchyroll
+105|Death Note|Anime|Japanese|9.0|2006|Netflix
+106|Jujutsu Kaisen|Anime|Japanese|8.6|2020|Crunchyroll
+107|Demon Slayer|Anime|Japanese|8.6|2019|Netflix
+108|Cyberpunk: Edgerunners|Anime|English|8.3|2022|Netflix
+109|Panchayat|Comedy|Hindi|9.0|2020|Prime Video
+110|The Office|Comedy|English|9.0|2005|Netflix
+111|Brooklyn Nine-Nine|Comedy|English|8.4|2013|Netflix
+112|Money Heist|Thriller|Spanish|8.2|2017|Netflix
+113|Squid Game|Thriller|Korean|8.0|2021|Netflix
+114|Mirzapur|Crime Drama|Hindi|8.5|2018|Prime Video
+115|Sacred Games|Crime Drama|Hindi|8.5|2018|Netflix
+116|Peaky Blinders|Crime Drama|English|8.8|2013|Netflix
+117|Severance|Sci-Fi|English|8.7|2022|Apple TV+
+118|The Boys|Action|English|8.7|2019|Prime Video
