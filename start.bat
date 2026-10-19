@@ -35,7 +35,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo [3/3] Launching Java REST Server and opening interface...
-start "CinePattern Backend Server" cmd /k "cd /d "%~dp0backend" && "%JAVA_CMD%" -cp bin Server"
+start "CinePattern Backend Server" cmd /k ""%JAVA_CMD%" -cp bin Server"
 
 timeout /t 2 >nul
 start http://localhost:8080

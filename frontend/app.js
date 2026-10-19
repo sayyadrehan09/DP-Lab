@@ -11,9 +11,9 @@
  * 8. Memento (WatchlistMemento)
  */
 
-const API_BASE = (window.location.protocol.startsWith('http') && window.location.port === '8080')
-  ? '' 
-  : 'http://localhost:8080';
+const API_BASE = (window.location.hostname === 'localhost' && window.location.port && window.location.port !== '8080')
+  ? 'http://localhost:8080' 
+  : '';
 
 // Supabase Cloud Configuration
 const SUPABASE_URL = "https://mhxkftnldxziqhydyfbf.supabase.co";

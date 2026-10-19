@@ -5,7 +5,10 @@
 [![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20%7C%20CSS3%20Bento-purple?style=for-the-badge)](frontend/)
 [![Persistence](https://img.shields.io/badge/Storage-Flat--File%20I%2FO%20%2B%20Supabase-success?style=for-the-badge)](backend/data/)
 [![Course](https://img.shields.io/badge/Assessment-Design%20Patterns%20Laboratory-orange?style=for-the-badge)](https://github.com/sayyadrehan09/DP-Lab)
+[![Vercel Deployment](https://img.shields.io/badge/Live%20Demo-dp--lab--woad.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dp-lab-woad.vercel.app)
 
+> 🚀 **Live Production Demo:** **[https://dp-lab-woad.vercel.app](https://dp-lab-woad.vercel.app)**
+>
 > **CinePattern (TiMN)** is a full-stack, enterprise-grade **Movie & OTT Recommendation System** engineered for the **Design Patterns Laboratory Assessment**. It features a high-performance native Java REST backend, flat-file persistence, and a modern dark obsidian / flame-cinnabar cinematic web interface (Pinwheel / Atlas Bento-Grid aesthetic).
 >
 > The system harmoniously implements **8 classic Gang of Four (GoF) design patterns** across Creational, Structural, and Behavioral categories, providing dynamic strategy-based catalog sorting, 4-stage sequential recommendation filtering, role-based protection proxies, decoupled real-time push notifications, a Memento-powered watchlist undo engine, and multi-format template report generation.
