@@ -543,7 +543,7 @@ java -cp bin Main
 
 ## 👨‍💻 Author & Credits
 
-* **Developer:** [Rehan Sayyad](https://github.com/sayyadrehan09)
+* **Developer:** [Rehan Sayyad](https://github.com/sayyadrehan09),[Tanvir Kanoje](https://github.com/tanvir-kanoje)
 * **GitHub Repository:** [sayyadrehan09/DP-Lab](https://github.com/sayyadrehan09/DP-Lab)
 * **Course:** Design Patterns Laboratory (5th Semester)
-* **Status:** Verified, Fully Operational on `http://localhost:8080`
+* **Status:** Verified & Fully Operational
